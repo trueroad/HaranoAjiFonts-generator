@@ -1,0 +1,13 @@
+s/<GlyphOrder src=".\+"\/>/<GlyphOrder src="glyphorder.ttx"\/>/g
+s/<name src=".\+"\/>/<name src="name.ttx"\/>/g
+s/<cmap src=".\+"\/>/<cmap src="cmap.ttx"\/>/g
+s/<CFF src=".\+"\/>/<CFF src="CFF.ttx"\/>/g
+s/<BASE src="\(.\+\)"\/>/<!--BASE src="\1"\/-->/g
+s/<GDEF src="\(.\+\)"\/>/<!--GDEF src="\1"\/-->/g
+s/<GPOS src="\(.\+\)"\/>/<!--GPOS src="\1"\/-->/g
+s/<GSUB src="\(.\+\)"\/>/<!--GSUB src="\1"\/-->/g
+s/<VORG src="\(.\+\)"\/>/<!--VORG src="\1"\/-->/g
+s/<hmtx src=".\+"\/>/<hmtx src="hmtx.ttx"\/>/g
+s/<vhea src="\(.\+\)"\/>/<!--vhea src="\1"\/-->/g
+s/<vmtx src="\(.\+\)"\/>/<!--vmtx src="\1"\/-->/g
+s/<DSIG src="\(.\+\)"\/>/<!--DSIG src="\1"\/-->/g

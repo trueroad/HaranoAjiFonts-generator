@@ -1,0 +1,6 @@
+#ifndef INCLUDE_GUARD_VERSION_HH
+#define INCLUDE_GUARD_VERSION_HH
+
+const char* const version = "@VERSION@";
+
+#endif // INCLUDE_GUARD_VERSION_HH

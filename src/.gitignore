@@ -1,0 +1,10 @@
+make_conv_table
+make_glyphorder
+conv_name
+conv_cmap
+conv_CFF
+conv_mtx
+*.exe
+*.d
+*.o
+version.hh
