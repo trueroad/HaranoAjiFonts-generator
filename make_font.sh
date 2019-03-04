@@ -13,13 +13,40 @@ BINDIR=${BASEDIR}/bin
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
 
+case "${SRC_FONTBASE}" in
+    SourceHanSans* )
+        AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSans
+        AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSans/aj16-kanji.txt
+        ;;
+    SourceHanSerif* )
+        AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSerif
+        AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSerif/aj16-kanji.txt
+        ;;
+    * )
+	echo invalid font name
+	exit 1
+	;;
+esac
+
 echo deleting old files...
 rm -f *.ttx *.log \
    || { echo error; exit 1; }
 
-echo making conversion table...
+echo "making conversion table (from cmap and CMap)..."
 ${BINDIR}/make_conv_table \
     ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx ${DOWNLOADDIR}/${CMAP} \
+    > table-cmap.tbl 2> table-cmap.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (from AI0-SourceHan and aj16-kanji.txt)..."
+${BINDIR}/make_kanji_table \
+    ${AI0_SOURCEHAN} ${AJ1X_KANJI} \
+    > table-kanji.tbl 2> table-kanji.log \
+   || { echo error; exit 1; }
+
+echo merging convertion tables...
+${BINDIR}/merge_table \
+    table-cmap.tbl table-kanji.tbl \
     > table.tbl 2> table.log \
    || { echo error; exit 1; }
 
