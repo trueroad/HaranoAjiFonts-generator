@@ -39,6 +39,8 @@ ln -s ${TTXDIR}/${SRC_FONTBASE}._h_h_e_a.ttx
 ln -s ${TTXDIR}/${SRC_FONTBASE}._m_a_x_p.ttx
 ln -s ${TTXDIR}/${SRC_FONTBASE}.O_S_2f_2.ttx
 ln -s ${TTXDIR}/${SRC_FONTBASE}._p_o_s_t.ttx
+ln -s ${TTXDIR}/${SRC_FONTBASE}.B_A_S_E_.ttx
+ln -s ${TTXDIR}/${SRC_FONTBASE}._v_h_e_a.ttx
 
 sed -f ${BASEDIR}/font_tables.sed ${TTXDIR}/${SRC_FONTBASE}.ttx \
     > output.ttx
