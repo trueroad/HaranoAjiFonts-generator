@@ -13,6 +13,9 @@ BINDIR=${BASEDIR}/bin
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
 
+echo deleting old files...
+rm *.ttx *.log
+
 echo making conversion table...
 ${BINDIR}/make_conv_table \
     ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx ${DOWNLOADDIR}/${CMAP} \
