@@ -30,6 +30,9 @@ ${BINDIR}/conv_cmap \
 ${BINDIR}/conv_CFF \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
     2> CFF.log | sed -f ${BASEDIR}/font_name.sed > CFF.ttx
+${BINDIR}/conv_VORG \
+    table.tbl ${TTXDIR}/${SRC_FONTBASE}.V_O_R_G_.ttx \
+    > VORG.ttx 2> VORG.log
 ${BINDIR}/conv_mtx \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx \
     > hmtx.ttx 2> hmtx.log

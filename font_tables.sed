@@ -5,7 +5,7 @@ s/<CFF src=".\+"\/>/<CFF src="CFF.ttx"\/>/g
 s/<GDEF src="\(.\+\)"\/>/<!--GDEF src="\1"\/-->/g
 s/<GPOS src="\(.\+\)"\/>/<!--GPOS src="\1"\/-->/g
 s/<GSUB src="\(.\+\)"\/>/<!--GSUB src="\1"\/-->/g
-s/<VORG src="\(.\+\)"\/>/<!--VORG src="\1"\/-->/g
+s/<VORG src=".\+"\/>/<VORG src="VORG.ttx"\/>/g
 s/<hmtx src=".\+"\/>/<hmtx src="hmtx.ttx"\/>/g
 s/<vmtx src=".\+"\/>/<vmtx src="vmtx.ttx"\/>/g
 s/<DSIG src="\(.\+\)"\/>/<!--DSIG src="\1"\/-->/g
