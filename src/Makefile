@@ -1,4 +1,4 @@
-BIN = make_conv_table make_glyphorder \
+BIN = make_conv_table make_glyphorder make_kanji_table \
 	conv_name conv_cmap conv_CFF conv_VORG conv_mtx
 
 all: version.hh $(BIN)
@@ -21,6 +21,8 @@ CXXFLAGS += $(PUGIXML_CFLAGS)
 MAKE_CONV_TABLE_OBJS = make_conv_table_main.o \
 	fontcmap_reverse.o prefer_unicode.o cmapfile.o
 MAKE_GLYPHORDER_OBJS = make_glyphorder_main.o conv_table.o
+MAKE_KANJI_TABLE_OBJS = make_kanji_table_main.o \
+	AI0-SourceHan.o aj1x-kanji.o
 CONV_NAME_OBJS = conv_name_main.o
 CONV_CMAP_OBJS = conv_cmap_main.o walker.o walker_conv.o walker_cmap.o \
 	conv_table.o
@@ -30,6 +32,7 @@ CONV_VORG_OBJS = conv_VORG_main.o conv_table.o
 CONV_MTX_OBJS = conv_mtx_main.o walker.o walker_conv.o conv_table.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
+	$(MAKE_KANJI_TABLE_OBJS) \
 	$(CONV_NAME_OBJS) $(CONV_CMAP_OBJS) $(CONV_CFF_OBJS) \
 	$(CONV_VORG_OBJS) $(CONV_MTX_OBJS)
 
@@ -70,6 +73,9 @@ make_conv_table: $(MAKE_CONV_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_glyphorder: $(MAKE_GLYPHORDER_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+make_kanji_table: $(MAKE_KANJI_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 conv_name: $(CONV_NAME_OBJS)
