@@ -33,7 +33,6 @@
 // SUCH DAMAGE.
 //
 
-#include <exception>
 #include <iostream>
 #include <string>
 
