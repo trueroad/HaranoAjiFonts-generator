@@ -33,6 +33,9 @@ ${BINDIR}/conv_CFF \
 ${BINDIR}/conv_mtx \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx \
     > hmtx.ttx 2> hmtx.log
+${BINDIR}/conv_mtx \
+    table.tbl ${TTXDIR}/${SRC_FONTBASE}._v_m_t_x.ttx \
+    > vmtx.ttx 2> vmtx.log
 
 ln -s ${TTXDIR}/${SRC_FONTBASE}._h_e_a_d.ttx
 ln -s ${TTXDIR}/${SRC_FONTBASE}._h_h_e_a.ttx
