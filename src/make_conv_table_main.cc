@@ -41,6 +41,7 @@
 
 #include "cmapfile.hh"
 #include "fontcmap_reverse.hh"
+#include "prefer_unicode.hh"
 #include "version.hh"
 
 int main (int argc, char *argv[])
@@ -114,22 +115,35 @@ int main (int argc, char *argv[])
 
           if (dup.find (cid_out) != dup.end ())
             {
+              auto bf_uni = fcr.get_map ().at (dup[cid_out]);
+              auto prefer = prefer_unicode (bf_uni, uni);
               std::cout << "#duplicate: cid " << dup[cid_out]
                         << " (U+"
                         << std::setw (4) << std::setfill ('0')
                         << std::hex << std::uppercase
-                        << fcr.get_map ().at (dup[cid_out])
-                        << std::dec
-                        << "), cid "
+                        << bf_uni
+                        << std::dec;
+              if (prefer == bf_uni)
+                std::cout << " preferred";
+              std::cout << "), cid "
                         << cid_in
                         << " (U+"
                         << std::setw (4) << std::hex
                         << uni
                         << std::nouppercase << std::dec
-                        << std::setfill (' ')
-                        << ") -> cid "
+                        << std::setfill (' ');
+              if (prefer == uni)
+                std::cout << " preferred";
+              std::cout <<  ") -> cid "
                         << cid_out << std::endl;
-              map[cid_in] = -1; // prefer lower cid_in
+              if (prefer == bf_uni)
+                map[cid_in] = -1;
+              else if (prefer == uni)
+                {
+                  map[dup[cid_out]] = -1;
+                  map[cid_in] = cid_out;
+                  dup[cid_out] = cid_in;
+                }
             }
           else
             {
