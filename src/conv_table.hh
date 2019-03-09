@@ -37,7 +37,6 @@
 #define INCLUDE_GUARD_CONV_TABLE_HH
 
 #include <map>
-#include <set>
 #include <string>
 #include <vector>
 
