@@ -47,63 +47,120 @@ ${BINDIR}/make_kanji_table \
 echo merging convertion tables...
 ${BINDIR}/merge_table \
     table-cmap.tbl table-kanji.tbl \
-    > table1.tbl 2> table1.log \
+    > table01.tbl 2> table01.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature fwid)..."
 ${BINDIR}/make_feature_table \
-    table1.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table01.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-fwid.tbl 2> table-fwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature hwid)..."
 ${BINDIR}/make_feature_table \
-    table1.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table01.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-hwid.tbl 2> table-hwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature pwid)..."
 ${BINDIR}/make_feature_table \
-    table1.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table01.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-pwid.tbl 2> table-pwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature ruby)..."
 ${BINDIR}/make_feature_table \
-    table1.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table01.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-ruby.tbl 2> table-ruby.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature vert)..."
 ${BINDIR}/make_feature_table \
-    table1.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table01.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-vert.tbl 2> table-vert.log \
    || { echo error; exit 1; }
 
 echo "merging convertion tables (OpenType features)..."
 ${BINDIR}/merge_table \
-    table-fwid.tbl table1.tbl \
-    > table2.tbl 2> table2.log \
+    table-fwid.tbl table01.tbl \
+    > table02.tbl 2> table02.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-hwid.tbl table2.tbl \
-    > table3.tbl 2> table3.log \
+    table-hwid.tbl table02.tbl \
+    > table03.tbl 2> table03.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-pwid.tbl table3.tbl \
-    > table4.tbl 2> table4.log \
+    table-pwid.tbl table03.tbl \
+    > table04.tbl 2> table04.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-ruby.tbl table4.tbl \
-    > table5.tbl 2> table5.log \
+    table-ruby.tbl table04.tbl \
+    > table05.tbl 2> table05.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-vert.tbl table5.tbl \
+    table-vert.tbl table05.tbl \
+    > table06.tbl 2> table06.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature fwid) pass 2..."
+${BINDIR}/make_feature_table \
+    table06.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-fwid2.tbl 2> table-fwid2.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature hwid) pass 2..."
+${BINDIR}/make_feature_table \
+    table06.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-hwid2.tbl 2> table-hwid2.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature pwid) pass 2..."
+${BINDIR}/make_feature_table \
+    table06.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-pwid2.tbl 2> table-pwid2.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature ruby) pass 2..."
+${BINDIR}/make_feature_table \
+    table06.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-ruby2.tbl 2> table-ruby2.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature vert) pass 2..."
+${BINDIR}/make_feature_table \
+    table06.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-vert2.tbl 2> table-vert2.log \
+   || { echo error; exit 1; }
+
+echo "merging convertion tables (OpenType features) pass 2..."
+${BINDIR}/merge_table \
+    table-fwid2.tbl table06.tbl \
+    > table07.tbl 2> table07.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-hwid2.tbl table07.tbl \
+    > table08.tbl 2> table08.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-pwid2.tbl table08.tbl \
+    > table09.tbl 2> table09.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-ruby2.tbl table09.tbl \
+    > table10.tbl 2> table10.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-vert2.tbl table10.tbl \
     > table.tbl 2> table.log \
    || { echo error; exit 1; }
 
