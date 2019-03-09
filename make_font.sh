@@ -47,6 +47,63 @@ ${BINDIR}/make_kanji_table \
 echo merging convertion tables...
 ${BINDIR}/merge_table \
     table-cmap.tbl table-kanji.tbl \
+    > table1.tbl 2> table1.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature fwid)..."
+${BINDIR}/make_feature_table \
+    table1.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-fwid.tbl 2> table-fwid.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature hwid)..."
+${BINDIR}/make_feature_table \
+    table1.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-hwid.tbl 2> table-hwid.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature pwid)..."
+${BINDIR}/make_feature_table \
+    table1.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-pwid.tbl 2> table-pwid.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature ruby)..."
+${BINDIR}/make_feature_table \
+    table1.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-ruby.tbl 2> table-ruby.log \
+   || { echo error; exit 1; }
+
+echo "making conversion table (OpenType feature vert)..."
+${BINDIR}/make_feature_table \
+    table1.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
+    > table-vert.tbl 2> table-vert.log \
+   || { echo error; exit 1; }
+
+echo "merging convertion tables (OpenType features)..."
+${BINDIR}/merge_table \
+    table-fwid.tbl table1.tbl \
+    > table2.tbl 2> table2.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-hwid.tbl table2.tbl \
+    > table3.tbl 2> table3.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-pwid.tbl table3.tbl \
+    > table4.tbl 2> table4.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-ruby.tbl table4.tbl \
+    > table5.tbl 2> table5.log \
+   || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table-vert.tbl table5.tbl \
     > table.tbl 2> table.log \
    || { echo error; exit 1; }
 
