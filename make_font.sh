@@ -17,10 +17,12 @@ case "${SRC_FONTBASE}" in
     SourceHanSans* )
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSans
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSans/aj16-kanji.txt
+	FONT_TYPE=Sans
         ;;
     SourceHanSerif* )
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSerif
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSerif/aj16-kanji.txt
+	FONT_TYPE=Serif
         ;;
     * )
 	echo invalid font name
@@ -38,6 +40,12 @@ ${BINDIR}/make_conv_table \
     > table-cmap.tbl 2> table-cmap.log \
    || { echo error; exit 1; }
 
+echo "making conversion table (from JISX0208-SourceHan-Mapping.txt)..."
+${BINDIR}/make_jisx0208_table \
+    ${DOWNLOADDIR}/JISX0208-SourceHan-Mapping.txt ${FONT_TYPE} \
+    > table-jisx0208.tbl 2> table-jisx0208.log \
+   || { echo error; exit 1; }
+
 echo "making conversion table (from AI0-SourceHan and aj16-kanji.txt)..."
 ${BINDIR}/make_kanji_table \
     ${AI0_SOURCEHAN} ${AJ1X_KANJI} \
@@ -49,118 +57,122 @@ ${BINDIR}/merge_table \
     table-cmap.tbl table-kanji.tbl \
     > table01.tbl 2> table01.log \
    || { echo error; exit 1; }
+${BINDIR}/merge_table \
+    table01.tbl table-jisx0208.tbl \
+    > table10.tbl 2> table10.log \
+   || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature fwid)..."
 ${BINDIR}/make_feature_table \
-    table01.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table10.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-fwid.tbl 2> table-fwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature hwid)..."
 ${BINDIR}/make_feature_table \
-    table01.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table10.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-hwid.tbl 2> table-hwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature pwid)..."
 ${BINDIR}/make_feature_table \
-    table01.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table10.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-pwid.tbl 2> table-pwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature ruby)..."
 ${BINDIR}/make_feature_table \
-    table01.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table10.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-ruby.tbl 2> table-ruby.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature vert)..."
 ${BINDIR}/make_feature_table \
-    table01.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table10.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-vert.tbl 2> table-vert.log \
    || { echo error; exit 1; }
 
 echo "merging convertion tables (OpenType features)..."
 ${BINDIR}/merge_table \
-    table-fwid.tbl table01.tbl \
-    > table02.tbl 2> table02.log \
+    table-fwid.tbl table10.tbl \
+    > table11.tbl 2> table11.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-hwid.tbl table02.tbl \
-    > table03.tbl 2> table03.log \
+    table-hwid.tbl table11.tbl \
+    > table12.tbl 2> table12.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-pwid.tbl table03.tbl \
-    > table04.tbl 2> table04.log \
+    table-pwid.tbl table12.tbl \
+    > table13.tbl 2> table13.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-ruby.tbl table04.tbl \
-    > table05.tbl 2> table05.log \
+    table-ruby.tbl table13.tbl \
+    > table14.tbl 2> table14.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-vert.tbl table05.tbl \
-    > table06.tbl 2> table06.log \
+    table-vert.tbl table14.tbl \
+    > table20.tbl 2> table20.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature fwid) pass 2..."
 ${BINDIR}/make_feature_table \
-    table06.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table20.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-fwid2.tbl 2> table-fwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature hwid) pass 2..."
 ${BINDIR}/make_feature_table \
-    table06.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table20.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-hwid2.tbl 2> table-hwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature pwid) pass 2..."
 ${BINDIR}/make_feature_table \
-    table06.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table20.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-pwid2.tbl 2> table-pwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature ruby) pass 2..."
 ${BINDIR}/make_feature_table \
-    table06.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table20.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-ruby2.tbl 2> table-ruby2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature vert) pass 2..."
 ${BINDIR}/make_feature_table \
-    table06.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    table20.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
     ${DOWNLOADDIR}/aj16-gsub-jp04.txt \
     > table-vert2.tbl 2> table-vert2.log \
    || { echo error; exit 1; }
 
 echo "merging convertion tables (OpenType features) pass 2..."
 ${BINDIR}/merge_table \
-    table-fwid2.tbl table06.tbl \
-    > table07.tbl 2> table07.log \
+    table-fwid2.tbl table20.tbl \
+    > table21.tbl 2> table21.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-hwid2.tbl table07.tbl \
-    > table08.tbl 2> table08.log \
+    table-hwid2.tbl table21.tbl \
+    > table22.tbl 2> table22.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-pwid2.tbl table08.tbl \
-    > table09.tbl 2> table09.log \
+    table-pwid2.tbl table22.tbl \
+    > table23.tbl 2> table23.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-ruby2.tbl table09.tbl \
-    > table10.tbl 2> table10.log \
+    table-ruby2.tbl table23.tbl \
+    > table24.tbl 2> table24.log \
    || { echo error; exit 1; }
 ${BINDIR}/merge_table \
-    table-vert2.tbl table10.tbl \
+    table-vert2.tbl table24.tbl \
     > table.tbl 2> table.log \
    || { echo error; exit 1; }
 
