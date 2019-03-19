@@ -42,7 +42,7 @@
 
 #include "aj1x-gsub.hh"
 #include "conv_table.hh"
-#include "gsub_subst.hh"
+#include "gsub_single.hh"
 #include "version.hh"
 
 int main (int argc, char *argv[])
@@ -110,14 +110,14 @@ int main (int argc, char *argv[])
       return 1;
     }
 
-  gsub_subst gs;
+  gsub_single gs;
   try
     {
       gs.load (doc, argv[2]);
     }
   catch (std::exception &e)
     {
-      std::cerr << "error: gsub_subst::load: std::exception: " << e.what ()
+      std::cerr << "error: gsub_single::load: std::exception: " << e.what ()
                 << std::endl;
       return 1;
     }

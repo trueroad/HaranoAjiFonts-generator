@@ -25,7 +25,7 @@ MAKE_GLYPHORDER_OBJS = make_glyphorder_main.o conv_table.o
 MAKE_KANJI_TABLE_OBJS = make_kanji_table_main.o \
 	AI0-SourceHan.o aj1x-kanji.o
 MAKE_FEATURE_TABLE_OBJS = make_feature_table_main.o \
-	 conv_table.o gsub_subst.o aj1x-gsub.o
+	 conv_table.o gsub_single.o aj1x-gsub.o
 MERGE_TABLE_OBJS = merge_table_main.o \
 	conv_table.o
 CONV_NAME_OBJS = conv_name_main.o

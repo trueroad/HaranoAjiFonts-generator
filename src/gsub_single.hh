@@ -2,8 +2,8 @@
 // Harano Aji Fonts generator
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
-// gsub_subst.cc:
-//   read `GSUB` table substitution and create map
+// gsub_single.cc:
+//   read `GSUB` table single substitution and create map
 //
 // Copyright (C) 2019 Masamichi Hosoda.
 // All rights reserved.
@@ -33,8 +33,8 @@
 // SUCH DAMAGE.
 //
 
-#ifndef INCLUDE_GUARD_GSUB_SUBST_HH
-#define INCLUDE_GUARD_GSUB_SUBST_HH
+#ifndef INCLUDE_GUARD_GSUB_SINGLE_HH
+#define INCLUDE_GUARD_GSUB_SINGLE_HH
 
 #include <map>
 #include <string>
@@ -44,7 +44,7 @@ namespace pugi
   class xml_document;
 };
 
-class gsub_subst
+class gsub_single
 {
 public:
   void load (pugi::xml_document &doc, const std::string &feature);
@@ -62,4 +62,4 @@ private:
   std::map<int, int> rev_;
 };
 
-#endif // INCLUDE_GUARD_GSUB_SUBST_HH
+#endif // INCLUDE_GUARD_GSUB_SINGLE_HH

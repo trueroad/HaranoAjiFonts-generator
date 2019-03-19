@@ -2,8 +2,8 @@
 // Harano Aji Fonts generator
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
-// gsub_subst.cc:
-//   read `GSUB` table substitution and create map
+// gsub_single.cc:
+//   read `GSUB` table single substitution and create map
 //
 // Copyright (C) 2019 Masamichi Hosoda.
 // All rights reserved.
@@ -33,7 +33,7 @@
 // SUCH DAMAGE.
 //
 
-#include "gsub_subst.hh"
+#include "gsub_single.hh"
 
 #include <iostream>
 #include <set>
@@ -42,7 +42,7 @@
 
 #include <pugixml.hpp>
 
-void gsub_subst::load (pugi::xml_document &doc, const std::string &feature)
+void gsub_single::load (pugi::xml_document &doc, const std::string &feature)
 {
   std::stringstream ss;
   ss << "ttFont/GSUB/FeatureList/FeatureRecord/FeatureTag[@value='"
