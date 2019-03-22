@@ -39,6 +39,8 @@
 
 #include <pugixml.hpp>
 
+#include "name.hh"
+
 walker::next_action walker_CFF::before (pugi::xml_node &node)
 {
   std::string node_name (node.name ());
@@ -46,6 +48,12 @@ walker::next_action walker_CFF::before (pugi::xml_node &node)
     {
       node.attribute ("Order") = "Japan1";
       node.attribute ("Supplement") = "6";
+    }
+  else if (node_name == "Notice")
+    {
+      std::string notice (node.attribute ("value").as_string ());
+      notice = prepend_copyright + notice;
+      node.attribute ("value") = notice.c_str ();
     }
 
   return walker_conv::before (node);
