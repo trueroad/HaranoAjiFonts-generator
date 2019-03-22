@@ -42,7 +42,7 @@
 walker::next_action walker_cmap::before (pugi::xml_node &node)
 {
   std::string node_name (node.name ());
-  if (node_name == "cmap_format_14" || node_name == "cmap_format_6")
+  if (node_name == "cmap_format_6")
     return walker::next_action::remove;
 
   return walker_conv::before (node);
