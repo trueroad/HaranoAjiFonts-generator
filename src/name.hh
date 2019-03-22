@@ -8,5 +8,7 @@ const char* const manufacture_name =
   "Masamichi Hosoda";
 const char* const url_vendor =
   "https://github.com/trueroad/HaranoAjiFonts-generator";
+const char* const fonts_name =
+  "Harano Aji Fonts";
 
 #endif // INCLUDE_GUARD_NAME_HH

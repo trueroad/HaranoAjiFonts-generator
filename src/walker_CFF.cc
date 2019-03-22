@@ -40,6 +40,7 @@
 #include <pugixml.hpp>
 
 #include "name.hh"
+#include "version.hh"
 
 walker::next_action walker_CFF::before (pugi::xml_node &node)
 {
@@ -52,7 +53,9 @@ walker::next_action walker_CFF::before (pugi::xml_node &node)
   else if (node_name == "Notice")
     {
       std::string notice (node.attribute ("value").as_string ());
-      notice = prepend_copyright + notice;
+      const std::string name (fonts_name);
+      notice = name + " version " + version + ". "
+        + prepend_copyright + notice;
       node.attribute ("value") = notice.c_str ();
     }
 
