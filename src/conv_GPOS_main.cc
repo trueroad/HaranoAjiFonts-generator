@@ -189,6 +189,34 @@ int main (int argc, char *argv[])
         }
     }
 
+  removes.clear ();
+  auto mark_base_poses
+    = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup/MarkBasePos");
+
+  for (auto it = mark_base_poses.begin ();
+       it != mark_base_poses.end ();
+       ++it)
+    {
+      auto mark_base_pos_node = it->node ();
+      auto mark_coverage_node = mark_base_pos_node.child ("MarkCoverage");
+      auto base_coverage_node = mark_base_pos_node.child ("BaseCoverage");
+
+      if (!mark_coverage_node || !base_coverage_node)
+        {
+          removes.push_back (mark_base_pos_node);
+          continue;
+        }
+
+      auto mark_coverage_glyph = mark_coverage_node.child ("Glyph");
+      auto base_coverage_glyph = base_coverage_node.child ("Glyph");
+
+      if (!mark_coverage_glyph || !base_coverage_glyph)
+        removes.push_back (mark_base_pos_node);
+    }
+
+  for (auto &n: removes)
+    n.parent ().remove_child (n);
+
   doc.save (std::cout, "  ", pugi::format_default, pugi::encoding_utf8);
 
   return 0;
