@@ -110,8 +110,6 @@ int main (int argc, char *argv[])
       return 1;
     }
 
-  auto name = doc.child ("ttFont").child ("name");
-
   auto uniq_id_node
     = doc.select_node ("/ttFont/name/namerecord[@nameID='3']").node ();
   auto org_uniq_id = trim (uniq_id_node.text ().get ());
