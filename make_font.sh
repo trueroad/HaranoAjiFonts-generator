@@ -206,6 +206,11 @@ if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
 else
     echo no GDEF table...
 fi
+echo converting GPOS table...
+${BINDIR}/conv_GPOS \
+    table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
+    > GPOS.ttx 2> GPOS.log \
+   || { echo error; exit 1; }
 echo converting VORG table...
 ${BINDIR}/conv_VORG \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.V_O_R_G_.ttx \
