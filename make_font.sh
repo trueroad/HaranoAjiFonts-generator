@@ -211,6 +211,11 @@ ${BINDIR}/conv_GPOS \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
     > GPOS.ttx 2> GPOS.log \
    || { echo error; exit 1; }
+echo converting GSUB table...
+${BINDIR}/conv_GSUB \
+    table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
+    > GSUB.ttx 2> GSUB.log \
+   || { echo error; exit 1; }
 echo converting VORG table...
 ${BINDIR}/conv_VORG \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.V_O_R_G_.ttx \
