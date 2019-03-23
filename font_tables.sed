@@ -2,7 +2,7 @@ s/<GlyphOrder src=".\+"\/>/<GlyphOrder src="glyphorder.ttx"\/>/g
 s/<name src=".\+"\/>/<name src="name.ttx"\/>/g
 s/<cmap src=".\+"\/>/<cmap src="cmap.ttx"\/>/g
 s/<CFF src=".\+"\/>/<CFF src="CFF.ttx"\/>/g
-s/<GDEF src="\(.\+\)"\/>/<!--GDEF src="\1"\/-->/g
+s/<GDEF src=".\+"\/>/<GDEF src="GDEF.ttx"\/>/g
 s/<GPOS src="\(.\+\)"\/>/<!--GPOS src="\1"\/-->/g
 s/<GSUB src="\(.\+\)"\/>/<!--GSUB src="\1"\/-->/g
 s/<VORG src=".\+"\/>/<VORG src="VORG.ttx"\/>/g

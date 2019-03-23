@@ -196,7 +196,16 @@ echo converting CFF table...
 ${BINDIR}/conv_CFF \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
     2> CFF.log | sed -f ${BASEDIR}/font_name.sed > CFF.ttx \
-   || { echo error; exit 1; }
+    || { echo error; exit 1; }
+if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
+    echo converting GDEF table...
+    ${BINDIR}/conv_GDEF \
+        table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx \
+        > GDEF.ttx 2> GDEF.log \
+       || { echo error; exit 1; }
+else
+    echo no GDEF table...
+fi
 echo converting VORG table...
 ${BINDIR}/conv_VORG \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.V_O_R_G_.ttx \
