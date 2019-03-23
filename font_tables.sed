@@ -3,7 +3,7 @@ s/<name src=".\+"\/>/<name src="name.ttx"\/>/g
 s/<cmap src=".\+"\/>/<cmap src="cmap.ttx"\/>/g
 s/<CFF src=".\+"\/>/<CFF src="CFF.ttx"\/>/g
 s/<GDEF src=".\+"\/>/<GDEF src="GDEF.ttx"\/>/g
-s/<GPOS src=".\+"\/>/<GPOS src="GPOS.ttx"\/>/g
+s/<GPOS src=".\+"\/>/<!--GPOS src="GPOS.ttx"\/-->/g
 s/<GSUB src=".\+"\/>/<GSUB src="GSUB.ttx"\/>/g
 s/<VORG src=".\+"\/>/<VORG src="VORG.ttx"\/>/g
 s/<hmtx src=".\+"\/>/<hmtx src="hmtx.ttx"\/>/g
