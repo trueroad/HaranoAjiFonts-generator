@@ -3,7 +3,8 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	merge_table \
 	conv_name conv_cmap conv_CFF \
 	conv_GDEF conv_GPOS conv_GSUB \
-	conv_VORG conv_mtx
+	conv_VORG conv_mtx \
+	check_table_CMap
 
 all: version.hh $(BIN)
 
@@ -43,6 +44,7 @@ CONV_GPOS_OBJS = conv_GPOS_main.o conv_table.o
 CONV_GSUB_OBJS = conv_GSUB_main.o conv_table.o
 CONV_VORG_OBJS = conv_VORG_main.o conv_table.o
 CONV_MTX_OBJS = conv_mtx_main.o walker.o walker_conv.o conv_table.o
+CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
@@ -51,6 +53,7 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(CONV_NAME_OBJS) $(CONV_CMAP_OBJS) $(CONV_CFF_OBJS) \
 	$(CONV_GDEF_OBJS) $(CONV_GPOS_OBJS) $(CONV_GSUB_OBJS) \
 	$(CONV_VORG_OBJS) $(CONV_MTX_OBJS) \
+	$(CHECK_TABLE_CMAP_OBJS)
 
 
 #
@@ -125,6 +128,9 @@ conv_VORG: $(CONV_VORG_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 conv_mtx: $(CONV_MTX_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+check_table_CMap: $(CHECK_TABLE_CMAP_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 VERSION := $(shell cat ../version.txt)
