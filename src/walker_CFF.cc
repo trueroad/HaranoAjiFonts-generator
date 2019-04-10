@@ -48,7 +48,7 @@ walker::next_action walker_CFF::before (pugi::xml_node &node)
   if (node_name == "ROS")
     {
       node.attribute ("Order") = "Japan1";
-      node.attribute ("Supplement") = "6";
+      node.attribute ("Supplement") = "7";
     }
   else if (node_name == "Notice")
     {
