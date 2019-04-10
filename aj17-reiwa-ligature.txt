@@ -1,0 +1,19 @@
+# From
+# https://twitter.com/ken_lunde/status/1114141493948633088
+
+feature aalt {
+substitute \23058 by \23059;
+substitute \23059 by \23058;
+} aalt;
+
+feature dlig {
+substitute \4009 \4072 by \23058;
+} dlig;
+
+feature vert {
+substitute \23058 by \23059;
+} vert;
+
+feature vrt2 {
+substitute \23058 by \23059;
+} vert;
