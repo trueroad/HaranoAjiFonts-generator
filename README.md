@@ -5,9 +5,17 @@
 Adobe-Japan1 （以下、AJ1）フォントになるように組み替えた
 「原ノ味フォント（原ノ味明朝、原ノ味角ゴシック）」
 生成プログラムです。
-CID の対応がとれないため抜けてしまうグリフがある、
-いくつかの OpenType テーブルを落としている、
-などがあるため実験的なフォントにとどまっています。
+CID の対応がとれないため抜けてしまうグリフがありますが、
+素の pTeX / pLaTeX で和文フォントとして使う分には
+ほぼすべてのグリフが揃っています。
+
+「原ノ味」というのは、
+源ノフォントからグリフやテーブルが抜けていることを表すために
+「氵（さんずい）」を取り、
+AJ1 をもじって AJI にして
+音から「味」という字をあてたものです。
+
+## 配布
 
 * 原ノ味フォント生成プログラム
     - [
@@ -18,11 +26,14 @@ https://github.com/trueroad/HaranoAjiFonts-generator
 https://github.com/trueroad/HaranoAjiFonts
 ](https://github.com/trueroad/HaranoAjiFonts)
 
-「原ノ味」というのは、
-源ノフォントからグリフやテーブルが抜けていることを表すために
-「氵（さんずい）」を取り、
-AJ1 をもじって AJI にして
-音から「味」という字をあてたものです。
+その他、以下のファイルも配布しています。
+
+* [
+pTeX / pLaTeX 用マップファイル
+](https://github.com/trueroad/HaranoAjiFonts-generator/tree/master/tex/map)
+* [
+各種 TeX 用テストファイル
+](https://github.com/trueroad/HaranoAjiFonts-generator/tree/master/tex)
 
 ## Adobe-Japan1 (AJ1) v.s. Adobe-Identity0 (AI0)
 
@@ -32,39 +43,6 @@ Pan-CJK フォントで日本語以外にも対応しています。
 
 * pTeX / pLaTeX で比較的簡単に使うことができる
     - pTeX / pLaTeX で源ノフォント（AI0 フォント）を使うのは少々難しいです
-    - 原ノ味フォントでは
-        + OTF パッケージを使わない場合
-            + 横書き
-                - JIS90 字形、JIS2004 字形ともに
-                  pTeX / pLaTeX で使えるすべての和文グリフを搭載しています
-                  （CMap file `H` の全グリフを搭載、
-                   `2004-H` では JIS X 0208 範囲内の全グリフを搭載、
-                   JIS X 0213 で拡張された非漢字には搭載しないものがありますが
-                   JIS X 0208 範囲外は素の pTeX / pLaTeX で使えません）
-            + 縦書き
-                - JIS90 字形：下記 1 グリフを除き
-                  pTeX / pLaTeX で使えるすべての和文グリフを
-                  搭載しています
-                  （CMap file `V` で下記 1 グリフ以外の全グリフを搭載）
-                    - `‖` 01-34 U+2016 'DOUBLE VERTICAL LINE'
-                - JIS2004 字形：下記 4 グリフを除き
-                  pTeX / pLaTeX で使えるすべての和文グリフを
-                  搭載しています
-                  （CMap file `2004-V` では JIS X 0208 範囲内で
-                  下記 4 グリフ以外の全グリフを搭載、
-                   JIS X 0213 で拡張された非漢字にはその他にも
-                   搭載しないものがありますが
-                   JIS X 0208 範囲外は素の pTeX / pLaTeX で使えません）
-                    - `‖` 01-34 U+2016 'DOUBLE VERTICAL LINE'
-                    - `°` 01-75 U+00B0 'DEGREE SIGN'
-                    - `′` 01-76 U+2032 'PRIME'
-                    - `″` 01-77 U+2033 'DOUBLE PRIME'
-        + OTF パッケージを使う場合
-            + Adobe-Japan1-6 の全漢字グリフを CID 直接指定で
-              呼び出すことができます
-            + 非漢字（ひらがな、カタカナ、英数字、記号類など）には
-              抜けているグリフもあります
-    - [マップファイルを配布しています](./tex/map)
 * PDF に埋め込む際に ToUnicode CMap が必要ない
     - AI0 だと ToUnicode CMap を用意して PDF に埋め込んでおかないと
       PDF からテキスト抽出できない
@@ -82,6 +60,87 @@ Pan-CJK フォントで日本語以外にも対応しています。
               生成して埋め込むため一部で文字化けが発生することがあるようです
 
 といったメリット？があります。
+
+## 搭載グリフ
+
+源ノフォントが搭載しているグリフ、かつ、
+AJ1 への対応が取れたものを搭載します。
+
+* 漢字
+    + Adobe-Japan1-6 漢字グリフは以下の 1 グリフを除きすべて搭載
+        + \<U+6CE8 U+E0102\> (AJ1 CID+12869) 「注」の異字体
+    + JIS X 0208、JIS X 0213 の全漢字グリフを搭載
+* 非漢字（ひらがな、カタカナ、英数字、記号類など）
+    + JIS X 0208 横書きグリフはすべて搭載
+        + JIS90 字形（CMap file `H` を使った場合）すべて搭載
+        + JIS2004 字形（CMap file `2004-H` を使った場合）すべて搭載
+    + JIS X 0208 縦書きグリフは以下の 4 グリフを除きすべて搭載
+        + JIS90 字形（CMap file `V` を使った場合）
+            + `‖` 01-34 U+2016 'DOUBLE VERTICAL LINE'
+              (AJ1 CID+7895)
+        + JIS2004 字形（CMap file `2004-V` を使った場合）
+            + `‖` 01-34 U+2016 'DOUBLE VERTICAL LINE'
+              (AJ1 CID+7895)
+            + `°` 01-75 U+00B0 'DEGREE SIGN'
+              (AJ1 CID+8269)
+            + `′` 01-76 U+2032 'PRIME'
+              (AJ1 CID+8273)
+            + `″` 01-77 U+2033 'DOUBLE PRIME'
+              (AJ1 CID+8283)
+    + JIS X 0213 の非漢字グリフには抜けているものがあります。
+    + その他 Adobe-Japan1-6 非漢字グリフには抜けているものがあります。
+
+抜けているグリフのCIDは欠番になります。
+上記で具体的に記載した非搭載グリフ（漢字 1 グリフ、非漢字縦書き 4 グリフ）は
+いずれも源ノフォントが搭載していないため原ノ味フォントに搭載できないものです。
+`H`, `V` は[
+Adobe が配布する CMap file
+](https://github.com/adobe-type-tools/cmap-resources)
+で、TeX Live などにも含まれています。
+`2004-H`, `2004-V` は[
+Japanese TeX Development Community が配布する CMap file
+（のようなもの）
+](https://github.com/texjporg/jfontmaps/tree/master/cmap)
+で、TeX Live にも含まれています。
+
+## pTeX / pLaTeX
+
+源ノフォントと異なり比較的簡単に使うことができます。
+フォントファイルとマップファイルを適切に配置すれば普通に使えます。
+ただし搭載しない（抜けている）グリフを使うことはできません。
+
+* OTF パッケージを使わない場合
+    + JIS90 字形（マップファイル `ptex-haranoaji.map` を使った場合）
+        + 横書きは全グリフ使えます。
+        + 縦書きは 1 グリフ `‖` だけ使えません。
+    + JIS2004 字形（マップファイル `ptex-haranoaji-04.map` を使った場合）
+        + 横書きは全グリフ使えます。
+        + 縦書きは 4 グリフ `‖`, `°`, `′`, `″` 使えません。
+* OTF パッケージを使う場合
+    + Adobe-Japan1-6 全漢字グリフから 1 グリフを除き CID 直接指定などで
+      呼び出すことができます。
+        + AJ1 CID+12869 （「注」の異字体）だけ使えません。
+    + 非漢字（ひらがな、カタカナ、英数字、記号類など）には
+      使えないグリフもあります。
+
+詳細は「搭載グリフ」も参照してください。
+
+### ipsj.cls
+
+ipsj.cls の場合は下記のマップファイル
+
+```
+rml	H	HaranoAjiMincho-Light.otf
+gbm	H	HaranoAjiGothic-Regular.otf
+futomin-b	H	HaranoAjiMincho-Regular.otf
+futogo-b	H	HaranoAjiGothic-Medium.otf
+```
+
+を使い、クラスオプションから `submit` を外すと
+[
+本物っぽくなると思います
+](https://twitter.com/trueroad_jp/status/1111612471763066880)
+。
 
 ## 生成プログラムの使い方
 
@@ -226,7 +285,7 @@ cmap テーブルの format 12 には
 横書き用のグリフしか登録されていませんし、
 `UniJIS2004-UTF32-H` も横書き用ですので、
 縦書きのグリフは対応が取れずに失われます。
-また、cmap format 12 には異字体セレクタの情報がありませんから、
+また、cmap format 12 も CMap file も異字体セレクタの情報がありませんから、
 異字体セレクタを要するグリフも対応が取れずに失われます。
 
 #### 漢字
@@ -295,6 +354,13 @@ AJ1 の GSUB は Adobe で配布されている
 の対照表が得られるので、これをさらに重ねることで、
 縦書き用 AI0 CID →横書き用 AI0 CID →横書き用 AJ1 CID →縦書き用 AJ1 CID
 となって、縦書き用の対照表を作ることができます。
+また、上記の配布は Adobe-Japan1-6 までの範囲しか含まれておらず、
+Adobe-Japan1-7 で追加されたグリフについては縦書きへの対応が得られません。
+そこで
+[
+AJ17 フォントの「令和」合字
+](https://twitter.com/ken_lunde/status/1114141493948633088)
+の情報を追加することで対応しています。
 
 縦書き `vert` 以外にも、CID が 1 対 1 で対応している
 `fwid`, `hwid`, `pwid`, `ruby`  についても同様の方法で
@@ -338,7 +404,7 @@ AJ1 CID → Unicode → AI0 CID
 
 ### OpenType テーブル
 
-現状では一部のテーブルが変換できていません。
+ほとんどのテーブルを変換しています。
 
 #### `head`, `hhea`, `maxp`, `OS/2`, `post`, `BASE`, `vhea`
 
