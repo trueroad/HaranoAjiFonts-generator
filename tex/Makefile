@@ -12,8 +12,8 @@ DVIPDFMX = dvipdfmx
 
 LUATEX = luatex
 XETEX = xetex
-LUALATEX = luatex
-XELATEX = xetex
+LUALATEX = lualatex
+XELATEX = xelatex
 
 
 PTEX_SOURCES = $(wildcard *.ptex*.tex)
