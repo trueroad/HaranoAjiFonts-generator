@@ -85,11 +85,18 @@ void conv_table::load (const std::string &filename)
       if (i > (before + 1))
         {
           if ( i == (before + 2) )
-            std::cerr << "miss pre-defined cid: cid " << (before + 1)
-                      << std::endl;
+            {
+              std::cerr << "miss pre-defined cid: cid " << (before + 1)
+                        << std::endl;
+              cid_miss_.push_back (before + 1);
+            }
           else
-            std::cerr << "miss pre-defined cid: cid " << (before + 1)
-                      << " - cid " << (i - 1) << std::endl;
+            {
+              std::cerr << "miss pre-defined cid: cid " << (before + 1)
+                        << " - cid " << (i - 1) << std::endl;
+              for (int j = before + 1; j < i; ++j)
+                cid_miss_.push_back (j);
+            }
         }
       before = i;
     }

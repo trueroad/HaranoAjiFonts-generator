@@ -57,6 +57,10 @@ public:
   {
     return cid_outs_;
   }
+  const std::vector<int> &get_cid_miss (void) const noexcept
+  {
+    return cid_miss_;
+  }
 
 private:
   bool map_line (const std::smatch &);
@@ -66,6 +70,7 @@ private:
 
   std::map<int, int> map_;
   std::vector<int> cid_outs_;
+  std::vector<int> cid_miss_;
 };
 
 #endif // INCLUDE_GUARD_CONV_TABLE_HH
