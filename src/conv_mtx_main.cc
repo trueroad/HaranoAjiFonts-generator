@@ -34,7 +34,10 @@
 //
 
 #include <exception>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include <pugixml.hpp>
 
@@ -100,20 +103,41 @@ int main (int argc, char *argv[])
       return 1;
     }
 
+  auto mtx = doc.child ("ttFont").child ("hmtx");
+  if (!mtx)
+    mtx = doc.child ("ttFont").child ("vmtx");
+  if (!mtx)
+    {
+      std::cerr << "error: hmtx and vmtx not found" << std::endl;
+
+      return 1;
+    }
+
   try
     {
-      auto hmtx = doc.child ("ttFont").child ("hmtx");
-      if (hmtx)
-        wconv.walk (hmtx, "mtx");
-      auto vmtx = doc.child ("ttFont").child ("vmtx");
-      if (vmtx)
-        wconv.walk (vmtx, "mtx");
+      wconv.walk (mtx, "mtx");
     }
   catch (std::exception &e)
     {
       std::cerr << "error: walk: std::exception: " << e.what ()
                 << std::endl;
       return 1;
+    }
+
+  auto notdef = mtx.select_node ("mtx[@name='.notdef']").node ();
+
+  for (auto i: wconv.get_conv_table ().get_cid_miss ())
+    {
+      std::stringstream ss;
+      ss << "aji" << std::setw (5) << std::setfill ('0') << i;
+
+      auto node = mtx.append_child ("mtx");
+      node.append_attribute ("name") = ss.str ().c_str ();
+      for (auto a: notdef.attributes ())
+        {
+          if (std::string (a.name ()) != std::string ("name"))
+            node.append_attribute (a.name ()) = a.value ();
+        }
     }
 
   doc.save (std::cout, "  ", pugi::format_default, pugi::encoding_utf8);
