@@ -58,6 +58,10 @@ public:
     node_name_ = node_name;
     walker::walk (node);
   }
+  const conv_table &get_conv_table () const noexcept
+  {
+    return ct_;
+  }
 
 protected:
   walker::next_action before (pugi::xml_node &node);
