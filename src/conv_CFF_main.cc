@@ -34,7 +34,10 @@
 //
 
 #include <exception>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include <pugixml.hpp>
 
@@ -105,6 +108,26 @@ int main (int argc, char *argv[])
       std::cerr << "error: walk: std::exception: " << e.what ()
                 << std::endl;
       return 1;
+    }
+
+  auto CharStrings =
+    doc.child ("ttFont").child ("CFF").child ("CFFFont").child ("CharStrings");
+  auto notdef =
+    CharStrings.select_node ("CharString[@name='.notdef']").node ();
+
+  for (auto i: wcff.get_conv_table ().get_cid_miss ())
+    {
+      std::stringstream ss;
+      ss << "aji" << std::setw (5) << std::setfill ('0') << i;
+
+      auto node = CharStrings.append_child ("CharString");
+      node.append_attribute ("name") = ss.str ().c_str ();
+      for (auto a: notdef.attributes ())
+        {
+          if (std::string (a.name ()) != std::string ("name"))
+            node.append_attribute (a.name ()) = a.value ();
+        }
+      node.text ().set (notdef.text ().get ());
     }
 
   doc.save (std::cout, "  ", pugi::format_default, pugi::encoding_utf8);
