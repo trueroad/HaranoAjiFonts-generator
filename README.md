@@ -58,6 +58,10 @@ Pan-CJK フォントで日本語以外にも対応しています。
               埋め込みもしないため文字化けが発生しにくくなります
             + ただし LuaTeX は AJ1 でも逆変換で ToUnicode CMap を
               生成して埋め込むため一部で文字化けが発生することがあるようです
+              →[
+PDF から ToUnicode CMap を削除するツール
+](https://github.com/trueroad/pdf-rm-tuc)
+              で原ノ味フォントの ToUnicode CMap を削除することもできます
 
 といったメリット？があります。
 
