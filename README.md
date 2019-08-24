@@ -62,6 +62,13 @@ Pan-CJK フォントで日本語以外にも対応しています。
 PDF から ToUnicode CMap を削除するツール
 ](https://github.com/trueroad/pdf-rm-tuc)
               で原ノ味フォントの ToUnicode CMap を削除することもできます
+* 文字幅の食い違いが発生しない
+    - 源ノフォントは AI0 なので、文字幅について明確な決まりが無く、
+      JFM の文字幅と食い違ってしまい、
+      dvipdfmx で後続文字の位置がズレるなど、
+      組版結果がおかしくなることがあります。
+    - 原ノ味フォント 20190824 以降は AJ1 に従った文字幅にしているので、
+      後続文字の位置がズレることはありません。
 
 といったメリット？があります。
 
@@ -71,8 +78,9 @@ PDF から ToUnicode CMap を削除するツール
 AJ1 への対応が取れたものを搭載します。
 
 * 漢字
-    + Adobe-Japan1-6 漢字グリフは以下の 1 グリフを除きすべて搭載
-        + \<U+6CE8 U+E0102\> (AJ1 CID+12869) 「注」の異字体
+    + Adobe-Japan1-6 漢字グリフはすべて搭載
+        + \<U+6CE8 U+E0102\> (AJ1 CID+12869) ルビ用の「注」は非搭載
+            + これは AJ1 の「漢字グリフ」範囲外で漢字扱いではありません。
     + JIS X 0208、JIS X 0213 の全漢字グリフを搭載
 * 非漢字（ひらがな、カタカナ、英数字、記号類など）
     + JIS X 0208 横書きグリフはすべて搭載
@@ -96,7 +104,7 @@ AJ1 への対応が取れたものを搭載します。
 
 抜けているグリフのCIDにはダミーグリフ
 （.notdef と同じで四角の中に×が入ったような形）が入っています。
-上記で具体的に記載した非搭載グリフ（漢字 1 グリフ、非漢字縦書き 4 グリフ）は
+上記で具体的に記載した非搭載グリフ（ルビ 1 グリフ、非漢字縦書き 4 グリフ）は
 いずれも源ノフォントが搭載していないため原ノ味フォントに搭載できないものです。
 `H`, `V` は[
 Adobe が配布する CMap file
@@ -107,6 +115,47 @@ Japanese TeX Development Community が配布する CMap file
 （のようなもの）
 ](https://github.com/texjporg/jfontmaps/tree/master/cmap)
 で、TeX Live にも含まれています。
+
+非漢字の搭載グリフの一部で、
+源ノフォントの文字幅が AJ1 の文字幅に合わなくて、
+強制的に AJ1 に合わせたものがあります
+（AJ1 でプロポーショナル幅とされているグリフは変更していません）。
+単純に幅だけを上書きしたので、
+幅が広くなったグリフは左に寄って見えますし、
+幅が狭くなったグリフは右側がはみ出て後続の文字と重なるなどの現象が発生し、
+不格好な表示になることがあります。
+とはいえ、幅としては正しくなっているため、
+後続文字の位置がズレるなるなどといった、組版への影響は発生しません。
+以下に該当のグリフを示します。
+
++ ギリシャ文字
++ キリル文字
++ `¨` AJ1 CID+647 U+00A8 'DIAERESIS'
++ `°` AJ1 CID+707 U+00B0 'DEGREE SIGN'
++ `´` AJ1 CID+645 U+00B4 'ACUTE ACCENT'
++ `′` AJ1 CID+708 U+2032 'PRIME'
++ `″` AJ1 CID+709 U+2033 'DOUBLE PRIME'
++ `‼` AJ1 CID+12111 U+203C 'DOUBLE EXCLAMATION MARK'
++ `⁇` AJ1 CID+16278 U+2047 'DOUBLE QUESTION MARK'
++ `⁈` AJ1 CID+16279 U+2048 'QUESTION EXCLAMATION MARK'
++ `⁉` AJ1 CID+12112 U+2049 'EXCLAMATION QUESTION MARK'
++ `ℓ` AJ1 CID+8025 U+2113 'SCRIPT SMALL L'
++ `№` AJ1 CID+7610 U+2116 'NUMERO SIGN'
++ `−` AJ1 CID+693 U+2212 'MINUS SIGN'
++ `✓` AJ1 CID+16270 U+2713 'CHECK MARK'
+
+以下については、源ノフォントでは幅がゼロの合成用グリフですが、
+AJ1 で全角幅の CID に割り当たったため、幅のみ全角幅で上書きしています。
+そのため、不格好な表示になることがあります。
+
++ AJ1 CID+16328 U+20DD 'COMBINING ENCLOSING CIRCLE'
++ AJ1 CID+11035 U+20DE 'COMBINING ENCLOSING SQUARE'
+    + AJ1 CID+11035 は原ノ味明朝は未搭載、原ノ味角ゴシックのみ搭載
++ AJ1 CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
++ AJ1 CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
+
+また、ダミーグリフは全角幅ですが、
+これも AJ1 の文字幅で上書きしています。
 
 ## pTeX / pLaTeX
 
@@ -122,9 +171,9 @@ Japanese TeX Development Community が配布する CMap file
         + 横書きは全グリフ使えます。
         + 縦書きは 4 グリフ `‖`, `°`, `′`, `″` 使えません。
 * OTF パッケージを使う場合
-    + Adobe-Japan1-6 全漢字グリフから 1 グリフを除き CID 直接指定などで
+    + Adobe-Japan1-6 全漢字グリフから CID 直接指定などで
       呼び出すことができます。
-        + AJ1 CID+12869 （「注」の異字体）だけ使えません。
+        + AJ1 CID+12869 （ルビ用の「注」）は使えません。
     + 非漢字（ひらがな、カタカナ、英数字、記号類など）には
       使えないグリフもあります。
 
@@ -208,14 +257,12 @@ Adobe-Japan1-6 vs Source Han
       と書いてあるところにリンクがあります）
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniJIS2004-UTF32-H
-* AJ1-6 の GSUB 情報
+* AJ1-7 の GSUB 情報
     + [
-AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
-](http://blogs.adobe.com/CCJKType/2012/01/afdko-features-tips-tricks-part-2.html)
-      から `gsub-012012.tar` をダウンロードし
-      （本文中第 2 パラグラフの下から 2 番目の文中
-      here と書いてあるところにリンクがあります）解凍すると得られる
-      `aj16-gsub-jp04.txt`
+The Adobe-Japan1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-Japan1)
+      から `aj17-gsub-jp04.fea`
+      （GSUB ディレクトリにあります）
 
 注意：
 `aj16-kanji.txt` は明朝とゴシックでファイル名が同じですが中身は異なります。
@@ -350,22 +397,11 @@ JIS90 のグリフも追加されました
 縦書き用 AI0 CID →横書き用 AI0 CID →横書き用 AJ1 CID
 という変換ができます。
 
-また、原ノ味フォント初版リリース後に
-[
-AJ1 の GSUB は Adobe で配布されている
-](https://twitter.com/o_tamon/status/1102231709951483906)
-ということを教えていただきました。
+AJ1-7 の GSUB が入手可能です。
 このファイルから `vert` をパースすると横書き用・縦書き用 AJ1 CID
 の対照表が得られるので、これをさらに重ねることで、
 縦書き用 AI0 CID →横書き用 AI0 CID →横書き用 AJ1 CID →縦書き用 AJ1 CID
 となって、縦書き用の対照表を作ることができます。
-また、上記の配布は Adobe-Japan1-6 までの範囲しか含まれておらず、
-Adobe-Japan1-7 で追加されたグリフについては縦書きへの対応が得られません。
-そこで
-[
-AJ17 フォントの「令和」合字
-](https://twitter.com/ken_lunde/status/1114141493948633088)
-の情報を追加することで対応しています。
 
 縦書き `vert` 以外にも、CID が 1 対 1 で対応している
 `fwid`, `hwid`, `pwid`, `ruby`  についても同様の方法で
@@ -447,6 +483,11 @@ CID をすべて AI0 CID から AJ1 CID に変換しています。
 欠けている AJ1 CID についてはダミーグリフとして
 .notdef の内容をコピーしています。
 
+原ノ味フォント 20190824 から、
+源ノフォントの横幅と AJ1 の横幅が食い違ったグリフについて、
+`hmtx` に AJ1 の横幅を上書きしています。
+AJ1 がプロポーショナル幅の場合は上書きしません。
+
 #### `VORG`
 
 `VORG` 用の変換プログラムで
@@ -483,6 +524,28 @@ AJ1 用の GSUB 定義を持ってきているわけではなく、
 
 ## 履歴
 
+* [
+20190824
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20190824)
+    + グリフの横幅を AJ1 の定義に従うようにしました
+        + これまで一部のグリフで AJ1 の横幅と食い違っているものがあり、
+          [
+後続文字の位置がズレて組版結果がおかしくなる
+](https://twitter.com/trueroad_jp/status/1164525246319251456)
+          ことがありました。
+        + 単純に横幅を上書きしただけなので、
+          該当のグリフを使うと、左に寄って表示されたり、
+          前後の文字に重なったり、不格好な表示になることがありますが、
+          他のグリフの位置には影響を及ぼさなくなっているハズです。
+    + AJ1-7 の GSUB 情報
+        + AJ1-7 の GSUB 情報が公開されたので、
+          それを利用するようにしました。
+    + バージョンアップ
+        - ttx 4.0.0, UniJIS2004-UTF32-H 1.021
+    + グリフ数
+        - 原ノ味明朝：16678
+        - 原ノ味角ゴシック：16684
+        - カウント方法を変更しましたが、数は同じです。
 * [
 20190501
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20190501)
