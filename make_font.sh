@@ -228,6 +228,11 @@ ${BINDIR}/conv_VORG \
 echo converting hmtx table...
 ${BINDIR}/conv_mtx \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx \
+    > hmtx_conv.ttx 2> hmtx_conv.log \
+   || { echo error; exit 1; }
+echo fixing widths in hmtx table...
+${BINDIR}/fix_hmtx \
+    table.tbl hmtx_conv.ttx \
     > hmtx.ttx 2> hmtx.log \
    || { echo error; exit 1; }
 echo converting vmtx table...
