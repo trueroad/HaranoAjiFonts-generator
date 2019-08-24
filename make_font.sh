@@ -62,42 +62,38 @@ ${BINDIR}/merge_table \
     > table10.tbl 2> table10.log \
    || { echo error; exit 1; }
 
-echo "making AJ1-7 GSUB..."
-cat ${DOWNLOADDIR}/aj16-gsub-jp04.txt ${BASEDIR}/aj17-reiwa-ligature.txt \
-    > aj17-gsub.txt
-
 echo "making conversion table (OpenType feature fwid)..."
 ${BINDIR}/make_feature_table \
     table10.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-fwid.tbl 2> table-fwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature hwid)..."
 ${BINDIR}/make_feature_table \
     table10.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-hwid.tbl 2> table-hwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature pwid)..."
 ${BINDIR}/make_feature_table \
     table10.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-pwid.tbl 2> table-pwid.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature ruby)..."
 ${BINDIR}/make_feature_table \
     table10.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-ruby.tbl 2> table-ruby.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature vert)..."
 ${BINDIR}/make_feature_table \
     table10.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-vert.tbl 2> table-vert.log \
    || { echo error; exit 1; }
 
@@ -126,35 +122,35 @@ ${BINDIR}/merge_table \
 echo "making conversion table (OpenType feature fwid) pass 2..."
 ${BINDIR}/make_feature_table \
     table20.tbl fwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-fwid2.tbl 2> table-fwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature hwid) pass 2..."
 ${BINDIR}/make_feature_table \
     table20.tbl hwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-hwid2.tbl 2> table-hwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature pwid) pass 2..."
 ${BINDIR}/make_feature_table \
     table20.tbl pwid ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-pwid2.tbl 2> table-pwid2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature ruby) pass 2..."
 ${BINDIR}/make_feature_table \
     table20.tbl ruby ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-ruby2.tbl 2> table-ruby2.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (OpenType feature vert) pass 2..."
 ${BINDIR}/make_feature_table \
     table20.tbl vert ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    aj17-gsub.txt \
+    ${DOWNLOADDIR}/aj17-gsub-jp04.fea \
     > table-vert2.tbl 2> table-vert2.log \
    || { echo error; exit 1; }
 
