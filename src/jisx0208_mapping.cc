@@ -5,7 +5,7 @@
 // jisx0208_mapping.cc:
 //   read JIS X 0208 mapping file and create map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -45,11 +45,11 @@ jisx0208::jisx0208 ():
   regex_dispatcher::member_table<jisx0208>
   ({
     { std::regex (R"(\d+-\d+\tU\+[\dA-F]+\t(\d+)\t(\d+)\t(\d+)\r?)"),
-      line},
+      &jisx0208::line},
     { std::regex (R"(\d+-\d+\tU\+[\dA-F]+\t(\d+) \((\d+)\)\t(\d+) \((\d+)\)\t(\d+) \((\d+)\)\r?)"),
-      line_dual},
+      &jisx0208::line_dual},
     { std::regex (R"(\d+-\d+\tU\+[\dA-F]+\t(\d+) \[(\d+)\]\t(\d+) \[(\d+)\]\t(\d+) \[(\d+)\]\r?)"),
-      line_dual},
+      &jisx0208::line_dual},
   })
 {
 }

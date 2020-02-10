@@ -5,7 +5,7 @@
 // aj1x-gsub.hh:
 //   read aj1?-gsub-jp04 file and create map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -47,11 +47,11 @@ aj1x_gsub::aj1x_gsub ():
   regex_dispatcher::member_table<aj1x_gsub>
   ({
     { std::regex (R"(\s*feature\s+(\w+)\s*\{\s*\r?)"),
-      feature_start},
+      &aj1x_gsub::feature_start},
     { std::regex (R"(\s*substitute\s+\\(\d+)\s+by\s+\\(\d+)\s*;\s*\r?)"),
-      substitute_line},
+      &aj1x_gsub::substitute_line},
     { std::regex (R"(\s*\}\s+(\w+)\s*;\s*\r?)"),
-      feature_end},
+      &aj1x_gsub::feature_end},
   })
 {
 }

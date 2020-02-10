@@ -5,7 +5,7 @@
 // cmapfile.cc:
 //   read CMap file (UTF-32 to pre-defined CID) and create map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -48,21 +48,21 @@ cmapfile::cmapfile ():
   regex_dispatcher::member_table<cmapfile>
   ({
     { std::regex (R"(<([\da-fA-F]+)>\s*(\d+)\r?)"),
-      cidchar_dec},
+      &cmapfile::cidchar_dec},
     { std::regex (R"(<([\da-fA-F]+)>\s*([\da-fA-F]+)\r?)"),
-      cidchar_hex},
+      &cmapfile::cidchar_hex},
     { std::regex (R"(<([\da-fA-F]+)>\s*<([\da-fA-F]+)>\s*(\d+)\r?)"),
-      cidrange_dec},
+      &cmapfile::cidrange_dec},
     { std::regex (R"(<([\da-fA-F]+)>\s*<([\da-fA-F]+)>\s*([\da-fA-F]+)\r?)"),
-      cidrange_hex},
+      &cmapfile::cidrange_hex},
     { std::regex (R"((\d+)\s*begincidchar\r?)"),
-      begincidchar},
+      &cmapfile::begincidchar},
     { std::regex (R"((\d+)\s*begincidrange\r?)"),
-      begincidrange},
+      &cmapfile::begincidrange},
     { std::regex (R"(endcidchar\r?)"),
-      endcidchar},
+      &cmapfile::endcidchar},
     { std::regex (R"(endcidrange\r?)"),
-      endcidrange},
+      &cmapfile::endcidrange},
   })
 {
 }

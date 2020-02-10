@@ -5,7 +5,7 @@
 // conv_table.cc:
 //   conversion table from CID to CID
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -50,9 +50,9 @@ conv_table::conv_table ():
   regex_dispatcher::member_table<conv_table>
   ({
     { std::regex (R"((\d+)\s+(\d+)\r?)"),
-      map_line},
+      &conv_table::map_line},
     { std::regex (R"((\d+)\r?)"),
-      remove_line},
+      &conv_table::remove_line},
   })
 {
 }

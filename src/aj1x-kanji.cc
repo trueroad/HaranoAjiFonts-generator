@@ -5,7 +5,7 @@
 // aj1x-kanji.cc:
 //   read aj1?-kanji file and create reverse map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ aj1x_kanji::aj1x_kanji ():
   regex_dispatcher::member_table<aj1x_kanji>
   ({
     { std::regex (R"((\d+)\t([^\t]+)\r?)"),
-      data_line},
+      &aj1x_kanji::data_line},
   })
 {
 }

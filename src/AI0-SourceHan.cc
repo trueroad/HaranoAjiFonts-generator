@@ -5,7 +5,7 @@
 // AI0-SourceHan.cc:
 //   read AI0-SourceHan{Sans|Serif} file and create map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ ai0_sourcehan::ai0_sourcehan ():
   regex_dispatcher::member_table<ai0_sourcehan>
   ({
     { std::regex (R"((\d+)\t[^\t]+\t[^\t]+\t([^\t]+)\r?)"),
-      data_line},
+      &ai0_sourcehan::data_line},
   })
 {
 }
