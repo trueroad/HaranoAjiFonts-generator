@@ -133,7 +133,7 @@ std::string conv_table::convert (const std::string cid_in_str)
 
 namespace
 {
-  output_cid_or_remove (int cid)
+  void output_cid_or_remove (int cid)
   {
     if (cid < 0)
       std::cerr << "remove";
