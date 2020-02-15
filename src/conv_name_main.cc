@@ -136,7 +136,7 @@ int main (int argc, char *argv[])
   designer_node.parent ().remove_child (designer_node);
 
   std::string description
-    = "This font is base on the font \"" + org_uniq_id + "\"";
+    = "This font is based on the font \"" + org_uniq_id + "\"";
   auto description_node
     = doc.select_node ("/ttFont/name/namerecord[@nameID='10']").node ();
   description_node.text ().set (description.c_str ());
