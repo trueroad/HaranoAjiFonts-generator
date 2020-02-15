@@ -12,6 +12,7 @@ BASEDIR=../..
 BINDIR=${BASEDIR}/bin
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
+SCRIPTDIR=${BASEDIR}/script
 
 case "${SRC_FONTBASE}" in
     SourceHanSans* )
@@ -236,6 +237,21 @@ ${BINDIR}/conv_mtx \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._v_m_t_x.ttx \
     > vmtx.ttx 2> vmtx.log \
    || { echo error; exit 1; }
+
+echo making adjust table...
+${SCRIPTDIR}/make_adjust.py \
+    table.tbl \
+    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
+    > adjust.tbl 2> make_adjust.log \
+    || { echo error; exit 1; }
+mv -f CFF.ttx CFF_origin.ttx || { echo error; exit 1; }
+echo adjusting CFF table...
+${SCRIPTDIR}/adjust.py \
+    adjust.tbl \
+    CFF_origin.ttx \
+    CFF.ttx \
+    > adjust.log \
+    || { echo error; exit 1; }
 
 echo symbolic linking other tables...
 ln -s ${TTXDIR}/${SRC_FONTBASE}._h_e_a_d.ttx || { echo error; exit 1; }
