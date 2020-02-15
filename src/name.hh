@@ -7,7 +7,7 @@ const char* const prepend_copyright =
 const char* const manufacture_name =
   "Masamichi Hosoda";
 const char* const url_vendor =
-  "https://github.com/trueroad/HaranoAjiFonts-generator";
+  "https://github.com/trueroad/HaranoAjiFonts";
 const char* const fonts_name =
   "Harano Aji Fonts";
 
