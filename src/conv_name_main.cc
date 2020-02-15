@@ -5,7 +5,7 @@
 // conv_name_main.cc:
 //   convert name.ttx
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(convert name.ttx)"
     << std::endl
-    << "Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 

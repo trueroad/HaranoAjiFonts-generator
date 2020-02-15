@@ -2,7 +2,7 @@
 #define INCLUDE_GUARD_NAME_HH
 
 const char* const prepend_copyright =
-  "Copyright (C) 2019 Masamichi Hosoda,"
+  "Copyright (C) 2019, 2020 Masamichi Hosoda,"
   " with Reserved Font Name 'Harano Aji'. ";
 const char* const manufacture_name =
   "Masamichi Hosoda";
