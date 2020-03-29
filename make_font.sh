@@ -253,6 +253,9 @@ ${SCRIPTDIR}/make_adjust.py \
     ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
     > adjust.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
+echo adding shift table to adjust table...
+cat ${COMMONDATADIR}/shift.tbl >> adjust.tbl \
+    || { echo error; exit 1; }
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
     adjust.tbl \
