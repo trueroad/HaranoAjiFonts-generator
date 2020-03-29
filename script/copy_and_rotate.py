@@ -448,8 +448,6 @@ def copy_and_rotate_CharString(cs, fd, angle):
             y_before = stack.pop(0) * sy + dy # y <- x
             rev_y.append(y_before)
             y = stack.pop(0) # dx
-            if y < 0:
-                print("warning: cannot handle negative stem")
             y *= sy # dy <- dx
             rev_y.append(y_before + y)
             y_before += y
@@ -464,10 +462,17 @@ def copy_and_rotate_CharString(cs, fd, angle):
                 rev_y.append(y_before + y)
                 y_before += y
             y_before = 0
-            for _ in range(len(rev_y)):
-                y = rev_y.pop()
-                result_list.append(str(y - y_before))
-                y_before = y
+            for _ in range(len(rev_y)//2):
+                y1 = rev_y.pop()
+                y2 = rev_y.pop()
+                y_diff = y2 - y1
+                if y_diff < 0:
+                    y1, y2 = y2, y1
+                    y2 -= y_diff * 2
+                    print ("debug: negative stem");
+                result_list.append(str(y1 - y_before))
+                result_list.append(str(y2 - y1))
+                y_before = y2
             if op == "vstem":
                 result_list.append("hstem")
             elif op == "vstemhm":
@@ -488,8 +493,6 @@ def copy_and_rotate_CharString(cs, fd, angle):
                 y_before = stack.pop(0) * sy + dy # y <- x
                 rev_y.append(y_before)
                 y = stack.pop(0) # dx
-                if y < 0:
-                    print("warning: cannot handle negative stem")
                 y *= sy # dy <- dx
                 rev_y.append(y_before + y)
                 y_before += y
@@ -504,10 +507,17 @@ def copy_and_rotate_CharString(cs, fd, angle):
                     rev_y.append(y_before + y)
                     y_before += y
                 y_before = 0
-                for _ in range(len(rev_y)):
-                    y = rev_y.pop()
-                    result_list.append(str(y - y_before))
-                    y_before = y
+                for _ in range(len(rev_y)//2):
+                    y1 = rev_y.pop()
+                    y2 = rev_y.pop()
+                    y_diff = y2 - y1
+                    if y_diff < 0:
+                        y1, y2 = y2, y1
+                        y2 -= y_diff * 2
+                        print ("debug: negative stem");
+                    result_list.append(str(y1 - y_before))
+                    result_list.append(str(y2 - y1))
+                    y_before = y2
                 result_list.append("hstemhm")
             if len(vstem_list) > 0:
                 result_list.extend (vstem_list)
