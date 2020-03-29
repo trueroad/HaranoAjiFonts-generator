@@ -196,7 +196,7 @@ ${BINDIR}/conv_cmap \
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
-    2> CFF.log | sed -f ${BASEDIR}/font_name.sed > CFF.ttx \
+    2> CFF01.log | sed -f ${BASEDIR}/font_name.sed > CFF01.ttx \
     || { echo error; exit 1; }
 if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
     echo converting GDEF table...
@@ -244,11 +244,10 @@ ${SCRIPTDIR}/make_adjust.py \
     ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
     > adjust.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
-mv -f CFF.ttx CFF_origin.ttx || { echo error; exit 1; }
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
     adjust.tbl \
-    CFF_origin.ttx \
+    CFF01.ttx \
     CFF.ttx \
     > adjust.log \
     || { echo error; exit 1; }
