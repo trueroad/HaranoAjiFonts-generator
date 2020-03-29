@@ -523,7 +523,14 @@ def copy_and_rotate_CharString(cs, fd, angle):
                 result_list.extend (vstem_list)
                 vstem_list.clear()
             result_list.append(op)
-            result_list.append(curr_list.pop(0))
+            mask = curr_list.pop(0)
+            print("debug: vstems {}, hstems {}".format(vstems, hstems))
+            vmask = mask[0:vstems]
+            hmask = mask[vstems:vstems+hstems]
+            remain = mask[vstems+hstems:]
+            print("debug: mask {},{},{} -> {},{},{}".\
+                  format(vmask, hmask, remain, hmask, vmask, remain))
+            result_list.append(hmask + vmask + remain)
             stack.clear()
         elif op == "callsubr":
             list_stack.append(curr_list)
