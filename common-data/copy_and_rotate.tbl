@@ -1,0 +1,3 @@
+# name_src name_dst angle
+# CID+666 -> CID+7895 (GSUB vert/vrt2, `‖` U+2016 'DOUBLE VERTICAL LINE')
+aji00666	aji07895	90

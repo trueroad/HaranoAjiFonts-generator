@@ -10,9 +10,10 @@ cd build/${SRC_FONTBASE}
 
 BASEDIR=../..
 BINDIR=${BASEDIR}/bin
+SCRIPTDIR=${BASEDIR}/script
+COMMONDATADIR=${BASEDIR}/common-data
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
-SCRIPTDIR=${BASEDIR}/script
 
 case "${SRC_FONTBASE}" in
     SourceHanSans* )
@@ -238,6 +239,14 @@ ${BINDIR}/conv_mtx \
     > vmtx.ttx 2> vmtx.log \
    || { echo error; exit 1; }
 
+echo copy and rotate glyphs in CFF table...
+${SCRIPTDIR}/copy_and_rotate.py \
+    ${COMMONDATADIR}/copy_and_rotate.tbl \
+    CFF01.ttx \
+    CFF02.ttx \
+    > copy_and_rotate.log \
+    || { echo error; exit 1; }
+
 echo making adjust table...
 ${SCRIPTDIR}/make_adjust.py \
     table.tbl \
@@ -247,7 +256,7 @@ ${SCRIPTDIR}/make_adjust.py \
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
     adjust.tbl \
-    CFF01.ttx \
+    CFF02.ttx \
     CFF.ttx \
     > adjust.log \
     || { echo error; exit 1; }
