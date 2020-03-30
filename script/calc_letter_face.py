@@ -636,7 +636,10 @@ def load_calcTable(file):
             if line.startswith("#"):
                 continue
             items = line.split()
+            name0 = items[0]
             name = items[1]
+            if re_isInt.match(name) is not None:
+                name = name0
             table.append(name)
     return table
 
