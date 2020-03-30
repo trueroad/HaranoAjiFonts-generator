@@ -258,14 +258,22 @@ echo making adjust table...
 ${SCRIPTDIR}/make_adjust.py \
     table.tbl \
     ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
-    > adjust.tbl 2> make_adjust.log \
+    > adjust01.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
+
+echo making shift table...
+${SCRIPTDIR}/make_shift.py \
+    letter_face01.tbl \
+    > shift.tbl \
+    || { echo error; exit 1; }
+
 echo adding shift table to adjust table...
-cat ${COMMONDATADIR}/shift.tbl >> adjust.tbl \
+cat adjust01.tbl shift.tbl > adjust02.tbl \
     || { echo error; exit 1; }
+
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
-    adjust.tbl \
+    adjust02.tbl \
     CFF02.ttx \
     CFF.ttx \
     > adjust.log \
