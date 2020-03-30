@@ -48,6 +48,11 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
+debug_mode = False
+
+if debug_mode:
+    import tkinter
+
 FDArray = []
 GlobalSubrs = []
 
@@ -86,6 +91,141 @@ def get_LocalSubr(fd, index):
     else:
         return Subrs[index + 32768]
 
+# for debug
+window = 0
+canvas = 0
+debug_before = False
+debug_before_x = 0
+debug_before_y = 0
+debug_first = False
+debug_first_x = 0
+debug_first_y = 0
+
+def debug_print(msg):
+    if debug_mode:
+        print("# " + msg)
+
+def draw_box():
+    if not debug_mode:
+        return
+
+    r = 3
+    xs = 0.5
+    ys = -0.5
+    xa = 60
+    ya = 500
+
+    canvas.create_rectangle(0 * xs + xa, 880 * ys + ya,
+                            1000 * xs + xa, -120 * ys + ya,
+                            outline='white')
+    canvas.create_line(0 * xs + xa, 0 * ys + ya,
+                       1000 * xs + xa, 0 * ys + ya,
+                       fill='white')
+
+def point_end():
+    if not debug_mode:
+        return
+
+    global debug_before
+    global debug_before_x
+    global debug_before_y
+    global debug_first
+    global debug_first_x
+    global debug_first_y
+    global debug_first
+
+    r = 3
+    xs = 0.5
+    ys = -0.5
+    xa = 60
+    ya = 500
+
+    if debug_first:
+        canvas.create_line(debug_before_x * xs + xa,
+                           debug_before_y * ys + ya,
+                           debug_first_x * xs + xa,
+                           debug_first_y * ys + ya)
+
+    debug_before = False
+    debug_before_x = 0
+    debug_before_y = 0
+    debug_first = False
+    debug_first_x = 0
+    debug_first_y = 0
+
+def point_path(x, y):
+    if not debug_mode:
+        return
+
+    global debug_before
+    global debug_before_x
+    global debug_before_y
+    global debug_first
+    global debug_first_x
+    global debug_first_y
+
+    r = 3
+    xs = 0.5
+    ys = -0.5
+    xa = 60
+    ya = 500
+
+    canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
+                       x * xs + xa + r, y * ys + ya + r,
+                       fill='red')
+    if debug_before:
+        canvas.create_line(debug_before_x * xs + xa,
+                           debug_before_y * ys + ya,
+                           x * xs + xa, y * ys + ya)
+
+    if debug_first_x == x and debug_first_y == y:
+        debug_before = False
+        debug_first = False
+    else:
+        debug_before_x = x
+        debug_before_y = y
+        debug_before = True
+
+    debug_print("path ({}, {})".format(x, y))
+
+def point_move(x, y):
+    if not debug_mode:
+        return
+
+    global debug_first
+    global debug_first_x
+    global debug_first_y
+
+    point_end()
+    point_path(x, y)
+
+    debug_first = True
+    debug_first_x = x
+    debug_first_y = y
+
+def point_ctrl(x, y):
+    if not debug_mode:
+        return
+
+    global debug_before_x
+    global debug_before_y
+
+    r = 3
+    xs = 0.5
+    ys = -0.5
+    xa = 60
+    ya = 500
+
+    canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
+                       x * xs + xa + r, y * ys + ya + r)
+    if debug_before:
+        canvas.create_line(debug_before_x * xs + xa,
+                           debug_before_y * ys + ya,
+                           x * xs + xa, y * ys + ya)
+    debug_before_x = x
+    debug_before_y = y
+    debug_print("ctrl ({}, {})".format(x, y))
+
 re_isInt = re.compile(r"^-?\d+$")
 re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
 
@@ -113,6 +253,7 @@ def calc_CharString(cs, fd):
             # |- dx1 dy1 rmoveto (21) |-
             # |- dx1 hmoveto (22) |-
             # |- dy1 vmoveto (4) |-
+            debug_print(op)
             dx1 = 0
             dy1 = 0
             if op == "rmoveto":
@@ -133,6 +274,7 @@ def calc_CharString(cs, fd):
                 dy1 = stack[0]
             x_abs += dx1
             y_abs += dy1
+            point_move(x_abs, y_abs)
             if is_first_move:
                 x_min = x_abs
                 x_max = x_abs
@@ -150,6 +292,7 @@ def calc_CharString(cs, fd):
             for _ in range(len(stack)//2):
                 x_abs += stack.pop(0) # dxa
                 y_abs += stack.pop(0) # dya
+                point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
                 y_min = min(y_abs, y_min)
@@ -158,51 +301,64 @@ def calc_CharString(cs, fd):
         elif op == "hlineto":
             # |- dx1 {dya dxb}* hlineto (6) |-
             # |- {dxa dyb}+ hlineto (6) |-
+            debug_print(op)
             if len(stack) % 2 == 1:
                 x_abs += stack.pop(0) # dx1
+                point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
                 for _ in range(len(stack)//2):
                     y_abs += stack.pop(0) # dya
+                    point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
                     x_abs += stack.pop(0) # dxb
+                    point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
             else:
                 for _ in range(len(stack)//2):
                     x_abs += stack.pop(0) # dxa
+                    point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
                     y_abs += stack.pop(0) # dyb
+                    point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
             stack.clear()
         elif op == "vlineto":
             # |- dy1 {dxa dyb}* vlineto (7) |-
             # |- {dya dxb}+ vlineto (7) |-
+            debug_print(op)
             if len(stack) % 2 == 1:
                 y_abs += stack.pop(0) # dy1
+                point_path(x_abs, y_abs)
                 y_min = min(y_abs, y_min)
                 y_max = max(y_abs, y_max)
                 for _ in range(len(stack)//2):
                     x_abs += stack.pop(0) # dxa
+                    point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
                     y_abs += stack.pop(0) # dyb
+                    point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
             else:
                 for _ in range(len(stack)//2):
                     y_abs += stack.pop(0) # dya
+                    point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
                     x_abs += stack.pop(0) # dxb
+                    point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
             stack.clear()
         elif op == "rrcurveto":
             # |- {dxa dya dxb dyb dxc dyc}+ rrcurveto (8) |-
+            debug_print(op)
             for _ in range(len(stack)//6):
                 x0 = x_abs
                 y0 = y_abs
@@ -227,6 +383,7 @@ def calc_CharString(cs, fd):
             stack.clear()
         elif op == "hhcurveto":
             # |- dy1? {dxa dxb dyb dxc}+ hhcurveto (27) |-
+            debug_print(op)
             x0 = x_abs
             y0 = y_abs
             if len(stack) % 4 >= 1:
@@ -254,6 +411,7 @@ def calc_CharString(cs, fd):
         elif op == "hvcurveto":
             # |- dx1 dx2 dy2 dy3 {dya dxb dyb dxc dxd dxe dye dyf}* dxf? hvcurveto (31) |-
             # |- {dxa dxb dyb dyc dyd dxe dye dxf}+ dyf? hvcurveto (31) |-
+            debug_print("op {}, stacks {}".format(op, len(stack)))
             if len(stack) % 8 >= 4:
                 x0 = x_abs
                 y0 = y_abs
@@ -366,6 +524,7 @@ def calc_CharString(cs, fd):
             stack.clear()
         elif op == "rcurveline":
             # |- {dxa dya dxb dyb dxc dyc}+ dxd dyd rcurveline (24) |-
+            debug_print(op)
             for _ in range((len(stack)-2)//6):
                 x0 = x_abs
                 y0 = y_abs
@@ -389,6 +548,7 @@ def calc_CharString(cs, fd):
                 y_max = max(y_c_max, y_max)
             x_abs += stack.pop(0) # dxd
             y_abs += stack.pop(0) # dyd
+            point_path(x_abs, y_abs)
             x_min = min(x_abs, x_min)
             x_max = max(x_abs, x_max)
             y_min = min(y_abs, y_min)
@@ -396,9 +556,11 @@ def calc_CharString(cs, fd):
             stack.clear()
         elif op == "rlinecurve":
             # |- {dxa dya}+ dxb dyb dxc dyc dxd dyd rlinecurve (25) |-
+            debug_print(op)
             for _ in range((len(stack)-6)//2):
                 x_abs += stack.pop(0) # dxa
                 y_abs += stack.pop(0) # dya
+                point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
                 y_min = min(y_abs, y_min)
@@ -427,6 +589,7 @@ def calc_CharString(cs, fd):
         elif op == "vhcurveto":
             # |- dy1 dx2 dy2 dx3 {dxa dxb dyb dyc dyd dxe dye dxf}* dyf? vhcurveto (30) |-
             # |- {dya dxb dyb dxc dxd dxe dye dyf}* dxf? vhcurveto (30) |-
+            debug_print(op)
             if len(stack) % 8 >= 4:
                 x0 = x_abs
                 y0 = y_abs
@@ -539,6 +702,7 @@ def calc_CharString(cs, fd):
             stack.clear()
         elif op == "vvcurveto":
             # |- dx1? {dya dxb dyb dyc}+ vvcurveto (26) |-
+            debug_print(op)
             x0 = x_abs
             y0 = y_abs
             if len(stack) % 4 >= 1:
@@ -566,14 +730,17 @@ def calc_CharString(cs, fd):
         # elif op == "flex":
         #     # |- flex |- 
         elif op == "endchar": # endchar (14) |-
+            debug_print(op)
             if is_first and len(stack) > 0:
                 _ = stack.pop(0) # w
                 is_first = False
+            point_end()
             stack.clear()
             break
         elif op == "hstem" or op == "hstemhm":
             # |- y dy {dya dyb}* hstem (1) |-
             # |- y dy {dya dyb}* hstemhm (18) |-
+            debug_print(op)
             if is_first and len(stack) % 2 == 1:
                 _ = stack.pop(0) # w
                 is_first = False
@@ -586,6 +753,7 @@ def calc_CharString(cs, fd):
         elif op == "vstem" or op == "vstemhm":
             # |- x dx {dxa dxb}* vstem (3) |-
             # |- x dx {dxa dxb}* vstem (23) |-
+            debug_print(op)
             if is_first and len(stack) % 2 == 1:
                 _ = stack.pop(0) # w
                 is_first = False
@@ -598,6 +766,7 @@ def calc_CharString(cs, fd):
         elif op == "hintmask" or op == "cntrmask":
             # |- hintmask (19 + mask) |-
             # |- cntrmask (20 + mask) |-
+            debug_print(op)
             if len(stack) > 0:
                 if is_first and len(stack) % 2 == 1:
                     _ = stack.pop(0) # w
@@ -627,6 +796,9 @@ def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
     y_min = min(y0, y1, y2, y3)
     x_max = max(x0, x1, x2, x3)
     y_max = max(y0, y1, y2, y3)
+    point_ctrl(x1, y1)
+    point_ctrl(x2, y2)
+    point_path(x3, y3)
     return x_min, y_min, x_max, y_max
 
 def load_calcTable(file):
@@ -666,6 +838,13 @@ for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
     name = cs.attrib["name"]
     if name in table:
         fd = int(cs.attrib["fdSelectIndex"])
+        if debug_mode:
+            window = tkinter.Tk()
+            canvas = tkinter.Canvas(window, width=620, height=620)
+            canvas.pack()
+            draw_box()
         x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
         print("{}\t{}\t{}\t{}\t{}". \
               format(name, x_min, y_min, x_max, y_max))
+        if debug_mode:
+            window.mainloop()
