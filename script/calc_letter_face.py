@@ -122,6 +122,20 @@ def draw_box():
                        1000 * xs + xa, 0 * ys + ya,
                        fill='white')
 
+def draw_letter_face(x_min, y_min, x_max, y_max):
+    if not debug_mode:
+        return
+
+    r = 3
+    xs = 0.5
+    ys = -0.5
+    xa = 60
+    ya = 500
+
+    canvas.create_rectangle(x_min * xs + xa, y_min * ys + ya,
+                            x_max * xs + xa, y_max * ys + ya,
+                            outline='green', dash=(2, 2))
+
 def point_end():
     if not debug_mode:
         return
@@ -847,4 +861,5 @@ for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
         print("{}\t{}\t{}\t{}\t{}". \
               format(name, x_min, y_min, x_max, y_max))
         if debug_mode:
+            draw_letter_face(x_min, y_min, x_max, y_max)
             window.mainloop()
