@@ -109,11 +109,10 @@ def draw_box():
     if not debug_mode:
         return
 
-    r = 3
     xs = 0.5
     ys = -0.5
-    xa = 60
-    ya = 500
+    xa = 100
+    ya = 540
 
     canvas.create_rectangle(0 * xs + xa, 880 * ys + ya,
                             1000 * xs + xa, -120 * ys + ya,
@@ -126,11 +125,10 @@ def draw_letter_face(x_min, y_min, x_max, y_max):
     if not debug_mode:
         return
 
-    r = 3
     xs = 0.5
     ys = -0.5
-    xa = 60
-    ya = 500
+    xa = 100
+    ya = 540
 
     canvas.create_rectangle(x_min * xs + xa, y_min * ys + ya,
                             x_max * xs + xa, y_max * ys + ya,
@@ -148,11 +146,10 @@ def point_end():
     global debug_first_y
     global debug_first
 
-    r = 3
     xs = 0.5
     ys = -0.5
-    xa = 60
-    ya = 500
+    xa = 100
+    ya = 540
 
     if debug_first:
         canvas.create_line(debug_before_x * xs + xa,
@@ -181,8 +178,8 @@ def point_path(x, y):
     r = 3
     xs = 0.5
     ys = -0.5
-    xa = 60
-    ya = 500
+    xa = 100
+    ya = 540
 
     canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
                        x * xs + xa + r, y * ys + ya + r,
@@ -227,8 +224,8 @@ def point_ctrl(x, y):
     r = 3
     xs = 0.5
     ys = -0.5
-    xa = 60
-    ya = 500
+    xa = 100
+    ya = 540
 
     canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
                        x * xs + xa + r, y * ys + ya + r)
@@ -854,7 +851,7 @@ for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
         fd = int(cs.attrib["fdSelectIndex"])
         if debug_mode:
             window = tkinter.Tk()
-            canvas = tkinter.Canvas(window, width=620, height=620)
+            canvas = tkinter.Canvas(window, width=700, height=700)
             canvas.pack()
             draw_box()
         x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
