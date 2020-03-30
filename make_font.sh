@@ -239,7 +239,7 @@ ${BINDIR}/conv_mtx \
     > vmtx.ttx 2> vmtx.log \
    || { echo error; exit 1; }
 
-echo copy and rotate glyphs in CFF table...
+echo copying and rotating glyphs in CFF table...
 ${SCRIPTDIR}/copy_and_rotate.py \
     ${COMMONDATADIR}/copy_and_rotate.tbl \
     CFF01.ttx \
