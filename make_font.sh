@@ -247,6 +247,13 @@ ${SCRIPTDIR}/copy_and_rotate.py \
     > copy_and_rotate.log \
     || { echo error; exit 1; }
 
+echo calculating letter face...
+${SCRIPTDIR}/calc_letter_face.py \
+    ${COMMONDATADIR}/shift.lst \
+    CFF02.ttx \
+    > letter_face01.tbl \
+    || { echo error; exit 1; }
+
 echo making adjust table...
 ${SCRIPTDIR}/make_adjust.py \
     table.tbl \
