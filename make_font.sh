@@ -231,12 +231,12 @@ ${BINDIR}/conv_mtx \
 echo fixing widths in hmtx table...
 ${BINDIR}/fix_hmtx \
     table.tbl hmtx_conv.ttx \
-    > hmtx.ttx 2> hmtx.log \
+    > hmtx_width.ttx 2> hmtx_width.log \
    || { echo error; exit 1; }
 echo converting vmtx table...
 ${BINDIR}/conv_mtx \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._v_m_t_x.ttx \
-    > vmtx.ttx 2> vmtx.log \
+    > vmtx_conv.ttx 2> vmtx_conv.log \
    || { echo error; exit 1; }
 
 echo copying and rotating glyphs in CFF table...
@@ -247,7 +247,7 @@ ${SCRIPTDIR}/copy_and_rotate.py \
     > copy_and_rotate.log \
     || { echo error; exit 1; }
 
-echo calculating letter face...
+echo calculating letter face for shift table...
 ${SCRIPTDIR}/calc_letter_face.py \
     ${COMMONDATADIR}/shift.lst \
     CFF02.ttx \
@@ -257,7 +257,7 @@ ${SCRIPTDIR}/calc_letter_face.py \
 echo making adjust table...
 ${SCRIPTDIR}/make_adjust.py \
     table.tbl \
-    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
+    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx_width.ttx \
     > adjust01.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
 
@@ -277,6 +277,33 @@ ${SCRIPTDIR}/adjust.py \
     CFF02.ttx \
     CFF.ttx \
     > adjust.log \
+    || { echo error; exit 1; }
+
+echo "making {h|v}mtx fixing table..."
+cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate.tbl > fix_mtx.tbl \
+    || { echo error; exit 1; }
+
+echo "calculating letter face for fixing {h|v}mtx..."
+${SCRIPTDIR}/calc_letter_face.py \
+    fix_mtx.tbl \
+    CFF.ttx \
+    > letter_face02.tbl \
+    || { echo error; exit 1; }
+
+echo fixing LSB in hmtx table...
+${SCRIPTDIR}/fix_mtx.py \
+    letter_face02.tbl \
+    hmtx_width.ttx \
+    hmtx.ttx \
+    > hmtx_lsb.log \
+    || { echo error; exit 1; }
+
+echo fixing TSB in vmtx table...
+${SCRIPTDIR}/fix_mtx.py \
+    letter_face02.tbl \
+    vmtx_conv.ttx \
+    vmtx.ttx \
+    > vmtx_tsb.log \
     || { echo error; exit 1; }
 
 echo symbolic linking other tables...
