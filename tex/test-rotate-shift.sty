@@ -1,0 +1,40 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 2020xxxx 回転・平行移動グリフ
+% テスト用マクロ
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{100pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+
+\newcommand{\testAll}{%
+  \textmd{CID+666}→\textmd{CID+7895, GSUB vert/vrt2}\par
+  \textmd{U+2016 `DOUBLE VERTICAL LINE' --- 90}度右回転
+
+  \test{\CID{666}}%
+  \test{\CID{7895}}%
+
+  \vspace{1zh}
+
+  \textmd{CID+707}→\textmd{CID+8269, GSUB vert/vrt2}\par
+  \textmd{U+00B0 `DEGREE SIGN' ---}左上から右下へ平行移動
+
+  \test{\CID{707}}%
+  \test{\CID{8269}}%
+
+  \vspace{1zh}
+
+  \textmd{CID+708}→\textmd{CID+8273, GSUB vert/vrt2}\par
+  \textmd{U+2032 `PRIME' ---}左上から右下へ平行移動
+
+  \test{\CID{708}}%
+  \test{\CID{8273}}%
+
+  \vspace{1zh}
+
+  \textmd{CID+709}→\textmd{CID+8283, GSUB vert/vrt2}\par
+  \textmd{U+2033 `DOUBLE PRIME' ---}左上から右下へ平行移動
+
+  \test{\CID{709}}%
+  \test{\CID{8283}}%
+}
