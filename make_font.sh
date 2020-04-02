@@ -216,7 +216,7 @@ ${BINDIR}/conv_GPOS \
 echo converting GSUB table...
 ${BINDIR}/conv_GSUB \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
-    > GSUB.ttx 2> GSUB.log \
+    > GSUB01.ttx 2> GSUB.log \
    || { echo error; exit 1; }
 echo converting VORG table...
 ${BINDIR}/conv_VORG \
@@ -304,6 +304,12 @@ ${SCRIPTDIR}/fix_mtx.py \
     vmtx_conv.ttx \
     vmtx.ttx \
     > vmtx_tsb.log \
+    || { echo error; exit 1; }
+
+echo adding GSUB vert/vrt2 substitution...
+${SCRIPTDIR}/add_gsub_v.py \
+    GSUB01.ttx GSUB.ttx \
+    > GSUB_add_v.log \
     || { echo error; exit 1; }
 
 echo symbolic linking other tables...
