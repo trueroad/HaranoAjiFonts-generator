@@ -10,9 +10,10 @@ cd build/${SRC_FONTBASE}
 
 BASEDIR=../..
 BINDIR=${BASEDIR}/bin
+SCRIPTDIR=${BASEDIR}/script
+COMMONDATADIR=${BASEDIR}/common-data
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
-SCRIPTDIR=${BASEDIR}/script
 
 case "${SRC_FONTBASE}" in
     SourceHanSans* )
@@ -196,7 +197,7 @@ ${BINDIR}/conv_cmap \
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
-    2> CFF.log | sed -f ${BASEDIR}/font_name.sed > CFF.ttx \
+    2> CFF01.log | sed -f ${BASEDIR}/font_name.sed > CFF01.ttx \
     || { echo error; exit 1; }
 if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
     echo converting GDEF table...
@@ -238,17 +239,24 @@ ${BINDIR}/conv_mtx \
     > vmtx.ttx 2> vmtx.log \
    || { echo error; exit 1; }
 
+echo composite glyph in CFF table...
+${SCRIPTDIR}/composite.py \
+    ${COMMONDATADIR}/composite-${FONT_TYPE}.tbl \
+    CFF01.ttx \
+    CFF02.ttx \
+    > composite.log \
+    || { echo error; exit 1; }
+
 echo making adjust table...
 ${SCRIPTDIR}/make_adjust.py \
     table.tbl \
     ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx.ttx \
     > adjust.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
-mv -f CFF.ttx CFF_origin.ttx || { echo error; exit 1; }
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
     adjust.tbl \
-    CFF_origin.ttx \
+    CFF02.ttx \
     CFF.ttx \
     > adjust.log \
     || { echo error; exit 1; }

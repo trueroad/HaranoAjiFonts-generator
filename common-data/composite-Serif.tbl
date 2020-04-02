@@ -1,0 +1,14 @@
+# destination-name destination-width
+# + source-name x-scale y-scale x-translation y-translation
+# ㋿ AJ1 CID+23058 U+32FF SQUARE ERA NAME REIWA
+aji23058	1000
+# 令 AJ1 CID+4009 U+4EE4 REI
++	aji04009	0.5	1	0	0
+# 和 AJ1 CID+4072 U+548C WA
++	aji04072	0.5	1	500	0
+# ㋿ AJ1 CID+23059 U+32FF SQUARE ERA NAME REIWA (vert/vrt2)
+aji23059	1000
+# 令 AJ1 CID+4009 U+4EE4 REI
++	aji04009	1	0.5	0	440
+# 和 AJ1 CID+4072 U+548C WA
++	aji04072	1	0.5	0	-60
