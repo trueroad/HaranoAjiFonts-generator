@@ -100,6 +100,22 @@ void conv_table::load (const std::string &filename)
         }
       before = i;
     }
+  if (before < aj1_max_cid)
+    {
+      if ( aj1_max_cid == (before + 1) )
+        {
+          std::cerr << "miss pre-defined cid: cid " << (before + 1)
+                    << std::endl;
+          cid_miss_.push_back (before + 1);
+        }
+      else
+        {
+          std::cerr << "miss pre-defined cid: cid " << (before + 1)
+                    << " - cid " << (aj1_max_cid - 1) << std::endl;
+          for (int j = before + 1; j <= aj1_max_cid; ++j)
+            cid_miss_.push_back (j);
+        }
+    }
 }
 
 std::string conv_table::convert (const std::string cid_in_str)

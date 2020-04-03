@@ -42,6 +42,9 @@
 
 #include "regex_dispatcher_m.hh"
 
+const int aj17_max_cid = 23059;
+const int aj1_max_cid = aj17_max_cid;
+
 class conv_table: public regex_dispatcher::member_table<conv_table>
 {
 public:

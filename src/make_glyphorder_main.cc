@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
   GlyphOrder.append_child ("GlyphID").append_attribute ("name")
     = ".notdef";
 
-  for (int i = 1; i <= ct.get_cid_outs ().back (); ++i)
+  for (int i = 1; i <= aj1_max_cid; ++i)
     {
       std::stringstream ss;
       ss << "aji" << std::setw (5) << std::setfill ('0') << i;
