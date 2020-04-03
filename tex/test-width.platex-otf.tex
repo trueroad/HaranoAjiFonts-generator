@@ -1,0 +1,51 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20200215 幅・位置修正グリフ一覧
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\usepackage{test-width}
+
+\title{原ノ味フォント20200215幅・位置修正グリフ一覧 \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  このファイルは原ノ味フォントのグリフが正しく生成されているか、
+  他のフォントと比較して確認するためのものである。
+  そのために、同じDVIから、原ノ味フォント埋め込みPDFと
+  フォント非埋め込みPDFの双方を生成している。
+  小塚フォントを持つAcrobat Readerでフォント非埋め込みPDFを開くと、
+  小塚フォントを使った表示を見ることができる。
+  同じAcrobat Readerで原ノ味フォント埋め込みPDFを開くと、
+  原ノ味フォントを使った表示を見ることができる。
+  これにより双方の表示を比較し、
+  デザインの差を除いて同じような表示になれば、
+  原ノ味フォントのグリフが正しいと考えることができる。
+}
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily
+{\Large 明朝}
+
+\testAll
+
+\clearpage
+
+\gtfamily
+{\Large ゴシック}
+
+\testAll
+
+\end{document}
