@@ -85,6 +85,12 @@ $(filter %tex-otf.pdf,$(P_PDFS)): %tex-otf.pdf: %tex-otf.dvi
 $(filter %tex-otf.pdf,$(UP_PDFS)): %tex-otf.pdf: %tex-otf.dvi
 	$(DVIPDFMX) -f map/otf-up-haranoaji.map $<
 
+$(filter %tex-nomap.pdf,$(P_PDFS)): %tex-nomap.pdf: %tex-nomap.dvi
+	$(DVIPDFMX) $<
+
+$(filter %tex-nomap.pdf,$(UP_PDFS)): %tex-nomap.pdf: %tex-nomap.dvi
+	$(DVIPDFMX) $<
+
 $(LUATEX_PDFS): %.pdf: %.tex
 	$(LUATEX) $<
 
