@@ -36,6 +36,21 @@
 
 import sys
 
+def calc_shift (name, width, ascender, descender, \
+                face_width, face_height, lsb, tsb):
+    if name == "aji08269" or \
+       name == "aji08273" or \
+       name == "aji08283":
+        # CID+707 -> CID+8269 (GSUB vert/vrt2, `°` U+00B0 'DEGREE SIGN')
+        # CID+708 -> CID+8273 (GSUB vert/vrt2, `′` U+2032 'PRIME')
+        # CID+709 -> CID+8283 (GSUB vert/vrt2, `″` U+2033 'DOUBLE PRIME')
+        # Top left to bottom right
+        new_lsb = width - (face_width + lsb)
+        new_tsb = ascender - (descender + (face_height + tsb))
+        return new_lsb, new_tsb
+    print ("# no shift: {}".format (name))
+    return lsb, tsb
+
 def load_table (file):
     table = {}
     with open (file, "r") as f:
@@ -75,8 +90,8 @@ def main ():
         lsb = x_min
         tsb = ascender - y_max
 
-        new_lsb = width - (face_width + lsb)
-        new_tsb = ascender - (descender + (face_height + tsb))
+        new_lsb, new_tsb = calc_shift (name, width, ascender, descender,
+                                       face_width, face_height, lsb, tsb)
 
         print ("{}\t{}\t{}\t{}\t{}\t{}".format (name, width,
                                                 new_lsb - lsb,
