@@ -55,6 +55,8 @@ def calc_shift (name, width, ascender, descender, \
         # Left outside (right of previous letter face)
         # to left inside of letter face
         new_lsb = - lsb - face_width
+        if new_lsb < 0:
+            new_lsb = 0
         return new_lsb, tsb
     print ("# no shift: {}".format (name))
     return lsb, tsb
