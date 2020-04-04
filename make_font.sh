@@ -208,11 +208,6 @@ if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
 else
     echo no GDEF table...
 fi
-echo converting GPOS table...
-${BINDIR}/conv_GPOS \
-    table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
-    > GPOS.ttx 2> GPOS.log \
-   || { echo error; exit 1; }
 echo converting GSUB table...
 ${BINDIR}/conv_GSUB \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_S_U_B_.ttx \
@@ -283,7 +278,7 @@ echo "making {h|v}mtx fixing table..."
 cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate.tbl > fix_mtx.tbl \
     || { echo error; exit 1; }
 
-echo "calculating letter face for fixing {h|v}mtx..."
+echo "calculating letter face for fixing {h|v}mtx and GPOS conversion..."
 ${SCRIPTDIR}/calc_letter_face.py \
     fix_mtx.tbl \
     CFF.ttx \
@@ -305,6 +300,19 @@ ${SCRIPTDIR}/fix_mtx.py \
     vmtx.ttx \
     > vmtx_tsb.log \
     || { echo error; exit 1; }
+
+echo making conversion table for GPOS...
+${SCRIPTDIR}/make_table_for_GPOS.py \
+    table.tbl \
+    letter_face02.tbl \
+    > table_for_GPOS.tbl \
+    || { echo error; exit 1; }
+
+echo converting GPOS table...
+${BINDIR}/conv_GPOS \
+    table_for_GPOS.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
+    > GPOS.ttx 2> GPOS.log \
+   || { echo error; exit 1; }
 
 echo adding GSUB vert/vrt2 substitution...
 ${SCRIPTDIR}/add_gsub_v.py \
