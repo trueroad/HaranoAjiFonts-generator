@@ -5,7 +5,7 @@
 // conv_CFF_main.cc:
 //   convert CFF.ttx
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(convert CFF.ttx)"
     << std::endl
-    << "Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 
@@ -115,6 +115,39 @@ int main (int argc, char *argv[])
   auto notdef =
     CharStrings.select_node ("CharString[@name='.notdef']").node ();
 
+  auto GlobalSubrs = doc.select_node ("ttFont/CFF/GlobalSubrs").node ();
+  auto gs_size = GlobalSubrs.select_nodes ("CharString").size ();
+  std::string dummy_cs;
+  std::cerr << "global subrs len: " << gs_size << std::endl;
+  if (gs_size == 1239 || gs_size == 33899)
+    {
+      std::cerr << "cannot add global subr" << std::endl;
+      dummy_cs = notdef.text ().get ();
+    }
+  else
+    {
+      int index;
+      if (gs_size < 1239)
+        {
+          index = gs_size - 107;
+        }
+      else if (gs_size < 33899)
+        {
+          index = gs_size - 1131;
+        }
+      else
+        {
+          index = gs_size - 32768;
+        }
+      auto node = GlobalSubrs.append_child ("CharString");
+      node.append_attribute ("index") = std::to_string (gs_size).c_str ();
+      node.text ().set (notdef.text ().get ());
+
+      std::stringstream ss;
+      ss << index << " callgsubr";
+      dummy_cs = ss.str ().c_str ();
+    }
+
   for (auto i: wcff.get_conv_table ().get_cid_miss ())
     {
       std::stringstream ss;
@@ -127,7 +160,7 @@ int main (int argc, char *argv[])
           if (std::string (a.name ()) != std::string ("name"))
             node.append_attribute (a.name ()) = a.value ();
         }
-      node.text ().set (notdef.text ().get ());
+      node.text ().set (dummy_cs.c_str ());
     }
 
   doc.save (std::cout, "  ", pugi::format_default, pugi::encoding_utf8);
