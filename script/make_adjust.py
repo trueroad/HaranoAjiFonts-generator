@@ -75,9 +75,9 @@ def adjust_type(cid):
     if cid == 11035: # AJ1 CID+11035 U+20DE 'COMBINING ENCLOSING SQUARE' 
         return 'r'
     if cid == 16326: # AJ1 CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
-        return 'r'
+        return '' # calc by make_shift.py
     if cid == 16327: # AJ1 CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
-        return 'r'
+        return '' # calc by make_shift.py
     return ''
 
 def adjust(cid, name, source_width, output_width):

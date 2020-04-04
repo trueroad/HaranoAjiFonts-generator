@@ -48,6 +48,14 @@ def calc_shift (name, width, ascender, descender, \
         new_lsb = width - (face_width + lsb)
         new_tsb = ascender - (descender + (face_height + tsb))
         return new_lsb, new_tsb
+    elif name == "aji16326" or \
+         name == "aji16327":
+        # CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
+        # CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
+        # Left outside (right of previous letter face)
+        # to left inside of letter face
+        new_lsb = - lsb - face_width
+        return new_lsb, tsb
     print ("# no shift: {}".format (name))
     return lsb, tsb
 
