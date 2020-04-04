@@ -1,0 +1,35 @@
+\documentclass{jsarticle}
+\usepackage[expert]{otf}
+\usepackage{okumacro}
+
+\rubyfamily
+
+\begin{document}
+
+\section{OTFパッケージexpertオプション}
+
+このファイルは\ruby{原ノ味}{はらのあじ}フォントのダミーグリフが
+\ruby{正常}{せいじょう}に\ruby{生成}{せいせい}されていることを
+\ruby{確認}{かくにん}するためのものである。
+そのためにOTFパッケージを
+expertオプション\ruby{付}{つ}きで\ruby{使用}{しよう}し、
+\ruby{同}{おな}じDVIから、\ruby{原ノ味}{はらのあじ}フォント
+\ruby{埋}{う}め\ruby{込}{こ}みPDFと
+フォント\ruby{非}{ひ}\ruby{埋}{う}め\ruby{込}{こ}みPDFの
+\ruby{双方}{そうほう}を\ruby{生成}{せいせい}している。
+\ruby{原ノ味}{はらのあじ}フォントは、
+expertオプションで\ruby{使}{つか}われる、
+\ruby{組方向}{くみほうこう}に\ruby{応}{おう}じた\ruby{専用}{せんよう}かなや、
+ルビ\ruby{用}{よう}かなを\ruby{持}{も}っていないため、
+\ruby{原ノ味}{はらのあじ}フォント\ruby{埋}{う}め\ruby{込}{こ}みPDFでは
+ダミーグリフで\ruby{表示}{ひょうじ}される。
+\ruby{小塚}{こづか}フォントを\ruby{持}{も}つAcrobat Readerで
+フォント\ruby{非}{ひ}\ruby{埋}{う}め\ruby{込}{こ}みPDFを
+\ruby{開}{ひら}くと、ダミーグリフではない\ruby{本来}{ほんらい}の
+\ruby{表示}{ひょうじ}が\ruby{確認}{かくにん}できる。
+
+Note: If you use HaranoAji Fonts,
+all HIRAGANA and KATAKANA glyphs are displayed as DUMMY glyphs (i.e. \CID{0})
+in this document.
+
+\end{document}
