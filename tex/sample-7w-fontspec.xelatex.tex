@@ -1,0 +1,87 @@
+\documentclass[xelatex,ja=standard]{bxjsarticle}
+
+\usepackage{fontspec}
+\setCJKmainfont[
+  FontFace = {el}{\shapedefault}{ *-ExtraLight },
+  FontFace = {sl}{\shapedefault}{ *-Light },
+  FontFace = {x}{\shapedefault}{ *-Medium },
+  FontFace = {sb}{\shapedefault}{ *-SemiBold },
+  FontFace = {eb}{\shapedefault}{ *-Heavy }% eb の Bold を Heavy で上書き
+]{HaranoAjiMincho}
+\setCJKsansfont[
+  FontFace = {el}{\shapedefault}{ *-ExtraLight },
+  FontFace = {l}{\shapedefault}{ *-Light },% l の Regular を Light で上書き
+  FontFace = {sl}{\shapedefault}{ *-Normal },
+  FontFace = {x}{\shapedefault}{ *-Regular },
+  FontFace = {sb}{\shapedefault}{ *-Medium },
+]{HaranoAjiGothic}
+
+\begin{document}
+
+\section{Xe\LaTeX +fontspecで明朝・ゴシック各7ウェイトを使う}
+
+CTAN haranoajiおよび
+haranoaji-extraパッケージ収録分のフォントを使用。
+
+\texttt{HaranoAjiMincho.fontspec},
+\texttt{HaranoAjiGothic.fontspec}が必要。
+
+\vspace{\baselineskip}
+
+\rmfamily
+\mcfamily
+\fontseries{el}\selectfont
+明朝el (Extra Light)原ノ味明朝ExtraLight
+
+\fontseries{l}\selectfont
+明朝l (Light)原ノ味明朝Light
+
+\fontseries{sl}\selectfont
+明朝sl (Semi Light)原ノ味明朝Lightで代替
+\footnote{ゴシックと対称になるように割り当てた。}
+
+\mdseries
+明朝m (Medium)原ノ味明朝Regular
+
+\fontseries{x}\selectfont
+明朝x (Expanded%
+\footnote{本来はウェイトではなく幅のシリーズ名だが、
+  mとbの間が足りないので使用。})原ノ味明朝Medium
+
+\fontseries{sb}\selectfont
+明朝sb (Semi Bold)原ノ味明朝SemiBold
+
+\bfseries
+明朝b (Bold)原ノ味明朝Bold
+
+\fontseries{eb}\selectfont
+明朝eb (Extra Bold)原ノ味明朝Heavy
+
+\sffamily
+\gtfamily
+\fontseries{el}\selectfont
+ゴシックel (Extra Light)原ノ味角ゴシックExtraLight
+
+\fontseries{l}\selectfont
+ゴシックl (Light)原ノ味角ゴシックLight
+
+\fontseries{sl}\selectfont
+ゴシックsl (Semi Light)原ノ味角ゴシックNormal
+
+\mdseries
+ゴシックm (Medium)原ノ味角ゴシックRegular
+
+\fontseries{x}\selectfont
+ゴシックx (Expanded)原ノ味角ゴシックRegularで代替
+\footnote{明朝と対称になるよう割り当てた。}
+
+\fontseries{sb}\selectfont
+ゴシックsb (Semi Bold)原ノ味角ゴシックMedium
+
+\bfseries
+ゴシックb (Bold)原ノ味角ゴシックBold
+
+\fontseries{eb}\selectfont
+ゴシックeb (Extra Bold)原ノ味角ゴシックHeavy
+
+\end{document}
