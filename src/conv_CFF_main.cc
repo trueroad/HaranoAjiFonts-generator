@@ -146,6 +146,8 @@ int main (int argc, char *argv[])
       std::stringstream ss;
       ss << index << " callgsubr";
       dummy_cs = ss.str ().c_str ();
+
+      notdef.text () = dummy_cs.c_str ();
     }
 
   for (auto i: wcff.get_conv_table ().get_cid_miss ())
