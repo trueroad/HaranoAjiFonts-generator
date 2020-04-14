@@ -15,6 +15,10 @@ XETEX = xetex
 LUALATEX = lualatex
 XELATEX = xelatex
 
+LATEXMK = latexmk
+
+LATEXMK_LUALATEX = $(LATEXMK) -lualatex
+
 
 NOEMBED_DIR = noEmbed
 
@@ -28,13 +32,16 @@ XETEX_SOURCES = $(wildcard *.xetex.tex)
 LUALATEX_SOURCES = $(wildcard *.lualatex.tex)
 XELATEX_SOURCES = $(wildcard *.xelatex.tex)
 
+LATEXMK_LUALATEX_SOURCES = $(wildcard *.latexmk-lualatex.tex)
+
 P_SOURCES = $(PTEX_SOURCES) $(PLATEX_SOURCES)
 UP_SOURCES = $(UPTEX_SOURCES) $(UPLATEX_SOURCES)
 
 SOURCES = \
 	$(P_SOURCES) $(UP_SOURCES) \
 	$(LUATEX_SOURCES) $(XETEX_SOURCES) \
-	$(LUALATEX_SOURCES) $(XELATEX_SOURCES)
+	$(LUALATEX_SOURCES) $(XELATEX_SOURCES) \
+	$(LATEXMK_LUALATEX_SOURCES)
 
 PTEX_DVIS = $(PTEX_SOURCES:.tex=.dvi)
 UPTEX_DVIS = $(UPTEX_SOURCES:.tex=.dvi)
@@ -56,11 +63,13 @@ LUATEX_PDFS = $(LUATEX_SOURCES:.tex=.pdf)
 XETEX_PDFS = $(XETEX_SOURCES:.tex=.pdf)
 LUALATEX_PDFS = $(LUALATEX_SOURCES:.tex=.pdf)
 XELATEX_PDFS = $(XELATEX_SOURCES:.tex=.pdf)
+LATEXMK_LUALATEX_PDFS = $(LATEXMK_LUALATEX_SOURCES:.tex=.pdf)
 
 PDFS = \
 	$(P_PDFS) $(UP_PDFS) \
 	$(LUATEX_PDFS) $(XETEX_PDFS) \
-	$(LUALATEX_PDFS) $(XELATEX_PDFS)
+	$(LUALATEX_PDFS) $(XELATEX_PDFS) \
+	$(LATEXMK_LUALATEX_PDFS)
 
 
 all_pdfs: $(NOEMBED_DIR) $(PDFS)
@@ -140,5 +149,8 @@ $(LUALATEX_PDFS): %.pdf: %.tex
 $(XELATEX_PDFS): %.pdf: %.tex
 	$(XELATEX) $<
 
+$(LATEXMK_LUALATEX_PDFS): %.pdf: %.tex
+	$(LATEXMK_LUALATEX) $<
+
 clean:
-	-$(RM) *~ *.aux *.log
+	-$(RM) *~ *.aux *.log *.out *.ltjruby *.fdb_latexmk *.fls

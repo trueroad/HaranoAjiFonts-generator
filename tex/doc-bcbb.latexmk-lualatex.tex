@@ -1,0 +1,909 @@
+% -*- coding: utf-8; mode: latex; -*-
+
+% エンジンを判定してクラスファイルやオプションを変更
+\makeatletter
+\ifx\luatexversion\@undefined
+  \ifx\kanjiskip\@undefined
+    % pdfLaTeX or XeLaTeX
+    \GenericError{}{LuaLaTeX or (u)pLaTeX is required.}{}
+                 {use lualatex, platex, or uplatex}
+  \else
+    \ifx\kchardef\@undefined
+      % pLaTeX
+      \documentclass[dvipdfmx]{jsarticle}
+    \else
+      % upLaTeX
+      \documentclass[uplatex,dvipdfmx]{jsarticle}
+    \fi
+    % pLaTeX/upLaTeX
+    \let\myengine=p
+  \fi
+\else
+  % LuaLaTeX
+  \documentclass{ltjsarticle}
+  \let\myengine=l
+\fi
+\makeatother
+
+% 数式環境
+\usepackage{amsmath}
+
+% しおりとハイパーリンク
+\usepackage[
+  bookmarks=true,
+  bookmarksnumbered=true,
+  colorlinks=true,
+  urlcolor=blue,
+  citecolor=black,
+  linkcolor=black
+]{hyperref}
+
+% pLaTeX/upLaTeX 設定
+\ifx p\myengine
+  % STIX2 フォントを使用（数式、本文セリフ体）
+  \usepackage[T1]{fontenc}
+  \usepackage{stix2}
+
+  % 欧文フォント設定（サンセリフ体、等幅）
+  \renewcommand{\sfdefault}{qhv}% TeX Gyre Hereos
+  \renewcommand{\ttdefault}{qcr}% TeX Gyre Cursor
+
+  % ルビ
+  \usepackage{okumacro}
+
+  % しおりの日本語
+  \usepackage{pxjahyper}
+
+  % 数式の各種ベクトル表記（環境依存分）
+  \newcommand\VectBold[1]{\boldsymbol{#1}}
+  \newcommand\VectBB[1]{\mathbb{#1}}
+\fi
+
+% LuaLaTeX 設定
+\ifx l\myengine
+  % STIX2 フォントを使用（数式、本文セリフ体）
+  \usepackage[no-math]{fontspec}
+  \usepackage{unicode-math}
+  \unimathsetup{math-style=ISO,bold-style=ISO}
+  \setmainfont{STIX Two Text}
+  \setmathfont{STIX Two Math}
+
+  % 欧文フォント設定（サンセリフ体、等幅）
+  \setsansfont{TeX Gyre Heros}
+  \setmonofont{TeX Gyre Cursor}
+
+  % 日本語フォント設定
+  \usepackage[haranoaji,nfssonly]{luatexja-preset}
+
+  % ルビ
+  \usepackage{luatexja-ruby}
+
+  % しおりの日本語
+  \hypersetup{unicode=true}
+
+  % 数式の各種ベクトル表記（環境依存分）
+  \newcommand\VectBold[1]{\symbf{#1}}
+  \newcommand\VectBB[1]{\symbb{#1}}
+\fi
+
+% 数式の各種ベクトル表記（環境非依存分）
+\newcommand\VectArrow[1]{\vec{#1}}
+
+% デフォルトのベクトル表記選択
+\newcommand\Vect[1]{\VectBold{#1}}
+
+% プログラムリスト
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  frame=single
+}
+
+% URL
+\usepackage{url}
+\urlstyle{same}
+
+% 数式のカッコ調整
+\usepackage{mleftright}
+\mleftright
+
+\title{ベジェ曲線の描画範囲}
+\author{細田 真道}
+\date{2020年4月14日}
+
+\begin{document}
+
+\maketitle
+
+\section{はじめに}
+
+本稿はベジェ曲線(Bézier curves)の数式を紐解き、
+3次ベジェ曲線の描画範囲を求める方法を示す。
+これは、原ノ味フォント\cite{haranoaji}生成プログラム
+\cite{haranoaji-generator}の開発中、
+平行移動させるグリフ(glyph)の移動量や、右90度回転したグリフの
+LSB（left side bearing: 左サイドベアリング）などを計算するため、
+グリフの描画範囲である\ruby{字面}{じづら}(letter face)を
+求める必要がでてきたためにまとめたものである。
+字面はグリフが描画されている領域を示す、
+$x$軸$y$軸に平行な辺を持つ長方形であり、
+グリフのバウンディングボックス(bounding box)ともいえる。
+これを求めるには、
+フォントのCFFテーブル内にある目的のグリフのCharStringを取り出し、
+レンダラ(renderer)のような処理をして
+グリフに含まれているパスそれぞれの描画範囲を調べていき、
+すべてのパスの描画範囲が収まる最小の長方形を求めればよい。
+しかし、グリフを構成するパスは直線（線分）だけではなく、
+3次ベジェ曲線もあるため曲線の計算が必要になる。
+3次ベジェ曲線は4つの点の座標で示され、
+これら4点を頂点とする四角形の内部に収まるという性質があるので、
+この四角形をそのまま曲線の描画範囲とみなす簡易的な方法も取り得る。
+今回対象となるグリフを目視で確認した限りにおいては、
+この簡易的な方法でも正しく字面を求めることができたが、
+今後対象となるグリフが増えた際などに
+実際よりもかなり広くとってしまう可能性がある。
+そこで、正確な字面を求めることができるよう、
+3次ベジェ曲線の描画範囲を過不足なく求める方法を調査し、
+数式を使って示す\footnote{%
+  ベクトルの表記には、
+  高校数学などで使われる$\VectArrow{p}$のような矢印を使ったものではなく、
+  大学の線形代数などで使われる$\VectBold{p}$のような太字を使ったものを
+  採用する。
+  この太字を黒板に手書きするときは一部の線を二重にする
+  $\VectBB{p}$のような書き方（黒板太字）をする習慣があるが、
+  本稿は手書きではないので通常の太字の書体を用いる。
+}。
+また、その過程で数式処理システムMaximaを利用したので、
+付録にMaximaへ入力した内容と出力された数式を示す。
+
+\section{ベジェ曲線の数式}
+
+ベジェ曲線については、様々な文献や資料がある。
+例えば文献\cite{sakane}は
+ベジェ曲線の歴史的状況から始まり、
+数学的性質を論じたものになっており大変参考になる。
+しかし、本稿の目的に必要な範囲を大幅に超えた内容も多いため
+数式などそのまま利用するのではなく、
+ベジェ曲線の理解に役立ちそうな「ド・カステリョ(de Casteljau)のアルゴリズム」
+を用い表記も単純なものに変更する。
+
+$n$次ベジェ曲線は$n+1$個の点を使って示される。
+本稿では、
+これらの点を位置ベクトル$\Vect{p}_0, \cdots, \Vect{p}_n$で表すことにする。
+位置ベクトルは2次元（平面）でも3次元（空間）でもよく、
+原理的にはもっと高次元でも構わない。
+なお、「何次のベジェ曲線か」と
+「何次元の位置ベクトルか」は独立のものである。
+例えば、本稿の目的であるCFFフォントで使われるベジェ曲線は
+「2次元平面における3次ベジェ曲線」であり、それぞれの次数が異なる。
+本稿では$\Vect{p}_0$を始点、$\Vect{p}_n$を終点、
+それ以外の点を制御点と呼ぶことにする\footnote{%
+始点や終点を区別せずにすべてを制御点としている文献もある。}。
+また、ベジェ曲線をベクトル関数$\Vect{b}\left(t\right)$の形で表し、
+媒介変数$t$が$0 \leq t \leq 1$の範囲で変化したときに
+$\Vect{b}\left(t\right)$が曲線上の点を示すものとする。
+つまり$t=0$ならば始点、$t=1$ならば終点を示し、
+$\Vect{b}\left(0\right)=\Vect{p}_0$,
+$\Vect{b}\left(1\right)=\Vect{p}_n$である。
+このことからベジェ曲線は始点と終点を必ず通る。
+一方、途中の制御点は一般には通らない\footnote{%
+  通ることもあるが、ほとんどは通らない。}。
+
+また、文献\cite{sakane}は$n$次に一般化したベジェ曲線を論じているが、
+本稿では一般化して考えることはせず、
+1次から3次までのベジェ曲線を順番に見ていくにとどめる。
+
+\subsection{1次ベジェ曲線}
+
+文献\cite{sakane}には
+「ベジエ曲線は線分の内分点を繰り返しとることにより得られる曲線である．」
+とある。
+1次ベジェ曲線(linear Bézier curves)は、この
+「内分点を繰り返しとること」を、繰り返さずに1回だけ行ったものである。
+つまり、始点と終点の2点間の線分を
+媒介変数で表したものである。途中の制御点は無い。
+曲線と言いつつ線形補間なので曲線には見えない。
+強いて言えば曲率0の曲線ということになる。
+1次ベジェ曲線$\Vect{b}\left(t\right)$は
+始点$\Vect{p}_0$と終点$\Vect{p}_1$の2点から、
+
+\begin{equation}
+  \Vect{b}\left(t\right)=\left(1-t\right)\Vect{p}_0 + t\Vect{p}_1
+  \label{eq:linear}
+\end{equation}
+
+で表すことができる。
+ベクトル関数ではあるが、ベクトルの計算はスカラー倍や加減算のみなので
+成分で表記してもまったく同じ形となる。
+例えば2次元で成分が
+
+\begin{equation}
+  \Vect{b}\left(t\right) =
+  \begin{pmatrix}
+    x_b\left(t\right) \\
+    y_b\left(t\right)
+  \end{pmatrix}
+  ,
+  \Vect{p}_k =
+  \begin{pmatrix}
+    x_k \\
+    y_k
+  \end{pmatrix}
+  ,
+  \left(k=0,1,\cdots,n\right)
+  \label{eq:component}
+\end{equation}
+
+だとすると、式(\ref{eq:linear})は
+
+\begin{align}
+  x_b\left(t\right)&=\left(1-t\right)x_0 + tx_1, \\
+  y_b\left(t\right)&=\left(1-t\right)y_0 + ty_1
+\end{align}
+
+ということになる。
+
+\subsection{2次ベジェ曲線}
+
+2次ベジェ曲線(quadratic Bézier curves)は、
+「内分点を繰り返しとること」を2段階行ったものであり、
+始点$\Vect{p}_0$, 制御点$\Vect{p}_1$, 終点$\Vect{p}_2$の3点で表される。
+まず1段階目として、
+3点のうち隣り合う2点間を同じ媒介変数$t$で線形補間したもの、
+つまり2つの1次ベジェ曲線を考える。
+$\Vect{p}_0$と$\Vect{p}_1$の間を$\Vect{b}_{01}\left(t\right)$,
+$\Vect{p}_1$と$\Vect{p}_2$の間を$\Vect{b}_{12}\left(t\right)$とすると
+式(\ref{eq:linear})より、
+
+\begin{align}
+  \Vect{b}_{01}\left(t\right)&=\left(1-t\right)\Vect{p}_0 + t\Vect{p}_1,
+  \label{eq:b01}
+  \\
+  \Vect{b}_{12}\left(t\right)&=\left(1-t\right)\Vect{p}_1 + t\Vect{p}_2
+  \label{eq:b12}
+\end{align}
+
+となる。そして2段階目として$\Vect{b}_{01}\left(t\right)$,
+$\Vect{b}_{12}\left(t\right)$の間を同じ媒介変数$t$で線形補間したものが
+2次ベジェ曲線である。よって、2次ベジェ曲線$\Vect{b}\left(t\right)$は
+式(\ref{eq:linear})(\ref{eq:b01})(\ref{eq:b12})より、
+
+\begin{align}
+  \Vect{b}\left(t\right)
+  &=
+  \left(1-t\right)\Vect{b}_{01}\left(t\right) + t\Vect{b}_{12}\left(t\right)
+  \label{eq:b-quadratic}
+  \\
+  &=
+  \left(1-t\right)\left(\left(1-t\right)\Vect{p}_0+t\Vect{p}_1\right)
+  +
+  t\left(\left(1-t\right)\Vect{p}_1+t\Vect{p}_2\right)
+  \label{eq:b-quadratic-expand}
+\end{align}
+
+となる。
+この式(\ref{eq:b-quadratic-expand})を
+$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$で整理すると、
+
+\begin{equation}
+  \Vect{b}\left(t\right)
+  = \left(t-1\right)^2 \Vect{p}_0
+  - 2\left(t-1\right)t \Vect{p}_1
+  + t^2 \Vect{p}_2
+  \label{eq:quadratic}
+\end{equation}
+
+となり、同じく式(\ref{eq:b-quadratic-expand})を$t$で整理すると
+
+\begin{equation}
+  \Vect{b}\left(t\right)
+  = \left( \Vect{p}_0 - 2\Vect{p}_1 + \Vect{p}_2 \right)t^2
+  - 2\left(\Vect{p}_0-\Vect{p}_1\right)t
+  + \Vect{p}_0
+  \label{eq:quadratic-t}
+\end{equation}
+
+となる。これら式
+(\ref{eq:b-quadratic-expand})(\ref{eq:quadratic})(\ref{eq:quadratic-t})いずれ
+の形であっても、媒介変数$t$を変化させることで2次ベジェ曲線上の点を
+得ることができる。
+
+次に、2次ベジェ曲線の接線を求めることを考える。
+曲線の接線を求めるには微分すればよいので、
+式(\ref{eq:quadratic-t})を微分すると、
+
+\begin{equation}
+  \Vect{b}'\left(t\right)
+  =
+  2\left( \Vect{p}_0 -2\Vect{p}_1 +\Vect{p}_2 \right) t
+  -2\left( \Vect{p}_0 - \Vect{p}_1 \right)
+  \label{eq:quadratic-d}
+\end{equation}
+
+となる。これにより任意の$t$で示される曲線上の点における
+接線を求めることができる。
+
+式(\ref{eq:b-quadratic-expand})(\ref{eq:quadratic})(\ref{eq:quadratic-t})%
+(\ref{eq:quadratic-d})いずれもベクトル関数ではあるが、
+ベクトルの計算はスカラー倍や加減算のみなので成分で表記しても同じ形である。
+
+\subsection{3次ベジェ曲線}
+
+3次ベジェ曲線(cubic Bézier curves)は、
+「内分点を繰り返しとること」をさらに1段増やして3段階行ったものであり、
+始点$\Vect{p}_0$, 制御点$\Vect{p}_1$, $\Vect{p}_2$, 終点$\Vect{p}_3$の
+4点で表す。
+まず2段階目まで、つまり2次ベジェ曲線を考える。
+4点のうち、前の3点$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$で
+表される2次ベジェ曲線を$\Vect{b}_{012}\left(t\right)$とし、
+後の3点$\Vect{p}_1$, $\Vect{p}_2$, $\Vect{p}_3$で
+表される2次ベジェ曲線を$\Vect{b}_{123}\left(t\right)$とすると、
+式(\ref{eq:quadratic})より、
+
+\begin{align}
+  \Vect{b}_{012}\left(t\right)
+  &= \left(t-1\right)^2 \Vect{p}_0
+  - 2\left(t-1\right)t \Vect{p}_1
+  + t^2 \Vect{p}_2,
+  \label{eq:b012}
+  \\
+  \Vect{b}_{123}\left(t\right)
+  &= \left(t-1\right)^2 \Vect{p}_1
+  - 2\left(t-1\right)t \Vect{p}_2
+  + t^2 \Vect{p}_3
+  \label{eq:b123}
+\end{align}
+
+となる。そして3段階目として
+$\Vect{b}_{012}\left(t\right)$, $\Vect{b}_{123}\left(t\right)$の間を
+同じ媒介変数$t$で線形補間したものが3次ベジェ曲線である。
+よって、3次ベジェ曲線$\Vect{b}\left(t\right)$は式
+(\ref{eq:linear})(\ref{eq:b012})(\ref{eq:b123})より、
+
+\begin{align}
+  \Vect{b}\left(t\right)
+  &=
+  \left(1-t\right)\Vect{b}_{012}\left(t\right)
+  + t\Vect{b}_{123}\left(t\right) \\
+  &=
+  \left(1-t\right)\left(
+  \left(t-1\right)^2 \Vect{p}_0
+  - 2\left(t-1\right)t \Vect{p}_1
+  + t^2 \Vect{p}_2
+  \right)
+  + t\left(
+  \left(t-1\right)^2 \Vect{p}_1
+  - 2\left(t-1\right)t \Vect{p}_2
+  + t^2 \Vect{p}_3
+  \right)
+  \label{eq:cubic-expand}
+\end{align}
+
+となる。この式(\ref{eq:cubic-expand})
+を$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$, $\Vect{p}_3$で整理すると、
+
+\begin{equation}
+  \Vect{b}\left(t\right)
+  =
+  - \left(t-1\right)^3 \Vect{p}_0
+  + 3\left(t-1\right)^2t \Vect{p}_1
+  - 3\left(t-1\right)t^2 \Vect{p}_2
+  + t^3 \Vect{p}_3
+  \label{eq:cubic}
+\end{equation}
+
+となり、同じく式(\ref{eq:cubic-expand})を$t$で整理すると、
+
+\begin{equation}
+  \Vect{b}\left(t\right)
+  =
+  - \left( \Vect{p}_0-3\Vect{p}_1+3\Vect{p}_2-\Vect{p}_3 \right)t^3
+  + 3\left( \Vect{p}_0-2\Vect{p}_1+\Vect{p}_2 \right)t^2
+  - 3\left( \Vect{p}_0-\Vect{p}_1 \right)t
+  + \Vect{p}_0
+  \label{eq:cubic-t}
+\end{equation}
+
+となる。これら式(\ref{eq:cubic-expand})(\ref{eq:cubic})(\ref{eq:cubic-t})%
+いずれの形であっても、媒介変数$t$を変化させることで3次ペジェ曲線上の点を
+得ることができる。
+
+次に3次ベジェ曲線の接線を求めることを考える。
+2次ベジェ曲線と同じく微分すればよいので、
+式(\ref{eq:cubic-t})を微分すると、
+
+\begin{equation}
+  \Vect{b}'\left(t\right)
+  =
+  -3\left( \Vect{p}_0 -3\Vect{p}_1 +3\Vect{p}_2 -\Vect{p}_3 \right) t^2
+  +6\left( \Vect{p}_0 -2\Vect{p}_1 +\Vect{p}_2 \right) t
+  -3\left( \Vect{p}_0 - \Vect{p}_1 \right)
+  \label{eq:cubic-d}
+\end{equation}
+
+となる。これにより任意の$t$で示される曲線上の点における
+接線を求めることができる。
+
+式(\ref{eq:cubic-expand})(\ref{eq:cubic})(\ref{eq:cubic-t})(\ref{eq:cubic-d})%
+いずれもベクトル関数ではあるが、
+ベクトルの計算はスカラー倍や加減算のみなので成分で表記しても同じ形である。
+2次元で成分が式(\ref{eq:component})の通りだとすると、式(\ref{eq:cubic-t})は、
+
+\begin{align}
+  x_b\left(t\right)
+  &=
+  - \left( x_0-3x_1+3x_2-x_3 \right)t^3
+  + 3\left( x_0-2x_1+x_2 \right)t^2
+  - 3\left( x_0-x_1 \right)t
+  + x_0,
+  \label{eq:xb}
+  \\
+  y_b\left(t\right)
+  &=
+  - \left( y_0-3y_1+3y_2-x_3 \right)t^3
+  + 3\left( y_0-2y_1+y_2 \right)t^2
+  - 3\left( y_0-y_1 \right)t
+  + y_0
+  \label{eq:yb}
+\end{align}
+
+となるし、式(\ref{eq:cubic-d})は、
+
+\begin{align}
+  x_b{}'\left(t\right)
+  &=
+  -3\left( x_0 -3x_1 +3x_2 -x_3 \right) t^2
+  +6\left( x_0 -2x_1 + x_2 \right) t
+  -3\left( x_0 - x_1 \right),
+  \label{eq:xb-d}
+  \\
+  y_b{}'\left(t\right)
+  &=
+  -3\left( y_0 -3y_1 +3y_2 -y_3 \right) t^2
+  +6\left( y_0 -2y_1 + y_2 \right) t
+  -3\left( y_0 - y_1 \right)
+  \label{eq:yb-d}
+\end{align}
+
+となる。
+
+\section{描画範囲}
+
+2次元平面におけるベジェ曲線の描画範囲として
+バウンディングボックス(bounding box)を求める方法を考える。
+一つの方法として、
+$t$を十分に細かく変化させつつ順次$\Vect{b}\left(t\right)$を求め、
+得られた座標の中から$x$軸$y$軸それぞれの最大と最小を取り出すことが考えられる。
+ただし、この方法はあてもなく$t$を探索することになるので
+大きな計算量を要する。
+十分に細かくなければ誤差が出てしまうし、
+細かすぎるともともと大きかった計算量がさらに増えてしまう。
+あてもなく探索するのではなく、
+あたりをつけて探索するためバウンディングボックスの条件を考え、
+条件を満たした候補を挙げて、その中から選ぶ方法を取る。
+
+\subsection{候補の条件}
+
+バウンディングボックスを構成する四角形の4つの辺は、
+それぞれベジェ曲線のもっとも外側の部分に触れているはずである。
+ベジェ曲線で辺に触れる部分には、
+始点や終点のように曲線が切れている部分と、
+曲線の途中で切れていない部分の2種類が考えられる。
+
+\subsection{始点と終点}
+
+ベジェ曲線が切れている始点や終点は、
+外側を向いているのであれば辺に触れることになる。
+始点や終点であっても内側を向いていると辺には触れないが、
+その場合はさらに外側に別の候補がある。
+そのため、特に向きや触れているかいないかの判定をせずに候補として挙げても、
+最終的には外側の候補の方が選択されるので問題ない。
+
+\subsection{接線と辺}
+
+ベジェ曲線の途中で切れていない部分の場合、
+辺に触れている場所は辺が曲線の接線になっているはずである。
+ベジェ曲線の接線は微分することによって求めることができる。
+求めた接線が辺になりうる条件を満たしていれば触れている場所の候補になる。
+辺には縦方向のものと横方向のものの2種類がある。
+
+\subsubsection{縦方向の辺}
+
+縦方向の辺は$y$が変化しても$x$が変化しないものといえるので、
+これを満たす接線の条件は、
+
+\begin{equation}
+  x_b{}'\left(t\right) = 0
+  \label{eq:h-side}
+\end{equation}
+
+となる。
+この接線が曲線の外側にある（接線の片側のみに曲線がある）ならば
+辺に触れている場所ということになる。
+内側である（接線の両側に曲線がある）ならば
+単に垂直な接線が引ける変曲点のような場所で辺には触れないが、
+その場合は外側に別の候補がある。
+そのため、特に内側か外側かの判定をせずに候補として挙げても、
+最終的には外側の候補の方が選択されるので問題ない。
+
+そこで、この式(\ref{eq:h-side})と式(\ref{eq:xb-d})より、
+
+\begin{equation}
+  0 =
+  -3\left( x_0 -3x_1 +3x_2 -x_3 \right) t^2
+  +6\left( x_0 -2x_1 + x_2 \right) t
+  -3\left( x_0 - x_1 \right)
+  \label{eq:h-quadratic-equation}
+\end{equation}
+
+を満たす$t$を見つける、つまりこの式(\ref{eq:h-quadratic-equation})の
+方程式を解く。ここで、
+
+\begin{align}
+  a &= -3\left( x_0 -3x_1 +3x_2 -x_3 \right), \\
+  b &= 6\left( x_0 -2x_1 + x_2 \right), \\
+  c &= -3\left( x_0 - x_1 \right)
+\end{align}
+
+と置けば、式(\ref{eq:h-quadratic-equation})は$0=at^2+bt+c$となる。
+$a\neq 0$の場合は2次方程式を、
+$a=0$の場合は1次方程式を解くことで$t$を求めることができるので、
+
+\begin{equation}
+  t=
+  \begin{cases}
+    \dfrac{-b\pm\sqrt{b^2-4ac}}{2a}, & a\neq 0 \\
+    -\dfrac{c}{b}, & a=0
+  \end{cases}
+  \label{eq:solve-t}
+\end{equation}
+
+となる。この式(\ref{eq:solve-t})で得られる解のうち、
+$0\leq t\leq 1$を満たす実数解を式(\ref{eq:xb})(\ref{eq:yb})に代入すると、
+縦方向の辺に触れている場所の候補が得られる。
+2次方程式で実数解が得られ、解$t$が2つとも$0\leq t\leq 1$を満たしていれば、
+縦方向の辺に触れている場所の候補は2個となる。
+$0\leq t\leq 1$を満たす解が1つだけならば候補は1個、
+1つもなければ候補は0個となる。
+
+\subsubsection{横方向の辺}
+
+横方向の辺は$x$が変化しても$y$が変化しないものといえるので、
+これを満たす接線の条件は、
+
+\begin{equation}
+  y_b{}'\left(t\right) = 0
+  \label{eq:v-side}
+\end{equation}
+
+となる。以下、縦方向と同様に、
+この式(\ref{eq:v-side})と式(\ref{eq:yb-d})より、
+
+\begin{equation}
+  0
+  =
+  -3\left( y_0 -3y_1 +3y_2 -y_3 \right) t^2
+  +6\left( y_0 -2y_1 + y_2 \right) t
+  -3\left( y_0 - y_1 \right)
+\end{equation}
+
+の方程式を解くため、
+
+\begin{align}
+  a &= -3\left( y_0 -3y_1 +3y_2 -y_3 \right), \\
+  b &= 6\left( y_0 -2y_1 + y_2 \right), \\
+  c &= -3\left( y_0 - y_1 \right)
+\end{align}
+
+と置き、式(\ref{eq:solve-t})で得られる解のうち、
+$0\leq t\leq 1$を満たす実数解を式(\ref{eq:xb})(\ref{eq:yb})に代入すると、
+横方向の辺に触れている場所の候補が得られる。
+縦方向と同様、候補の数は0個から2個の間となる。
+
+\subsection{描画範囲の計算}
+
+以上より、
+
+\begin{itemize}
+\item 始点（1個）
+\item 終点（1個）
+\item 縦方向の辺に触れている場所の候補（0～2個）
+\item 横方向の辺に触れている場所の候補（0～2個）
+\end{itemize}
+
+が候補として得られた。これらの座標から、
+$x$座標の最大値と最小値、$y$座標の最大値と最小値を取ると、
+ベジェ曲線の描画範囲であるバウンディングボックスを得ることができる。
+
+\section{おわりに}
+
+本稿では、ベジェ曲線の数式を紐解き、
+CFFフォントで使われる3次ベジェ曲線の描画範囲を求める方法を示した。
+これによって原ノ味フォント生成プログラムにおいて
+字面を正確に計算できるようになり、
+平行移動させるグリフの移動量や、回転させるグリフのLSBなどの計算が
+正確にできるようになることが期待できる。
+また、本稿では数式処理システムMaximaを利用して数式の処理を行った。
+どのような処理をしたのか付録に示しているので、
+興味のある方はお手元で再現してみるとよいと思う。
+
+本稿は十分に調査した上で執筆したつもりであるが、
+不十分なところや間違いなどがあるかもしれない。
+お気づきの点などあればご連絡いただきたい。
+本稿の最新版はリポジトリ\cite{haranoaji-generator}の
+奥深くに入れておくつもりである。
+
+\appendix
+
+\section{Maximaによる数式の処理}
+
+本稿の数式は数式処理システムMaximaを利用して得られたものを使っている。
+ここではMaximaへ入力した内容と出力された数式を示す。
+
+\subsection{2次ベジェ曲線}
+
+$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$はベクトルなので、
+非スカラであると宣言する。
+
+\begin{lstlisting}
+declare(p0, nonscalar);
+declare(p1, nonscalar);
+declare(p2, nonscalar);
+\end{lstlisting}
+
+変数の出力順序をリセットしてから、
+$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$の順番で出力されるように設定する。
+
+\begin{lstlisting}
+unorder();
+ordergreat(p0, p1, p2);
+\end{lstlisting}
+
+式(\ref{eq:b01})(\ref{eq:b12})(\ref{eq:b-quadratic})を定義する。
+
+\begin{lstlisting}
+define(b01(t), (1-t)*p0+t*p1);
+define(b12(t), (1-t)*p1+t*p2);
+define(b(t), (1-t)*b01(t)+t*b12(t));
+\end{lstlisting}
+
+$\Vect{p}_0$, $\Vect{p}_1$, $\Vect{p}_2$で整理する。
+
+\begin{lstlisting}
+rat(b(t), p2, p1, p0);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+\left(t^2-2\,t+1\right)\,\mathrm{p0}
++\left(-2\,t^2+2\,t\right)\,\mathrm{p1}
++t^2\,\mathrm{p2}
+\]
+
+が得られる。
+係数の形が展開されているものになっているので、これをまとめていくことにする。
+まずは、この形を別の関数$\Vect{b}_p\left(t\right)$に定義する。
+直前の出力を再利用するため「\%」を利用する。
+
+\begin{lstlisting}
+define(bp(t), %);
+\end{lstlisting}
+
+この中の$\Vect{p}_0$の1次の係数を抜き出す。
+
+\begin{lstlisting}
+coeff(bp(t), p0, 1);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+t^2-2\,t+1
+\]
+
+が得られる。正しく係数を抜き出すことができたので、これを因数分解する。
+
+\begin{lstlisting}
+factor(%);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+\left(t-1\right)^2
+\]
+
+が得られる。これを式(\ref{eq:quadratic})で$\Vect{p}_0$の係数とした。
+同様に$\Vect{p}_1$の1次の係数を抜き出す。
+
+\begin{lstlisting}
+coeff(bp(t), p1, 1);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+-2\,t^2+2\,t
+\]
+
+得られ、これを因数分解する。
+
+\begin{lstlisting}
+factor(%);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+-2\,\left(t-1\right)\,t
+\]
+
+が得られる。これを式(\ref{eq:quadratic})で$\Vect{p}_1$の係数とした。
+$\Vect{p}_2$の係数は$\Vect{b}_p\left(t\right)$定義の$t^2$のままでよいため、
+そのまま式(\ref{eq:quadratic})の係数とした。
+
+次に、$t$で整理する。
+
+\begin{lstlisting}
+rat(b(t), t);
+\end{lstlisting}
+
+すると、出力として
+
+\[
+\left(\mathrm{p0}-2\,\mathrm{p1}+\mathrm{p2}\right)\,t^2
++\left(-2\,\mathrm{p0}+2\,\mathrm{p1}\right)\,t+\mathrm{p0}
+\]
+
+が得られる。これを整形して式(\ref{eq:quadratic-t})とした。
+さらにこれを微分する。
+
+\begin{lstlisting}
+diff(%, t);
+\end{lstlisting}
+
+すると、出力として、
+
+\[
+\left(2\,\mathrm{p0}-4\,\mathrm{p1}+2\,\mathrm{p2}\right)\,t
+-2\,\mathrm{p0}+2\,\mathrm{p1}
+\]
+
+が得られる。これを整形して式(\ref{eq:quadratic-d})とした。
+
+\subsection{3次ベジェ曲線}
+
+2次ベジェ曲線と同様の手順で行う。
+
+\begin{lstlisting}
+declare(p0, nonscalar);
+declare(p1, nonscalar);
+declare(p2, nonscalar);
+declare(p3, nonscalar);
+
+unorder();
+ordergreat(p0, p1, p2, p3);
+
+define(b012(t), (t-1)^2*p0-2*(t-1)*t*p1+t^2*p2);
+define(b123(t), (t-1)^2*p1-2*(t-1)*t*p2+t^2*p3);
+define(b(t), (1-t)*b012(t)+t*b123(t));
+
+rat(b(t), p3, p2, p1, p0);
+\end{lstlisting}
+
+以下の出力が得られる。
+
+\[
+\left(-t^3+3\,t^2-3\,t+1\right)\,\mathrm{p0}
++\left(3\,t^3-6\,t^2+3\,t\right)\,\mathrm{p1}
++\left(-3\,t^3+3\,t^2\right)\,\mathrm{p2}+t^3\,\mathrm{p3}
+\]
+
+\begin{lstlisting}
+define(bp(t), %);
+
+coeff(bp(t), p0, 1);
+\end{lstlisting}
+
+$\Vect{P}_0$の1次の係数を抜き出した以下が得られる。
+
+\[
+-t^3+3\,t^2-3\,t+1
+\]
+
+\begin{lstlisting}
+factor(%);
+\end{lstlisting}
+
+因数分解した以下が得られる。
+
+\[
+-\left(t-1\right)^3
+\]
+
+以下同様に$\Vect{p}_1$の1次の係数は、
+
+\begin{lstlisting}
+coeff(bp(t), p1, 1);
+\end{lstlisting}
+
+\[
+3\,t^3-6\,t^2+3\,t
+\]
+
+\begin{lstlisting}
+factor(%);
+\end{lstlisting}
+
+\[
+3\,\left(t-1\right)^2\,t
+\]
+
+$\Vect{p}_2$の1次の係数は、
+
+\begin{lstlisting}
+coeff(bp(t), p2, 1);
+\end{lstlisting}
+
+\[
+-3\,t^3+3\,t^2
+\]
+
+\begin{lstlisting}
+factor(%);
+\end{lstlisting}
+
+\[
+-3\,\left(t-1\right)\,t^2
+\]
+
+が得られ、
+$\Vect{p}_3$の係数は$\Vect{b}_p\left(t\right)$定義の$t^3$のまま使い、
+これらを使って式(\ref{eq:cubic})の係数とした。
+
+次に$t$で整理すると、
+
+\begin{lstlisting}
+rat(b(t), t);
+\end{lstlisting}
+
+\[
+\left(-\mathrm{p0}+3\,\mathrm{p1}-3\,\mathrm{p2}+\mathrm{p3}\right)\,t^3
++\left(3\,\mathrm{p0}-6\,\mathrm{p1}+3\,\mathrm{p2}\right)\,t^2
++\left(-3\,\mathrm{p0}+3\,\mathrm{p1}\right)\,t+\mathrm{p0}
+\]
+
+が得られ、これを整理して式(\ref{eq:cubic-t})とした。
+さらにこれを微分すると、
+
+\begin{lstlisting}
+diff(%, t);
+\end{lstlisting}
+
+\[
+\left(-3\,\mathrm{p0}+9\,\mathrm{p1}-9\,\mathrm{p2}+3\,\mathrm{p3}\right)\,t^2
++\left(6\,\mathrm{p0}-12\,\mathrm{p1}+6\,\mathrm{p2}\right)\,t
+-3\,\mathrm{p0}+3\,\mathrm{p1}
+\]
+
+が得られ、これを整理して式(\ref{eq:cubic-d})とした。
+
+\begin{thebibliography}{9}
+
+\bibitem{haranoaji}
+  細田 真道. 原ノ味フォント.
+  \url{https://github.com/trueroad/HaranoAjiFonts}.
+
+\bibitem{haranoaji-generator}
+  細田 真道. 原ノ味フォント生成プログラム.
+  \url{https://github.com/trueroad/HaranoAjiFonts-generator}.
+
+\bibitem{sakane}
+  坂根 由昌. ベジェ曲線とベジェ曲面.
+  数学 56(2), pp. 201--214, 2004年4月.
+  \url{https://ci.nii.ac.jp/naid/10013123821}.
+
+\end{thebibliography}
+
+\end{document}
