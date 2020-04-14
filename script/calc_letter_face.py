@@ -44,6 +44,7 @@
 #
 
 import copy
+import math
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -802,15 +803,78 @@ def calc_CharString(cs, fd):
     return x_min, y_min, x_max, y_max
 
 def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
-    # !!!FIXME!!!: This is just an estimate without calculating the curve.
-    x_min = min(x0, x1, x2, x3)
-    y_min = min(y0, y1, y2, y3)
-    x_max = max(x0, x1, x2, x3)
-    y_max = max(y0, y1, y2, y3)
+    x_candidate = [float(x0), float(x3)]
+    y_candidate = [float(y0), float(y3)]
+
+    a = - 3.0*x0 + 9.0*x1 - 9.0*x2 + 3.0*x3
+    b =   6.0*x0 -12.0*x1 + 6.0*x2
+    c = - 3.0*x0 + 3.0*x1
+    t_candidate = solve_equation_real(a, b, c)
+
+    a = - 3.0*y0 + 9.0*y1 - 9.0*y2 + 3.0*y3
+    b =   6.0*y0 -12.0*y1 + 6.0*y2
+    c = - 3.0*y0 + 3.0*y1
+    t_candidate += solve_equation_real(a, b, c)
+
+    debug_print("cacl_curvebox")
+    debug_print("  0-candidate ({}, {})".format(x0, y0))
+    debug_print("  3-candidate ({}, {})".format(x3, y3))
+
+    for t in t_candidate:
+        if 0.0 <= t and t <= 1.0:
+            x, y = bezier(t, x0, y0, x1, y1, x2, y2, x3, y3)
+            debug_print("  t-candidate ({}, {})".format(x, y))
+            x_candidate.append(x)
+            y_candidate.append(y)
+
+    x_min = min(x_candidate)
+    y_min = min(y_candidate)
+    x_max = max(x_candidate)
+    y_max = max(y_candidate)
+
+    debug_print("  result min  ({}, {})".format(x_min, y_min))
+    debug_print("  result max  ({}, {})".format(x_max, y_max))
+
     point_ctrl(x1, y1)
     point_ctrl(x2, y2)
     point_path(x3, y3)
     return x_min, y_min, x_max, y_max
+
+def solve_equation_real(a, b, c):
+    r = []
+    debug_print("solve with a={}, b={}, c={}".format(a, b, c))
+    if a != 0.0:
+        d=b*b-4.0*a*c
+        debug_print("  quadratic equation. D={}".format(d))
+        if d < 0.0:
+            debug_print("  complex roots. no candidate.")
+            return []
+        elif d > 0.0:
+            debug_print("  real roots.")
+            r += [(-b + math.sqrt(d)) / (2.0*a)]
+            r += [(-b - math.sqrt(d)) / (2.0*a)]
+        else:
+            debug_print("  multiple root.")
+            r += [-b / (2.0*a)]
+    else:
+        debug_print("  linear equation")
+        if b != 0.0:
+            r += [-c / b]
+        else:
+            debug_print("  zero divide. no candidate.")
+        debug_print("  root = {}".format(r))
+    return r
+
+def bezier(t, x0, y0, x1, y1, x2, y2, x3, y3):
+    x =  (-1.0*x0 + 3.0*x1 - 3.0*x2 + 1.0*x3) *t*t*t \
+        +( 3.0*x0 - 6.0*x1 + 3.0*x2) *t*t \
+        +(-3.0*x0 + 3.0*x1) *t \
+        +  1.0*x0
+    y =  (-1.0*y0 + 3.0*y1 - 3.0*y2 + 1.0*y3) *t*t*t \
+        +( 3.0*y0 - 6.0*y1 + 3.0*y2) *t*t \
+        +(-3.0*y0 + 3.0*y1) *t \
+        +  1.0*y0
+    return x, y
 
 def load_calcTable(file):
     table = []
