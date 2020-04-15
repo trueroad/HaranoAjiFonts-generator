@@ -1,0 +1,64 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント各種かなグリフ
+% テスト用マクロ
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{70pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+
+\newcommand{\testAll}{%
+  原ノ味フォントの場合、
+  搭載していないグリフは.notdef（\colorbox{gray1}{\CID{0}}）と同じ形の
+  ダミーグリフで表示される。
+
+  通常全角（横組み）、通常全角（縦組み）、横組み最適化、縦組み最適化、ルビ
+
+  ぁ
+
+  \test{\CID{842}}% ぁ
+  \test{\CID{7918}}%
+  \test{\CID{12275}}%
+  \test{\CID{12458}}%
+  \test{\CID{12671}}
+
+  あ
+
+  \test{\CID{843}}% あ
+  \test{\CID{633}}%
+  \test{\CID{12276}}%
+  \test{\CID{12459}}%
+  \test{\CID{12672}}
+
+  ぃ
+
+  \test{\CID{844}}% ぃ
+  \test{\CID{7919}}%
+  \test{\CID{12277}}%
+  \test{\CID{12460}}%
+  \test{\CID{12673}}
+
+  い
+
+  \test{\CID{845}}% い
+  \test{\CID{633}}%
+  \test{\CID{12278}}%
+  \test{\CID{12461}}%
+  \test{\CID{12674}}
+
+  ぅ
+
+  \test{\CID{846}}% ぅ
+  \test{\CID{7920}}%
+  \test{\CID{12279}}%
+  \test{\CID{12462}}%
+  \test{\CID{12675}}
+
+  う
+
+  \test{\CID{847}}% う
+  \test{\CID{633}}%
+  \test{\CID{12280}}%
+  \test{\CID{12463}}%
+  \test{\CID{12676}}
+}
