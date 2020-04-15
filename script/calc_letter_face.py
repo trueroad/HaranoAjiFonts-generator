@@ -134,6 +134,48 @@ def draw_letter_face(x_min, y_min, x_max, y_max):
                             y_max * DEBUG_YS + DEBUG_YA,
                             outline='green', dash=(2, 2))
 
+def draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3):
+    if not debug_mode:
+        return
+
+    global debug_before
+    global debug_before_x
+    global debug_before_y
+
+    canvas.create_line(x0 * DEBUG_XS + DEBUG_XA,
+                       y0 * DEBUG_YS + DEBUG_YA,
+                       x1 * DEBUG_XS + DEBUG_XA,
+                       y1 * DEBUG_YS + DEBUG_YA,
+                       dash=(2, 2))
+    canvas.create_oval(x1 * DEBUG_XS + DEBUG_XA - DEBUG_R,
+                       y1 * DEBUG_YS + DEBUG_YA - DEBUG_R,
+                       x1 * DEBUG_XS + DEBUG_XA + DEBUG_R,
+                       y1 * DEBUG_YS + DEBUG_YA + DEBUG_R)
+    canvas.create_line(x2 * DEBUG_XS + DEBUG_XA,
+                       y2 * DEBUG_YS + DEBUG_YA,
+                       x3 * DEBUG_XS + DEBUG_XA,
+                       y3 * DEBUG_YS + DEBUG_YA,
+                       dash=(2, 2))
+    canvas.create_oval(x2 * DEBUG_XS + DEBUG_XA - DEBUG_R,
+                       y2 * DEBUG_YS + DEBUG_YA - DEBUG_R,
+                       x2 * DEBUG_XS + DEBUG_XA + DEBUG_R,
+                       y2 * DEBUG_YS + DEBUG_YA + DEBUG_R)
+
+    debug_before_x=x0
+    debug_before_y=y0
+
+    for i in range(1, 99):
+        t = i / 100
+        x, y = bezier(t, x0, y0, x1, y1, x2, y2, x3, y3)
+        canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
+                           debug_before_y * DEBUG_YS + DEBUG_YA,
+                           x * DEBUG_XS + DEBUG_XA,
+                           y * DEBUG_YS + DEBUG_YA)
+        debug_before_x=x
+        debug_before_y=y
+
+    point_path(x3, y3)
+
 def point_end():
     if not debug_mode:
         return
@@ -204,25 +246,6 @@ def point_move(x, y):
     debug_first = True
     debug_first_x = x
     debug_first_y = y
-
-def point_ctrl(x, y):
-    if not debug_mode:
-        return
-
-    global debug_before_x
-    global debug_before_y
-
-    canvas.create_oval(x * DEBUG_XS + DEBUG_XA - DEBUG_R,
-                       y * DEBUG_YS + DEBUG_YA - DEBUG_R,
-                       x * DEBUG_XS + DEBUG_XA + DEBUG_R,
-                       y * DEBUG_YS + DEBUG_YA + DEBUG_R)
-    if debug_before:
-        canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
-                           debug_before_y * DEBUG_YS + DEBUG_YA,
-                           x * DEBUG_XS + DEBUG_XA, y * DEBUG_YS + DEBUG_YA)
-    debug_before_x = x
-    debug_before_y = y
-    debug_print("ctrl ({}, {})".format(x, y))
 
 re_isInt = re.compile(r"^-?\d+$")
 re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
@@ -821,9 +844,7 @@ def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
     debug_print("  result min  ({}, {})".format(x_min, y_min))
     debug_print("  result max  ({}, {})".format(x_max, y_max))
 
-    point_ctrl(x1, y1)
-    point_ctrl(x2, y2)
-    point_path(x3, y3)
+    draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3)
     return x_min, y_min, x_max, y_max
 
 def solve_equation_real(a, b, c):
