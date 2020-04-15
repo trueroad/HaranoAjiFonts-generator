@@ -53,7 +53,9 @@ v_add_table = [
     # `′` U+2032 'PRIME'
     ["aji00708", "aji08273"],
     # `″` U+2033 'DOUBLE PRIME'
-    ["aji00709", "aji08283"]
+    ["aji00709", "aji08283"],
+    # `✂` U+2702 'BLACK SCISSORS'
+    ["aji12176", "aji12178"]
     ]
 
 def get_v_index (root):
