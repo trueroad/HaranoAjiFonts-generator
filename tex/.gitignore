@@ -2,3 +2,7 @@
 *.pdf
 *.aux
 *.log
+*.out
+*.ltjruby
+*.fdb_latexmk
+*.fls
