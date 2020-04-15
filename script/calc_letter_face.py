@@ -101,6 +101,11 @@ debug_before_y = 0
 debug_first = False
 debug_first_x = 0
 debug_first_y = 0
+DEBUG_R = 3
+DEBUG_XS = 0.5
+DEBUG_YS = -0.5
+DEBUG_XA = 100
+DEBUG_YA = 540
 
 def debug_print(msg):
     if debug_mode:
@@ -110,29 +115,23 @@ def draw_box():
     if not debug_mode:
         return
 
-    xs = 0.5
-    ys = -0.5
-    xa = 100
-    ya = 540
-
-    canvas.create_rectangle(0 * xs + xa, 880 * ys + ya,
-                            1000 * xs + xa, -120 * ys + ya,
+    canvas.create_rectangle(0 * DEBUG_XS + DEBUG_XA,
+                            880 * DEBUG_YS + DEBUG_YA,
+                            1000 * DEBUG_XS + DEBUG_XA,
+                            -120 * DEBUG_YS + DEBUG_YA,
                             outline='white')
-    canvas.create_line(0 * xs + xa, 0 * ys + ya,
-                       1000 * xs + xa, 0 * ys + ya,
+    canvas.create_line(0 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
+                       1000 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
                        fill='white')
 
 def draw_letter_face(x_min, y_min, x_max, y_max):
     if not debug_mode:
         return
 
-    xs = 0.5
-    ys = -0.5
-    xa = 100
-    ya = 540
-
-    canvas.create_rectangle(x_min * xs + xa, y_min * ys + ya,
-                            x_max * xs + xa, y_max * ys + ya,
+    canvas.create_rectangle(x_min * DEBUG_XS + DEBUG_XA,
+                            y_min * DEBUG_YS + DEBUG_YA,
+                            x_max * DEBUG_XS + DEBUG_XA,
+                            y_max * DEBUG_YS + DEBUG_YA,
                             outline='green', dash=(2, 2))
 
 def point_end():
@@ -147,16 +146,11 @@ def point_end():
     global debug_first_y
     global debug_first
 
-    xs = 0.5
-    ys = -0.5
-    xa = 100
-    ya = 540
-
     if debug_first:
-        canvas.create_line(debug_before_x * xs + xa,
-                           debug_before_y * ys + ya,
-                           debug_first_x * xs + xa,
-                           debug_first_y * ys + ya)
+        canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
+                           debug_before_y * DEBUG_YS + DEBUG_YA,
+                           debug_first_x * DEBUG_XS + DEBUG_XA,
+                           debug_first_y * DEBUG_YS + DEBUG_YA)
 
     debug_before = False
     debug_before_x = 0
@@ -176,19 +170,15 @@ def point_path(x, y):
     global debug_first_x
     global debug_first_y
 
-    r = 3
-    xs = 0.5
-    ys = -0.5
-    xa = 100
-    ya = 540
-
-    canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
-                       x * xs + xa + r, y * ys + ya + r,
+    canvas.create_oval(x * DEBUG_XS + DEBUG_XA - DEBUG_R,
+                       y * DEBUG_YS + DEBUG_YA - DEBUG_R,
+                       x * DEBUG_XS + DEBUG_XA + DEBUG_R,
+                       y * DEBUG_YS + DEBUG_YA + DEBUG_R,
                        fill='red')
     if debug_before:
-        canvas.create_line(debug_before_x * xs + xa,
-                           debug_before_y * ys + ya,
-                           x * xs + xa, y * ys + ya)
+        canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
+                           debug_before_y * DEBUG_YS + DEBUG_YA,
+                           x * DEBUG_XS + DEBUG_XA, y * DEBUG_YS + DEBUG_YA)
 
     if debug_first_x == x and debug_first_y == y:
         debug_before = False
@@ -222,18 +212,14 @@ def point_ctrl(x, y):
     global debug_before_x
     global debug_before_y
 
-    r = 3
-    xs = 0.5
-    ys = -0.5
-    xa = 100
-    ya = 540
-
-    canvas.create_oval(x * xs + xa - r, y * ys + ya - r,
-                       x * xs + xa + r, y * ys + ya + r)
+    canvas.create_oval(x * DEBUG_XS + DEBUG_XA - DEBUG_R,
+                       y * DEBUG_YS + DEBUG_YA - DEBUG_R,
+                       x * DEBUG_XS + DEBUG_XA + DEBUG_R,
+                       y * DEBUG_YS + DEBUG_YA + DEBUG_R)
     if debug_before:
-        canvas.create_line(debug_before_x * xs + xa,
-                           debug_before_y * ys + ya,
-                           x * xs + xa, y * ys + ya)
+        canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
+                           debug_before_y * DEBUG_YS + DEBUG_YA,
+                           x * DEBUG_XS + DEBUG_XA, y * DEBUG_YS + DEBUG_YA)
     debug_before_x = x
     debug_before_y = y
     debug_print("ctrl ({}, {})".format(x, y))
