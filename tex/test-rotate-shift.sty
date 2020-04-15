@@ -4,7 +4,7 @@
 % テスト用マクロ
 
 \definecolor{gray1}{rgb}{.9,.9,.9}
-\newcommand{\test}[1]{{\fontsize{100pt}{10pt}\selectfont%
+\newcommand{\test}[1]{{\fontsize{90pt}{10pt}\selectfont%
     \colorbox{gray1}{#1}\textmd{~}}}
 
 \newcommand{\testAll}{%
@@ -37,4 +37,12 @@
 
   \test{\CID{709}}%
   \test{\CID{8283}}%
+
+  \vspace{1zh}
+
+  \textmd{CID+12176}→\textmd{CID+12178, GSUB vert/vrt2}\par
+  \textmd{U+2702 `BLACK SCISSORS' --- 90}度右回転
+
+  \test{\CID{12176}}%
+  \test{\CID{12178}}%
 }
