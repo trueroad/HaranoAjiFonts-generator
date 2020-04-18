@@ -56,8 +56,8 @@ Map files for pTeX / pLaTeX are contained in
 ## Release Notes
 
 * [
-2020xxxx
-](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/2020xxxx)
+20200418
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200418)
     + Add 5 glyphs for vertical writing
     + Reduce file size
     + Readjust the drawing position of 2 glyphs
