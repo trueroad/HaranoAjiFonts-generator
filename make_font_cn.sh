@@ -172,7 +172,7 @@ ${BINDIR}/conv_cmap \
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
-    2> CFF01.log | sed -f ${BASEDIR}/font_name_cn.sed > CFF.ttx \
+    2> CFF01.log | sed -f ${BASEDIR}/font_name_cn.sed > CFF01.ttx \
     || { echo error; exit 1; }
 if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then
     echo converting GDEF table...
@@ -201,7 +201,7 @@ ${BINDIR}/conv_mtx \
 echo fixing widths in hmtx table...
 ${BINDIR}/fix_hmtx_cn \
     table.tbl hmtx_conv.ttx \
-    > hmtx.ttx 2> hmtx_width.log \
+    > hmtx_width.ttx 2> hmtx_width.log \
    || { echo error; exit 1; }
 echo converting vmtx table...
 ${BINDIR}/conv_mtx \
@@ -209,11 +209,46 @@ ${BINDIR}/conv_mtx \
     > vmtx.ttx 2> vmtx_conv.log \
    || { echo error; exit 1; }
 
+echo making adjust table...
+${SCRIPTDIR}/make_adjust_center.py \
+    table.tbl \
+    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx_width.ttx \
+    > adjust01.tbl 2> make_adjust.log \
+    || { echo error; exit 1; }
 
-# ***FIX ME*** Remove fixing width glyphs from GPOS
+echo adjusting CFF table...
+${SCRIPTDIR}/adjust.py \
+    adjust01.tbl \
+    CFF01.ttx \
+    CFF.ttx \
+    > adjust.log \
+    || { echo error; exit 1; }
+
+echo "calculating letter face for fixing {h|v}mtx and GPOS conversion..."
+${SCRIPTDIR}/calc_letter_face.py \
+    adjust01.tbl \
+    CFF.ttx \
+    > letter_face02.tbl \
+    || { echo error; exit 1; }
+
+echo fixing LSB in hmtx table...
+${SCRIPTDIR}/fix_mtx.py \
+    letter_face02.tbl \
+    hmtx_width.ttx \
+    hmtx.ttx \
+    > hmtx_lsb.log \
+    || { echo error; exit 1; }
+
+echo making conversion table for GPOS...
+${SCRIPTDIR}/make_table_for_GPOS.py \
+    table.tbl \
+    letter_face02.tbl \
+    > table_for_GPOS.tbl \
+    || { echo error; exit 1; }
+
 echo converting GPOS table...
 ${BINDIR}/conv_GPOS \
-    table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
+    table_for_GPOS.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
     > GPOS.ttx 2> GPOS.log \
    || { echo error; exit 1; }
 
