@@ -15,13 +15,8 @@ WEIGHT_SERIF = ExtraLight Light Regular Medium SemiBold Bold Heavy
 #WEIGHT_SANS = Regular
 #WEIGHT_SERIF  = Medium
 
-ORIGINAL_FONTS = $(addprefix $(ORIGINAL_FAMILY_SANS)-,$(WEIGHT_SANS)) \
-	$(addprefix $(ORIGINAL_FAMILY_SERIF)-,$(WEIGHT_SERIF))
-
 OUTPUT_FONTS = $(addprefix $(OUTPUT_FAMILY_SANS)-,$(WEIGHT_SANS)) \
 	$(addprefix $(OUTPUT_FAMILY_SERIF)-,$(WEIGHT_SERIF))
-
-BUILD_OTFS = $(addprefix build/,$(addsuffix /output.otf,$(ORIGINAL_FONTS)))
 OUTPUT_OTFS = $(addsuffix .otf,$(OUTPUT_FONTS))
 
 
@@ -41,9 +36,9 @@ build/%/output.otf: ttx/%.ttx bin/make_conv_table
 	./make_font.sh $* $(CMAP)
 
 
-HaranoAjiGothic-%.otf: build/SourceHanSansJP-%/output.otf
+$(OUTPUT_FAMILY_SANS)-%.otf: build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf
 	cp $< $@
-HaranoAjiMincho-%.otf: build/SourceHanSerifJP-%/output.otf
+$(OUTPUT_FAMILY_SERIF)-%.otf: build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf
 	cp $< $@
 
 
