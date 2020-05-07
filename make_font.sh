@@ -196,7 +196,7 @@ ${BINDIR}/conv_cmap \
    || { echo error; exit 1; }
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
-    table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
+    Adobe Japan1 7 table.tbl ${TTXDIR}/${SRC_FONTBASE}.C_F_F_.ttx \
     2> CFF01.log | sed -f ${BASEDIR}/font_name.sed > CFF01.ttx \
     || { echo error; exit 1; }
 if [ -f ${TTXDIR}/${SRC_FONTBASE}.G_D_E_F_.ttx ]; then

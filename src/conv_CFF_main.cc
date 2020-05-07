@@ -55,12 +55,18 @@ int main (int argc, char *argv[])
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 
-  if (argc != 3)
+  if (argc != 6)
     {
       std::cerr
-        << "usage: conv_CFF TABLE.TBL FONT.C_F_F_.ttx > CFF.ttx"
+        << "usage: conv_CFF R O S TABLE.TBL FONT.C_F_F_.ttx > CFF.ttx"
         << std::endl
         << std::endl
+        << "     R:" << std::endl
+        << "         Registry. e.g. Adobe" << std::endl
+        << "     O:" << std::endl
+        << "         Order. e.g. Japan1" << std::endl
+        << "     S:" << std::endl
+        << "         Supplement. e.g. 7" << std::endl
         << "     TABLE.TBL:" << std::endl
         << "         conversion table." << std::endl
         << "     FONT.C_F_F_.ttx:" << std::endl
@@ -69,17 +75,30 @@ int main (int argc, char *argv[])
       return 1;
     }
 
+  std::string ros_r = argv[1];
+  std::string ros_o = argv[2];
+  std::string ros_s = argv[3];
+  std::string table_filename = argv[4];
+  std::string original_CFF_filename = argv[5];
+
   std::cerr
-    << "inputs:" << std::endl
-    << "    conversion table file     : \"" << argv[1] << "\""
+    << "ROS:" << std::endl
+    << "    Registry                  : \"" << ros_r << "\""
     << std::endl
-    << "    original font CFF ttx file: \"" << argv[2] << "\""
+    << "    Order                     : \"" << ros_o << "\""
+    << std::endl
+    << "    Supplement                : \"" << ros_s << "\""
+    << std::endl
+    << "inputs:" << std::endl
+    << "    conversion table file     : \"" << table_filename << "\""
+    << std::endl
+    << "    original font CFF ttx file: \"" << original_CFF_filename << "\""
     << std::endl << std::endl;
 
-  walker_CFF wcff;
+  walker_CFF wcff (ros_r, ros_o, ros_s);
   try
     {
-      wcff.load (argv[1]);
+      wcff.load (table_filename);
     }
   catch (std::exception &e)
     {
@@ -90,10 +109,10 @@ int main (int argc, char *argv[])
 
   pugi::xml_document doc;
 
-  auto result = doc.load_file (argv[2]);
+  auto result = doc.load_file (original_CFF_filename.c_str ());
   if (!result)
     {
-      std::cerr << "error: filename \"" << argv[2]
+      std::cerr << "error: filename \"" << original_CFF_filename
                 << "\": " << result.description () << std::endl;
       return 1;
     }

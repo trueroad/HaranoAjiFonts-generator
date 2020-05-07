@@ -5,7 +5,7 @@
 // walker_CFF.cc:
 //   xml walker for CFF
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -47,8 +47,9 @@ walker::next_action walker_CFF::before (pugi::xml_node &node)
   std::string node_name (node.name ());
   if (node_name == "ROS")
     {
-      node.attribute ("Order") = "Japan1";
-      node.attribute ("Supplement") = "7";
+      node.attribute ("Registry") = r_.c_str ();
+      node.attribute ("Order") = o_.c_str ();
+      node.attribute ("Supplement") = s_.c_str ();
     }
   else if (node_name == "Notice")
     {

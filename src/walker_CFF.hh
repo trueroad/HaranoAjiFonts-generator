@@ -5,7 +5,7 @@
 // walker_CFF.hh:
 //   xml walker for CFF
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,8 @@
 #ifndef INCLUDE_GUARD_WALKER_CFF_HH
 #define INCLUDE_GUARD_WALKER_CFF_HH
 
+#include <string>
+
 #include "walker_conv.hh"
 
 class conv_table;
@@ -47,8 +49,23 @@ namespace pugi
 
 class walker_CFF: public walker_conv
 {
+public:
+  walker_CFF (const std::string &r,
+              const std::string &o,
+              const std::string &s)
+  {
+    r_ = r;
+    o_ = o;
+    s_ = s;
+  }
+
 protected:
   walker::next_action before (pugi::xml_node &node);
+
+private:
+  std::string r_;
+  std::string o_;
+  std::string s_;
 };
 
 #endif // INCLUDE_GUARD_WALKER_CONV_HH
