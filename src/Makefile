@@ -6,10 +6,8 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	conv_VORG conv_mtx \
 	check_table_CMap \
 	fix_hmtx
-BIN_CN = fix_hmtx_cn
 
 all: version.hh $(BIN)
-cn: all $(BIN_CN)
 
 #
 # Libraries
@@ -49,7 +47,6 @@ CONV_VORG_OBJS = conv_VORG_main.o conv_table.o
 CONV_MTX_OBJS = conv_mtx_main.o walker.o walker_conv.o conv_table.o
 CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o
 FIX_HMTX_OBJS = fix_hmtx_main.o conv_table.o
-FIX_HMTX_CN_OBJS = fix_hmtx_cn_main.o conv_table.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
@@ -59,7 +56,7 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(CONV_GDEF_OBJS) $(CONV_GPOS_OBJS) $(CONV_GSUB_OBJS) \
 	$(CONV_VORG_OBJS) $(CONV_MTX_OBJS) \
 	$(CHECK_TABLE_CMAP_OBJS) \
-	$(FIX_HMTX_OBJS) $(FIX_HMTX_CN_OBJS)
+	$(FIX_HMTX_OBJS)
 
 
 #
@@ -89,7 +86,7 @@ CPPFLAGS += -MMD -MP -MF $(@:.o=.d) -MT $@
 # Rules
 #
 
-.PHONY: all cn install install_cn clean
+.PHONY: all install clean
 
 clean:
 	$(RM) *~ $(OBJS) $(DEPS) version.hh
@@ -142,9 +139,6 @@ check_table_CMap: $(CHECK_TABLE_CMAP_OBJS)
 fix_hmtx: $(FIX_HMTX_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
-fix_hmtx_cn: $(FIX_HMTX_CN_OBJS)
-	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
-
 VERSION := $(shell cat ../version.txt)
 
 version.hh: version.hh.in ../version.txt
@@ -153,9 +147,6 @@ version.hh: version.hh.in ../version.txt
 install: all
 	$(INSTALL_DIR) ../bin
 	$(INSTALL_EXE) $(BIN) ../bin
-
-install_cn: install cn
-	$(INSTALL_EXE) $(BIN_CN) ../bin
 
 
 #

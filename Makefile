@@ -38,9 +38,6 @@ ttx/%.ttx: download/%.otf
 bin/make_conv_table:
 	$(MAKE) -C src
 	$(MAKE) -C src install
-bin/fix_hmtx_cn:
-	$(MAKE) -C src cn
-	$(MAKE) -C src install_cn
 
 build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf: \
 		ttx/$(ORIGINAL_FAMILY_SANS)JP-%.ttx bin/make_conv_table
@@ -52,11 +49,11 @@ build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf: \
 	./make_font.sh $(ORIGINAL_FAMILY_SERIF)JP-$* $(CMAP)
 
 build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SANS)CN-%.ttx bin/fix_hmtx_cn
+		ttx/$(ORIGINAL_FAMILY_SANS)CN-%.ttx bin/make_conv_table
 	mkdir -p build/$(ORIGINAL_FAMILY_SANS)CN-$*
 	./make_font_cn.sh $(ORIGINAL_FAMILY_SANS)CN-$* $(CMAP_CN)
 build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SERIF)CN-%.ttx bin/fix_hmtx_cn
+		ttx/$(ORIGINAL_FAMILY_SERIF)CN-%.ttx bin/make_conv_table
 	mkdir -p build/$(ORIGINAL_FAMILY_SERIF)CN-$*
 	./make_font_cn.sh $(ORIGINAL_FAMILY_SERIF)CN-$* $(CMAP_CN)
 

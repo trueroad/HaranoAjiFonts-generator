@@ -199,8 +199,8 @@ ${BINDIR}/conv_mtx \
     > hmtx_conv.ttx 2> hmtx_conv.log \
    || { echo error; exit 1; }
 echo fixing widths in hmtx table...
-${BINDIR}/fix_hmtx_cn \
-    table.tbl hmtx_conv.ttx \
+${BINDIR}/fix_hmtx \
+    AG1 table.tbl hmtx_conv.ttx \
     > hmtx_width.ttx 2> hmtx_width.log \
    || { echo error; exit 1; }
 echo converting vmtx table...
