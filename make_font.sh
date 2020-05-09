@@ -18,12 +18,14 @@ case "${SRC_FONTBASE}" in
     SourceHanSansJP* )
         FONT_LANG=JP
         FONT_TYPE=Sans
+
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSans
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSans/aj16-kanji.txt
         ;;
     SourceHanSerifJP* )
         FONT_LANG=JP
         FONT_TYPE=Serif
+
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSerif
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSerif/aj16-kanji.txt
         ;;
@@ -48,9 +50,12 @@ case "${FONT_LANG}" in
         ROS_O=Japan1
         ROS_S=7
         ROS=AJ1
+
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/aj17-gsub-jp04.fea
         FONT_NAME_SED=${BASEDIR}/font_name.sed
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust.py
+
+        JISX0208_MAPPING=${DOWNLOADDIR}/JISX0208-SourceHan-Mapping.txt
         ;;
     CN )
         CMAP=UniGB-UTF32-H
@@ -58,6 +63,7 @@ case "${FONT_LANG}" in
         ROS_O=GB1
         ROS_S=5
         ROS=AG1
+
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ag15-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_cn.sed
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
@@ -68,20 +74,22 @@ case "${FONT_LANG}" in
         ;;
 esac
 
+CMAP_FILE=${DOWNLOADDIR}/${CMAP}
+
 echo deleting old files...
 rm -f *.ttx *.log \
    || { echo error; exit 1; }
 
 echo "making conversion table (from cmap and CMap)..."
 ${BINDIR}/make_conv_table \
-    ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx ${DOWNLOADDIR}/${CMAP} \
+    ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx ${CMAP_FILE} \
     > table-cmap.tbl 2> table-cmap.log \
     || { echo error; exit 1; }
 
 if [ "${FONT_LANG}" = "JP" ]; then
     echo "making conversion table (from JISX0208-SourceHan-Mapping.txt)..."
     ${BINDIR}/make_jisx0208_table \
-        ${DOWNLOADDIR}/JISX0208-SourceHan-Mapping.txt ${FONT_TYPE} \
+        ${JISX0208_MAPPING} ${FONT_TYPE} \
         > table-jisx0208.tbl 2> table-jisx0208.log \
         || { echo error; exit 1; }
 
