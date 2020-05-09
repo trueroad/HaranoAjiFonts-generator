@@ -1,7 +1,6 @@
 #!/bin/sh
 
 SRC_FONTBASE=$1
-CMAP=$2
 
 TTXVER=`ttx --version`
 TOOLVER="ttx ${TTXVER}"
@@ -44,6 +43,7 @@ esac
 
 case "${FONT_LANG}" in
     JP )
+        CMAP=UniJIS2004-UTF32-H
         ROS_R=Adobe
         ROS_O=Japan1
         ROS_S=7
@@ -53,6 +53,7 @@ case "${FONT_LANG}" in
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust.py
         ;;
     CN )
+        CMAP=UniGB-UTF32-H
         ROS_R=Adobe
         ROS_O=GB1
         ROS_S=5

@@ -5,9 +5,6 @@ cn: output_otfs_cn
 .PHONY: all jp output_otfs cn output_otfs_cn clean
 
 
-CMAP = UniJIS2004-UTF32-H
-CMAP_CN = UniGB-UTF32-H
-
 ORIGINAL_FAMILY_SANS = SourceHanSans
 ORIGINAL_FAMILY_SERIF = SourceHanSerif
 OUTPUT_FAMILY_SANS = HaranoAjiGothic
@@ -39,23 +36,9 @@ bin/make_conv_table:
 	$(MAKE) -C src
 	$(MAKE) -C src install
 
-build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SANS)JP-%.ttx bin/make_conv_table
-	mkdir -p build/$(ORIGINAL_FAMILY_SANS)JP-$*
-	./make_font.sh $(ORIGINAL_FAMILY_SANS)JP-$* $(CMAP)
-build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SERIF)JP-%.ttx bin/make_conv_table
-	mkdir -p build/$(ORIGINAL_FAMILY_SERIF)JP-$*
-	./make_font.sh $(ORIGINAL_FAMILY_SERIF)JP-$* $(CMAP)
-
-build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SANS)CN-%.ttx bin/make_conv_table
-	mkdir -p build/$(ORIGINAL_FAMILY_SANS)CN-$*
-	./make_font.sh $(ORIGINAL_FAMILY_SANS)CN-$* $(CMAP_CN)
-build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf: \
-		ttx/$(ORIGINAL_FAMILY_SERIF)CN-%.ttx bin/make_conv_table
-	mkdir -p build/$(ORIGINAL_FAMILY_SERIF)CN-$*
-	./make_font.sh $(ORIGINAL_FAMILY_SERIF)CN-$* $(CMAP_CN)
+build/%/output.otf: ttx/%.ttx bin/make_conv_table
+	mkdir -p build/$*
+	./make_font.sh $*
 
 
 $(OUTPUT_FAMILY_SANS)-%.otf: build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf
@@ -69,11 +52,7 @@ $(OUTPUT_FAMILY_SERIF)CN-%.otf: build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf
 	cp $< $@
 
 
-NODELETE_FILES = ttx/%.ttx \
-	build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf \
-	build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf \
-	build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf \
-	build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf
+NODELETE_FILES = ttx/%.ttx build/%/output.otf
 
 .SECONDARY: $(NODELETE_FILES)
 .PRECIOUS: $(NODELETE_FILES)
