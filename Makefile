@@ -51,11 +51,11 @@ build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf: \
 build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf: \
 		ttx/$(ORIGINAL_FAMILY_SANS)CN-%.ttx bin/make_conv_table
 	mkdir -p build/$(ORIGINAL_FAMILY_SANS)CN-$*
-	./make_font_cn.sh $(ORIGINAL_FAMILY_SANS)CN-$* $(CMAP_CN)
+	./make_font.sh $(ORIGINAL_FAMILY_SANS)CN-$* $(CMAP_CN)
 build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf: \
 		ttx/$(ORIGINAL_FAMILY_SERIF)CN-%.ttx bin/make_conv_table
 	mkdir -p build/$(ORIGINAL_FAMILY_SERIF)CN-$*
-	./make_font_cn.sh $(ORIGINAL_FAMILY_SERIF)CN-$* $(CMAP_CN)
+	./make_font.sh $(ORIGINAL_FAMILY_SERIF)CN-$* $(CMAP_CN)
 
 
 $(OUTPUT_FAMILY_SANS)-%.otf: build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf
