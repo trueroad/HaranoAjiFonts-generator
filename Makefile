@@ -1,8 +1,12 @@
 all: jp
 jp: output_otfs
 cn: output_otfs_cn
+tw: output_otfs_tw
 
-.PHONY: all jp output_otfs cn output_otfs_cn clean
+.PHONY: all clean \
+	jp output_otfs \
+	cn output_otfs_cn \
+	tw output_otfs_tw
 
 
 ORIGINAL_FAMILY_SANS = SourceHanSans
@@ -23,9 +27,14 @@ OUTPUT_FONTS_CN = $(addprefix $(OUTPUT_FAMILY_SANS)CN-,$(WEIGHT_SANS)) \
 	$(addprefix $(OUTPUT_FAMILY_SERIF)CN-,$(WEIGHT_SERIF))
 OUTPUT_OTFS_CN = $(addsuffix .otf,$(OUTPUT_FONTS_CN))
 
+OUTPUT_FONTS_TW = $(addprefix $(OUTPUT_FAMILY_SANS)TW-,$(WEIGHT_SANS)) \
+	$(addprefix $(OUTPUT_FAMILY_SERIF)TW-,$(WEIGHT_SERIF))
+OUTPUT_OTFS_TW = $(addsuffix .otf,$(OUTPUT_FONTS_TW))
+
 
 output_otfs: $(OUTPUT_OTFS)
 output_otfs_cn: $(OUTPUT_OTFS_CN)
+output_otfs_tw: $(OUTPUT_OTFS_TW)
 
 
 ttx/%.ttx: download/%.otf
@@ -49,6 +58,11 @@ $(OUTPUT_FAMILY_SERIF)-%.otf: build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf
 $(OUTPUT_FAMILY_SANS)CN-%.otf: build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf
 	cp $< $@
 $(OUTPUT_FAMILY_SERIF)CN-%.otf: build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf
+	cp $< $@
+
+$(OUTPUT_FAMILY_SANS)TW-%.otf: build/$(ORIGINAL_FAMILY_SANS)TW-%/output.otf
+	cp $< $@
+$(OUTPUT_FAMILY_SERIF)TW-%.otf: build/$(ORIGINAL_FAMILY_SERIF)TW-%/output.otf
 	cp $< $@
 
 

@@ -3,7 +3,7 @@
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
 // fix_hmtx_main.cc:
-//   fix {AJ1|AG1} hmtx width
+//   fix {AJ1|AG1|AC1} hmtx width
 //
 // Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
@@ -79,12 +79,27 @@ namespace
     return 1000; // fwid
   }
 
+  // Adobe-CNS1 (AC1)
+  int ac1_width (int cid)
+  {
+    if ((    1 <= cid && cid <=    98) ||
+        (17601 <= cid && cid <= 17601))
+      return -1; // pwid
+    if ((13648 <= cid && cid <= 13742) ||
+        (17603 <= cid && cid <= 17603))
+      return 500; // hwid
+
+    return 1000; // fwid
+  }
+
   int get_width (const std::string &ros, int cid)
   {
     if (ros == "AJ1")
       return aj1_width (cid);
     else if (ros == "AG1")
       return ag1_width (cid);
+    else if (ros == "AC1")
+      return ac1_width (cid);
 
     return -1; // no change
   }
@@ -95,7 +110,7 @@ int main (int argc, char *argv[])
   std::cerr
     << "# fix_hmtx: Harano Aji Fonts generator " << version
     << "#" << std::endl
-    << "# (fix {AJ1|AG1} hmtx width)"
+    << "# (fix {AJ1|AG1|AC1} hmtx width)"
     << "#" << std::endl
     << "# Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
@@ -108,11 +123,11 @@ int main (int argc, char *argv[])
         << std::endl
         << std::endl
         << "     ROS:" << std::endl
-        << "         {AJ1|AG1}" << std::endl
+        << "         {AJ1|AG1|AC1}" << std::endl
         << "     TABLE.TBL:" << std::endl
         << "         conversion table." << std::endl
         << "     aj1_hmtx.ttx:" << std::endl
-        << "         {AJ1|AG1} hmtx table which contains wrong width."
+        << "         {AJ1|AG1|AC1} hmtx table which contains wrong width."
         << std::endl;
       return 1;
     }

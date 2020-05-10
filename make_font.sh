@@ -37,6 +37,14 @@ case "${SRC_FONTBASE}" in
         FONT_LANG=CN
         FONT_TYPE=Serif
         ;;
+    SourceHanSansTW* )
+        FONT_LANG=TW
+        FONT_TYPE=Sans
+        ;;
+    SourceHanSerifTW* )
+        FONT_LANG=TW
+        FONT_TYPE=Serif
+        ;;
     * )
         echo invalid font name
         exit 1
@@ -66,6 +74,17 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ag15-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_cn.sed
+        SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
+        ;;
+    TW )
+        CMAP=UniCNS-UTF32-H
+        ROS_R=Adobe
+        ROS_O=CNS1
+        ROS_S=7
+        ROS=AC1
+
+        FEATURE_GSUB_FEA=${DOWNLOADDIR}/ac17-gsub.fea
+        FONT_NAME_SED=${BASEDIR}/font_name_tw.sed
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     * )
