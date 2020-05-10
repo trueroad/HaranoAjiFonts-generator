@@ -3,7 +3,7 @@
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
 // fix_hmtx_main.cc:
-//   fix {AJ1|AG1|AC1} hmtx width
+//   fix {AJ1|AG1|AC1|AKR} hmtx width
 //
 // Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
@@ -92,6 +92,65 @@ namespace
     return 1000; // fwid
   }
 
+  // Adobe-KR (AKR)
+  int akr_width (int cid)
+  {
+    if ((    0 <= cid && cid <=     0) ||
+        (  119 <= cid && cid <=   119) ||
+        (  128 <= cid && cid <=   128) ||
+        (  132 <= cid && cid <=   132) ||
+        (  135 <= cid && cid <=   135) ||
+        (  136 <= cid && cid <=   136) ||
+        (  138 <= cid && cid <=   147) ||
+        (  152 <= cid && cid <=   155) ||
+        (  158 <= cid && cid <=   169) ||
+        (11451 <= cid && cid <= 11877) ||
+        (11895 <= cid && cid <= 11895) ||
+        (11923 <= cid && cid <= 11925) ||
+        (11932 <= cid && cid <= 11976) ||
+        (11978 <= cid && cid <= 12107) ||
+        (12151 <= cid && cid <= 12234) ||
+        (14238 <= cid && cid <= 22479) ||
+        (22690 <= cid && cid <= 22896))
+      return 1000; // fwid
+    if ((    1 <= cid && cid <=   108) ||
+        (  110 <= cid && cid <=   118) ||
+        (  120 <= cid && cid <=   127) ||
+        (  129 <= cid && cid <=   131) ||
+        (  133 <= cid && cid <=   133) ||
+        (  134 <= cid && cid <=   134) ||
+        (  137 <= cid && cid <=   137) ||
+        (  148 <= cid && cid <=   151) ||
+        (  156 <= cid && cid <=   156) ||
+        (  157 <= cid && cid <=   157) ||
+        ( 3001 <= cid && cid <=  3052) ||
+        (11878 <= cid && cid <= 11894) ||
+        (11896 <= cid && cid <= 11922) ||
+        (11926 <= cid && cid <= 11931) ||
+        (11977 <= cid && cid <= 11977) ||
+        (22480 <= cid && cid <= 22689))
+      return -1; // pwid
+    if ((  109 <= cid && cid <=   109) ||
+        (  170 <= cid && cid <=  3000) ||
+        ( 3053 <= cid && cid <=  3056) ||
+        ( 3059 <= cid && cid <= 11450) ||
+        (12108 <= cid && cid <= 12150) ||
+        (12237 <= cid && cid <= 13500))
+      return 1000; // Monospaced -> fwid
+    if (cid == 3057)
+      return -1; // Two-em -> pwid
+    if (cid == 3058)
+      return -1; // Three-em -> pwid
+    if (cid == 12235 || cid == 12236)
+      return 250; // qwid
+    if (13501 <= cid && cid <= 14237)
+      return 0; // Zero-width
+
+    std::cerr << "# Width error: AKR CID+" << cid << std::endl;
+
+    return -1; // no change
+  }
+
   int get_width (const std::string &ros, int cid)
   {
     if (ros == "AJ1")
@@ -100,6 +159,8 @@ namespace
       return ag1_width (cid);
     else if (ros == "AC1")
       return ac1_width (cid);
+    else if (ros == "AKR")
+      return akr_width (cid);
 
     return -1; // no change
   }
@@ -110,7 +171,7 @@ int main (int argc, char *argv[])
   std::cerr
     << "# fix_hmtx: Harano Aji Fonts generator " << version
     << "#" << std::endl
-    << "# (fix {AJ1|AG1|AC1} hmtx width)"
+    << "# (fix {AJ1|AG1|AC1|AKR} hmtx width)"
     << "#" << std::endl
     << "# Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
@@ -123,11 +184,11 @@ int main (int argc, char *argv[])
         << std::endl
         << std::endl
         << "     ROS:" << std::endl
-        << "         {AJ1|AG1|AC1}" << std::endl
+        << "         {AJ1|AG1|AC1|AKR}" << std::endl
         << "     TABLE.TBL:" << std::endl
         << "         conversion table." << std::endl
         << "     aj1_hmtx.ttx:" << std::endl
-        << "         {AJ1|AG1|AC1} hmtx table which contains wrong width."
+        << "         {AJ1|AG1|AC1|AKR} hmtx table which contains wrong width."
         << std::endl;
       return 1;
     }

@@ -45,6 +45,14 @@ case "${SRC_FONTBASE}" in
         FONT_LANG=TW
         FONT_TYPE=Serif
         ;;
+    SourceHanSansKR* )
+        FONT_LANG=KR
+        FONT_TYPE=Sans
+        ;;
+    SourceHanSerifKR* )
+        FONT_LANG=KR
+        FONT_TYPE=Serif
+        ;;
     * )
         echo invalid font name
         exit 1
@@ -85,6 +93,17 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ac17-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_tw.sed
+        SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
+        ;;
+    KR )
+        CMAP=UniAKR-UTF32-H
+        ROS_R=Adobe
+        ROS_O=KR
+        ROS_S=9
+        ROS=AKR
+
+        FEATURE_GSUB_FEA=${DOWNLOADDIR}/akr9-gsub.fea
+        FONT_NAME_SED=${BASEDIR}/font_name_kr.sed
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     * )
