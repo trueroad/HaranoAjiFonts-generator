@@ -5,7 +5,7 @@
 // conv_GSUB_main.cc:
 //   convert GSUB.ttx
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(convert GSUB.ttx)"
     << std::endl
-    << "Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 
@@ -238,6 +238,116 @@ int main (int argc, char *argv[])
         }
       if (!bremain)
         removes.push_back (ligset_node);
+    }
+
+  auto chain_subst
+    = doc.select_nodes ("/ttFont/GSUB/LookupList/Lookup/ChainContextSubst");
+
+  for (auto it = chain_subst.begin ();
+       it != chain_subst.end ();
+       ++it)
+    {
+      auto chain_subst_node = it->node ();
+
+      bool bexist = false;
+      bool bremain = false;
+      for (auto coverage: chain_subst_node.children ("BacktrackCoverage"))
+        {
+          bexist = true;
+          bremain = false;
+          for (auto glyph: coverage.children ("Glyph"))
+            {
+              auto glyph_attr = glyph.attribute ("value");
+
+              if (!glyph_attr)
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+
+              std::string cid = ct.convert (glyph_attr.value ());
+              if (cid == "")
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+              glyph_attr = cid.c_str ();
+              bremain = true;
+            }
+
+          if (!bremain)
+            {
+              removes.push_back (chain_subst_node);
+              break;
+            }
+        }
+      if (bexist && !bremain)
+        continue;
+
+      bexist = false;
+      bremain = false;
+      for (auto coverage: chain_subst_node.children ("InputCoverage"))
+        {
+          bexist = true;
+          bremain = false;
+          for (auto glyph: coverage.children ("Glyph"))
+            {
+              auto glyph_attr = glyph.attribute ("value");
+
+              if (!glyph_attr)
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+
+              std::string cid = ct.convert (glyph_attr.value ());
+              if (cid == "")
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+              glyph_attr = cid.c_str ();
+              bremain = true;
+            }
+
+          if (!bremain)
+            {
+              removes.push_back (chain_subst_node);
+              break;
+            }
+        }
+      if (bexist && !bremain)
+        continue;
+
+      for (auto coverage: chain_subst_node.children ("LookAheadCoverage"))
+        {
+          bremain = false;
+          for (auto glyph: coverage.children ("Glyph"))
+            {
+              auto glyph_attr = glyph.attribute ("value");
+
+              if (!glyph_attr)
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+
+              std::string cid = ct.convert (glyph_attr.value ());
+              if (cid == "")
+                {
+                  removes.push_back (glyph);
+                  continue;
+                }
+              glyph_attr = cid.c_str ();
+              bremain = true;
+            }
+
+          if (!bremain)
+            {
+              removes.push_back (chain_subst_node);
+              break;
+            }
+        }
     }
 
 
