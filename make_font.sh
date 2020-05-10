@@ -279,8 +279,17 @@ ${BINDIR}/conv_name \
 echo converting cmap table...
 ${BINDIR}/conv_cmap \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx \
-    > cmap.ttx 2> cmap.log \
+    > cmap01.ttx 2> cmap.log \
     || { echo error; exit 1; }
+if [ "${FONT_LANG}" = "KR" ]; then
+    # Remove cmap format 4 because the subtable size exceeds the limit.
+    echo "removing cmap format 4..."
+    ${SCRIPTDIR}/remove_cmap_format4.py < cmap01.ttx \
+        > cmap.ttx 2> cmap_remove_format4.log \
+        || { echo error; exit 1; }
+else
+    ln -s cmap01.ttx cmap.ttx
+fi
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
     ${ROS_R} ${ROS_O} ${ROS_S} \
