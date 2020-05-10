@@ -249,6 +249,8 @@ int main (int argc, char *argv[])
     {
       auto chain_subst_node = it->node ();
 
+      removes.push_back (chain_subst_node);
+      /* // ***FIX ME** Coverage must be sorted by glyph ids.
       bool bexist = false;
       bool bremain = false;
       for (auto coverage: chain_subst_node.children ("BacktrackCoverage"))
@@ -348,6 +350,7 @@ int main (int argc, char *argv[])
               break;
             }
         }
+      */
     }
 
 
