@@ -282,10 +282,10 @@ ${BINDIR}/conv_cmap \
     > cmap01.ttx 2> cmap.log \
     || { echo error; exit 1; }
 if [ "${FONT_LANG}" = "KR" ]; then
-    # Remove cmap format 4 because the subtable size exceeds the limit.
-    echo "removing cmap format 4..."
-    ${SCRIPTDIR}/remove_cmap_format4.py < cmap01.ttx \
-        > cmap.ttx 2> cmap_remove_format4.log \
+    # cmap table format 4 subtable size exceeds the limit.
+    echo "reducing size of cmap format 4..."
+    ${SCRIPTDIR}/fill_gaps_cmap.py cmap01.ttx cmap.ttx \
+        > cmap_fill_gaps.log \
         || { echo error; exit 1; }
 else
     ln -s cmap01.ttx cmap.ttx
