@@ -33,6 +33,7 @@
 // SUCH DAMAGE.
 //
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -249,108 +250,114 @@ int main (int argc, char *argv[])
     {
       auto chain_subst_node = it->node ();
 
-      removes.push_back (chain_subst_node);
-      /* // ***FIX ME** Coverage must be sorted by glyph ids.
       bool bexist = false;
-      bool bremain = false;
+      std::vector<std::string> cids;
       for (auto coverage: chain_subst_node.children ("BacktrackCoverage"))
         {
           bexist = true;
-          bremain = false;
+          cids.clear ();
+
           for (auto glyph: coverage.children ("Glyph"))
             {
               auto glyph_attr = glyph.attribute ("value");
+              removes.push_back (glyph);
 
               if (!glyph_attr)
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
+                continue;
 
               std::string cid = ct.convert (glyph_attr.value ());
               if (cid == "")
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
-              glyph_attr = cid.c_str ();
-              bremain = true;
+                continue;
+
+              cids.push_back (cid);
             }
 
-          if (!bremain)
+          if (cids.empty ())
             {
               removes.push_back (chain_subst_node);
               break;
             }
+
+          std::sort (cids.begin (), cids.end ());
+          for (const auto &cid: cids)
+            {
+              auto node = coverage.append_child ("Glyph");
+              node.append_attribute ("value") = cid.c_str ();
+            }
         }
-      if (bexist && !bremain)
+      if (bexist && cids.empty ())
         continue;
 
       bexist = false;
-      bremain = false;
+      cids.clear ();
       for (auto coverage: chain_subst_node.children ("InputCoverage"))
         {
           bexist = true;
-          bremain = false;
+          cids.clear ();
+
           for (auto glyph: coverage.children ("Glyph"))
             {
               auto glyph_attr = glyph.attribute ("value");
+              removes.push_back (glyph);
 
               if (!glyph_attr)
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
+                continue;
 
               std::string cid = ct.convert (glyph_attr.value ());
               if (cid == "")
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
-              glyph_attr = cid.c_str ();
-              bremain = true;
+                continue;
+
+              cids.push_back (cid);
             }
 
-          if (!bremain)
+          if (cids.empty ())
             {
               removes.push_back (chain_subst_node);
               break;
             }
+
+          std::sort (cids.begin (), cids.end ());
+          for (const auto &cid: cids)
+            {
+              auto node = coverage.append_child ("Glyph");
+              node.append_attribute ("value") = cid.c_str ();
+            }
         }
-      if (bexist && !bremain)
+      if (bexist && cids.empty ())
         continue;
 
       for (auto coverage: chain_subst_node.children ("LookAheadCoverage"))
         {
-          bremain = false;
+          cids.clear ();
+
           for (auto glyph: coverage.children ("Glyph"))
             {
               auto glyph_attr = glyph.attribute ("value");
+              removes.push_back (glyph);
 
               if (!glyph_attr)
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
+                continue;
 
               std::string cid = ct.convert (glyph_attr.value ());
               if (cid == "")
-                {
-                  removes.push_back (glyph);
-                  continue;
-                }
-              glyph_attr = cid.c_str ();
-              bremain = true;
+                continue;
+
+              cids.push_back (cid);
             }
 
-          if (!bremain)
+          if (cids.empty ())
             {
               removes.push_back (chain_subst_node);
               break;
             }
+
+          std::sort (cids.begin (), cids.end ());
+          for (const auto &cid: cids)
+            {
+              auto node = coverage.append_child ("Glyph");
+              node.append_attribute ("value") = cid.c_str ();
+            }
         }
-      */
     }
 
 
