@@ -456,5 +456,11 @@ sed -f ${BASEDIR}/font_tables.sed ${TTXDIR}/${SRC_FONTBASE}.ttx \
     > output.ttx \
     || { echo error; exit 1; }
 
+if [ "${FONT_LANG}" = "KR" ]; then
+    # ***FIX ME*** The `GPOS` table conversion seems incomplete for KR.
+    echo "removing GPOS table (KR workaround)..."
+    sed -i -e 's/<GPOS \(.*\)\/>/<!--GPOS \1\/-->/g' output.ttx
+fi
+
 ttx -b --recalc-timestamp output.ttx \
     || { echo error; exit 1; }
