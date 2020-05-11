@@ -148,7 +148,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific conversion table making and merging..."
-    cp table-cmap.tbl table10.tbl
+    ln -s table-cmap.tbl table10.tbl
 fi
 
 echo "making conversion table (OpenType feature fwid)..."
@@ -348,7 +348,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific copying and rotating glyphs..."
-    cp CFF01.ttx CFF02.ttx
+    ln -s CFF01.ttx CFF02.ttx
 fi
 
 echo making adjust table...
@@ -370,7 +370,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific shift table making and merging..."
-    cp adjust01.tbl adjust02.tbl
+    ln -s adjust01.tbl adjust02.tbl
 fi
 
 echo adjusting CFF table...
@@ -387,7 +387,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific {h|v}mtx fixing table making..."
-    cp adjust02.tbl fix_mtx.tbl
+    ln -s adjust02.tbl fix_mtx.tbl
 fi
 
 echo "calculating letter face for fixing {h|v}mtx and GPOS conversion..."
@@ -415,7 +415,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific TSB fixing in vmtx table..."
-    cp vmtx_conv.ttx vmtx.ttx
+    ln -s vmtx_conv.ttx vmtx.ttx
 fi
 
 echo making conversion table for GPOS...
@@ -439,7 +439,7 @@ if [ "${FONT_LANG}" = "JP" ]; then
         || { echo error; exit 1; }
 else
     echo "skipping language-specific GSUB vert/vrt2 substitution adding..."
-    cp GSUB01.ttx GSUB.ttx
+    ln -s GSUB01.ttx GSUB.ttx
 fi
 
 echo symbolic linking other tables...
