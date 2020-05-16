@@ -169,10 +169,8 @@ namespace
 int main (int argc, char *argv[])
 {
   std::cerr
-    << "# fix_hmtx: Harano Aji Fonts generator " << version
-    << "#" << std::endl
-    << "# (fix {AJ1|AG1|AC1|AKR} hmtx width)"
-    << "#" << std::endl
+    << "# fix_hmtx: Harano Aji Fonts generator " << version << std::endl
+    << "# (fix {AJ1|AG1|AC1|AKR} hmtx width)" << std::endl
     << "# Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
