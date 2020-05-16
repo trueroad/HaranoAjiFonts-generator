@@ -23,7 +23,7 @@ AJ1 をもじって AJI にして
     - [
 https://github.com/trueroad/HaranoAjiFonts-generator
 ](https://github.com/trueroad/HaranoAjiFonts-generator)
-* 生成した原ノ味フォント
+* 生成した原ノ味フォント（日本語版：JP）
     - TeX Live
         - TeX Live 2020 以降に含まれており、
           （ごく一部のエンジンを除き）和文のデフォルトフォントになっています
@@ -59,6 +59,21 @@ https://github.com/trueroad/HaranoAjiFonts
 pTeX / pLaTeX 用マップファイルは
 [ptex-fontmaps](https://www.ctan.org/pkg/ptex-fontmaps)
 20200217.0 以降に入っています。
+
+**実験的**に生成した中国語簡体字、中国語繁体字、韓国語フォントがあります。
+
+* （実験的）中国語簡体字 (CN)：Adobe-GB1 対応
+    + [
+https://github.com/trueroad/HaranoAjiFontsCN
+](https://github.com/trueroad/HaranoAjiFontsCN)
+* （実験的）中国語繁体字 (TW)：Adobe-CNS1 対応
+    + [
+https://github.com/trueroad/HaranoAjiFontsTW
+](https://github.com/trueroad/HaranoAjiFontsTW)
+* （実験的）韓国語 (KR)：Adobe-KR 対応
+    + [
+https://github.com/trueroad/HaranoAjiFontsKR
+](https://github.com/trueroad/HaranoAjiFontsKR)
 
 ## Adobe-Japan1 (AJ1) v.s. Adobe-Identity0 (AI0)
 
@@ -242,10 +257,10 @@ C++ で xml や CMap などから CID の対照表を作り、 C++ や sed で�
     + [https://pugixml.org/](https://pugixml.org/)
 * Python3
 * GNU Make
-* sed
+* GNU sed
 * その他 sh など
 
-### ファイル
+### ファイル (JP)
 
 `download` ディレクトリを掘り、以下のファイルを置いてください。
 
@@ -300,9 +315,107 @@ The Adobe-Japan1-7 Character Collection
 このファイルだけ明朝・ゴシック別のディレクトリに配置してください。
 その他のファイルはすべて同じディレクトリに配置してください。
 
-### 生成
+### 生成 (JP)
 
 `make` で生成できます。
+
+### （実験的）他の言語
+
+#### （実験的）ファイル (CN)
+
+* Source Han フォント Region-specific Subset OTFs CN 版
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifCN-ExtraLight.otf
+        - SourceHanSerifCN-Light.otf
+        - SourceHanSerifCN-Normal.otf
+        - SourceHanSerifCN-Regular.otf
+        - SourceHanSerifCN-Medium.otf
+        - SourceHanSerifCN-Bold.otf
+        - SourceHanSerifCN-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansCN-ExtraLight.otf
+        - SourceHanSansCN-Light.otf
+        - SourceHanSansCN-Regular.otf
+        - SourceHanSansCN-Medium.otf
+        - SourceHanSansCN-SemiBold.otf
+        - SourceHanSansCN-Bold.otf
+        - SourceHanSansCN-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniGB-UTF32-H
+* AG1-5 の GSUB 情報
+    + [
+The Adobe-GB1-5 Character Collection
+](https://github.com/adobe-type-tools/Adobe-GB1)
+      から `ag15-gsub.fea`
+      （GSUB ディレクトリにあります）
+
+#### （実験的）生成 (CN)
+
+`make cn` で生成できます。
+
+#### （実験的）ファイル (TW)
+
+* Source Han フォント Region-specific Subset OTFs TW 版
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifTW-ExtraLight.otf
+        - SourceHanSerifTW-Light.otf
+        - SourceHanSerifTW-Normal.otf
+        - SourceHanSerifTW-Regular.otf
+        - SourceHanSerifTW-Medium.otf
+        - SourceHanSerifTW-Bold.otf
+        - SourceHanSerifTW-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansTW-ExtraLight.otf
+        - SourceHanSansTW-Light.otf
+        - SourceHanSansTW-Regular.otf
+        - SourceHanSansTW-Medium.otf
+        - SourceHanSansTW-SemiBold.otf
+        - SourceHanSansTW-Bold.otf
+        - SourceHanSansTW-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniCNS-UTF32-H
+* AC1-7 の GSUB 情報
+    + [
+The Adobe-CNS1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-CNS1)
+      から `ac17-gsub.fea`
+      （GSUB ディレクトリにあります）
+
+#### （実験的）生成 (TW)
+
+`make tw` で生成できます。
+
+#### （実験的）ファイル (KR)
+
+* Source Han フォント Region-specific Subset OTFs KR 版
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifKR-ExtraLight.otf
+        - SourceHanSerifKR-Light.otf
+        - SourceHanSerifKR-Normal.otf
+        - SourceHanSerifKR-Regular.otf
+        - SourceHanSerifKR-Medium.otf
+        - SourceHanSerifKR-Bold.otf
+        - SourceHanSerifKR-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansKR-ExtraLight.otf
+        - SourceHanSansKR-Light.otf
+        - SourceHanSansKR-Regular.otf
+        - SourceHanSansKR-Medium.otf
+        - SourceHanSansKR-SemiBold.otf
+        - SourceHanSansKR-Bold.otf
+        - SourceHanSansKR-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniAKR-UTF32-H
+* AKR-9 の GSUB 情報
+    + [
+The Adobe-KR-9 Character Collection
+](https://github.com/adobe-type-tools/Adobe-KR)
+      から `akr9-gsub.fea`
+      （GSUB ディレクトリにあります）
+
+#### （実験的）生成 (KR)
+
+`make kr` で生成できます。
 
 ## 詳細
 
@@ -371,7 +484,7 @@ cmap テーブルの format 12 には
 また、cmap format 12 も CMap file も異字体セレクタの情報がありませんから、
 異字体セレクタを要するグリフも対応が取れずに失われます。
 
-#### 漢字
+#### 漢字（JP のみ）
 
 cmap テーブルと CMap file による方法は源ノフォントに限らず、
 AI0 の OpenType フォントであればどのフォントでも使うことができる方法です。
@@ -397,7 +510,7 @@ AI0 CID → AJ1 CID
 とはいえ、グリフ数の大部分は漢字ですから、
 この方法でかなりカバーできているはずです。
 
-#### JIS X 0208
+#### JIS X 0208 （JP のみ）
 
 前節で非漢字の対応表が無いと書きましたが、
 原ノ味フォントを作ってしばらくしたら
@@ -441,7 +554,7 @@ AJ1-7 の GSUB が入手可能です。
 もう 1 回同じことをするとさらに対応付けできる CID の数が増えるため、
 2 回実施しています。
 
-#### その他の変換方法
+#### その他の変換方法（JP のみ）
 
 以上でほとんどの CID を対応付けすることができており、
 抜けているグリフはもともと源ノフォントが持っていないもの
@@ -506,6 +619,20 @@ ttx の出力で中身が無かった format 6 は削除しています。
 これは本当に中身が無いのか ttx が format 6 のパースに対応していないのか、
 どちらなのかはわかりません。
 
+原ノ味フォント 20200516 から、KR のみ format 4 と format 12 に対し、
+Unicode コードポイントで一つだけ抜けている
+（両隣は存在するが該当箇所は存在しない）ものに
+.notdef を割り当てる加工をしています。
+これは、何もしないと format 4 のサイズが 64 KB を超えてしまい、
+ttx でのフォント生成が例外で落ちてしまったためです。
+format 12 はサイズの問題がないし format 4 の情報もすべて含んだ上位互換なので、
+format 4 がなくてもいいだろうと削除してみたら落ちなくなりましたが、
+Windows がフォントとして認識してくれません。
+仕方なく format 4 の仕様書とにらめっこしてサイズを低減する方法を模索し、
+上記の処理を入れました。
+なお format 12 も BMP の範囲は format 4 と同じである必要があるため、
+BMP 範囲内のみ同じ処理を入れてあります。
+
 #### `CFF`
 
 `CFF` 用の変換プログラムで
@@ -544,6 +671,9 @@ AJ1 がプロポーショナル幅の場合は上書きしません。
 CharString のレンダリングと同様の処理で字面を計算し、
 LSB （左サイドベアリング）と TSB （上サイドベアリング）を修正しています。
 
+原ノ味フォント 20200516 から、
+KR で AKR の横幅が Monospaced になっているものは全角幅としています。
+
 #### `VORG`
 
 `VORG` 用の変換プログラムで
@@ -567,6 +697,11 @@ CID をすべて AI0 CID から AJ1 CID に変換しています。
 原ノ味フォント 20200418 から、
 幅上書、位置調整したグリフについてテーブルから削除しています。
 
+原ノ味フォント 20200516 から、
+KR のみ `GPOS` テーブルを削除しています。
+これはテーブルの変換がうまくいっていない（ttx でフォント生成はできるが
+Windows がフォントとして認識してくれない）ためです。
+
 #### `GSUB`
 
 `GSUB` 用の変換プログラムで
@@ -576,6 +711,9 @@ AJ1 用の GSUB 定義を持ってきているわけではなく、
 あくまでも源ノフォントの GSUB を変換しています。
 とはいえ、「びゃん」や「たいと」などは AJ1 には無いので対応できません。
 
+原ノ味フォント 20200516 から、chain context の変換に対応しました。
+chain context があるのは KR のみです。
+
 #### `DSIG`
 
 必須テーブルではないため削除しています。
@@ -583,6 +721,25 @@ AJ1 用の GSUB 定義を持ってきているわけではなく、
 
 ## 履歴
 
+* [
+20200516
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200516)
+(CN, TW, KR)
+    + **実験的に**中国語簡体字、中国語繁体字、韓国語フォントを
+      生成できるようにしました
+    + 各言語版のフォント名は、サフィックスにベースとした源ノフォントと同じ
+      アルファベット 2 文字を付けています
+        + 中国語簡体字：Adobe-GB1 対応、サフィックス CN
+            + UniGB-UTF32-H 1.016
+        + 中国語繁体字：Adobe-CNS1 対応、サフィックス TW
+            + UniCNS-UTF32-H 1.019
+        + 韓国語：Adobe-KR 対応、サフィックス KR
+            + UniAKR-UTF32-H 1.002
+    + 日本語は変更なし、今回のリリースもありません
+    + 今後は各言語版の略称にサフィックスを使います
+        + 日本語版はフォント名にサフィックスありませんが略称 JP とします
+    + バージョンアップ
+        - ttx 4.10.0
 * [
 20200418
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200418)

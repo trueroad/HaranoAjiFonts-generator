@@ -16,7 +16,7 @@ There are 14 fonts, 7 weights each for Mincho and Gothic.
     - [
 https://github.com/trueroad/HaranoAjiFonts-generator
 ](https://github.com/trueroad/HaranoAjiFonts-generator)
-* Generated Harano Aji Fonts
+* Generated Harano Aji Fonts (Japanese: JP)
     - TeX Live
         - Contained in TeX Live 2020 and later.
           Default font for Japanese except for a few engines.
@@ -53,8 +53,211 @@ Map files for pTeX / pLaTeX are contained in
 [ptex-fontmaps](https://www.ctan.org/pkg/ptex-fontmaps)
 20200217.0 or later.
 
+There are **experimentally** generated Simplified Chinese,
+Traditional Chinese, and Korean fonts.
+
+* (Experimental) Simplified Chinese (CN): Adobe-GB1
+    + [
+https://github.com/trueroad/HaranoAjiFontsCN
+](https://github.com/trueroad/HaranoAjiFontsCN)
+* (Experimental) Traditional Chinese (TW): Adobe-CNS1
+    + [
+https://github.com/trueroad/HaranoAjiFontsTW
+](https://github.com/trueroad/HaranoAjiFontsTW)
+* (Experimental) Korean (KR): Adobe-KR
+    + [
+https://github.com/trueroad/HaranoAjiFontsKR
+](https://github.com/trueroad/HaranoAjiFontsKR)
+
+## Usage
+
+### Required
+
+* ttx
+    + [fonttools](https://github.com/fonttools/fonttools)
+* C++11 compiler
+    + g++ 4.9 and above etc.
+* pugixml
+    + [https://pugixml.org/](https://pugixml.org/)
+* Python3
+* GNU Make
+* GNU sed
+* sh etc.
+
+### Files (JP)
+
+Make `download` directory and put the following files in it.
+
+* Source Han fonts Region-specific Subset OTFs Japanese
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifJP-ExtraLight.otf
+        - SourceHanSerifJP-Light.otf
+        - SourceHanSerifJP-Normal.otf
+        - SourceHanSerifJP-Regular.otf
+        - SourceHanSerifJP-Medium.otf
+        - SourceHanSerifJP-Bold.otf
+        - SourceHanSerifJP-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansJP-ExtraLight.otf
+        - SourceHanSansJP-Light.otf
+        - SourceHanSansJP-Regular.otf
+        - SourceHanSansJP-Medium.otf
+        - SourceHanSansJP-SemiBold.otf
+        - SourceHanSansJP-Bold.otf
+        - SourceHanSansJP-Heavy.otf
+* Some files of Source Han's Resources
+    + [Source Han Serif
+](https://github.com/adobe-fonts/source-han-serif/tree/release/Resources)
+        - AI0-SourceHanSerif
+        - aj16-kanji.txt
+            - Only aj16-kanji.txt,
+              put it into `download/SourceHanSerif` directory.
+    + [Source Han Sans
+](https://github.com/adobe-fonts/source-han-sans/tree/release/Resources)
+        - AI0-SourceHanSans
+        - aj16-kanji.txt
+            - Only aj16-kanji.txt,
+              put it into `download/SourceHanSans` directory.
+* Source Han's JIS X 0208 mapping file
+    + [
+Adobe-Japan1-6 vs Source Han
+](https://blogs.adobe.com/CCJKType/2019/03/aj16-vs-source-han.html)
+        - JISX0208-SourceHan-Mapping.txt
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniJIS2004-UTF32-H
+* AJ1-7 GSUB
+    + [
+The Adobe-Japan1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-Japan1)
+        - aj17-gsub-jp04.fea
+
+Note:
+`aj16-kanji.txt` has the same file name in Serif and Sans,
+but the contents are different.
+Place only this file in a separate directory for Serif and Sans.
+Place all other files in the same directory.
+
+### Generate fonts (JP)
+
+`make`
+
+### (Experimental) Other languages
+
+#### (Experimental) File (CN)
+
+* Source Han fonts Region-specific Subset OTFs CN version
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifCN-ExtraLight.otf
+        - SourceHanSerifCN-Light.otf
+        - SourceHanSerifCN-Normal.otf
+        - SourceHanSerifCN-Regular.otf
+        - SourceHanSerifCN-Medium.otf
+        - SourceHanSerifCN-Bold.otf
+        - SourceHanSerifCN-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansCN-ExtraLight.otf
+        - SourceHanSansCN-Light.otf
+        - SourceHanSansCN-Regular.otf
+        - SourceHanSansCN-Medium.otf
+        - SourceHanSansCN-SemiBold.otf
+        - SourceHanSansCN-Bold.otf
+        - SourceHanSansCN-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniGB-UTF32-H
+* AG1-5 GSUB
+    + [
+The Adobe-GB1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-GB1)
+        - ag15-gsub.fea
+
+#### (Experimental) Generate fonts (CN)
+
+`make cn`
+
+#### (Experimental) File (TW)
+
+* Source Han fonts Region-specific Subset OTFs TW version
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifTW-ExtraLight.otf
+        - SourceHanSerifTW-Light.otf
+        - SourceHanSerifTW-Normal.otf
+        - SourceHanSerifTW-Regular.otf
+        - SourceHanSerifTW-Medium.otf
+        - SourceHanSerifTW-Bold.otf
+        - SourceHanSerifTW-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansTW-ExtraLight.otf
+        - SourceHanSansTW-Light.otf
+        - SourceHanSansTW-Regular.otf
+        - SourceHanSansTW-Medium.otf
+        - SourceHanSansTW-SemiBold.otf
+        - SourceHanSansTW-Bold.otf
+        - SourceHanSansTW-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniCNS-UTF32-H
+* AC1-7 GSUB
+    + [
+The Adobe-CNS1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-CNS1)
+        - ac17-gsub.fea
+
+#### (Experimental) Generate fonts (TW)
+
+`make tw`
+
+#### (Experimental) File (KR)
+
+* Source Han fonts Region-specific Subset OTFs KR version
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifKR-ExtraLight.otf
+        - SourceHanSerifKR-Light.otf
+        - SourceHanSerifKR-Normal.otf
+        - SourceHanSerifKR-Regular.otf
+        - SourceHanSerifKR-Medium.otf
+        - SourceHanSerifKR-Bold.otf
+        - SourceHanSerifKR-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansKR-ExtraLight.otf
+        - SourceHanSansKR-Light.otf
+        - SourceHanSansKR-Regular.otf
+        - SourceHanSansKR-Medium.otf
+        - SourceHanSansKR-SemiBold.otf
+        - SourceHanSansKR-Bold.otf
+        - SourceHanSansKR-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniAKR-UTF32-H
+* AKR-9 GSUB
+    + [
+The Adobe-KR-9 Character Collection
+](https://github.com/adobe-type-tools/Adobe-KR)
+        - akr9-gsub.fea
+
+#### (Experimental) Generate fonts (KR)
+
+`make kr`
+
 ## Release Notes
 
+* [
+20200516
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200516)
+(CN, TW, KR)
+    + The generator can now generate **experimental**
+      Simplified Chinese, Traditional Chinese, and Korean fonts.
+    + The font name for each langulage has the two letter suffix
+      same as Source Han fonts.
+        + Simplified Chinese: Adobe-GB1, suffix CN
+            + UniGB-UTF32-H 1.016
+        + Traditional Chinese: Adobe-CNS1, suffix TW
+            + UniCNS-UTF32-H 1.019
+        + Korean: Adobe-KR, suffix KR
+            + UniAKR-UTF32-H 1.002
+    + No change for Japanese version, no release this time.
+    + The suffix is used as an abbreviation for each language font.
+        + The Japanese font name has no suffix,
+          but the abbreviation is JP.
+    + Update
+        - ttx 4.10.0
 * [
 20200418
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200418)
