@@ -270,6 +270,54 @@ namespace
           n.parent ().remove_child (n);
       }
   }
+
+  // Convert PairPos format 2
+  void conv_pair_pos_format2 (conv_table &ct, pugi::xml_node &doc)
+  {
+    auto pair_pos_format2 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/PairPos[@Format='2']");
+
+    for (auto &pp: pair_pos_format2)
+      {
+        auto pair_pos_node = pp.node ();
+        auto glyphs = pair_pos_node.select_nodes ("Coverage/Glyph");
+        std::vector<pugi::xml_node> removes;
+
+        for (auto &glyph_select: glyphs)
+          {
+            auto glyph_node = glyph_select.node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  removes.push_back (glyph_node);
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        auto class_defs = pair_pos_node.select_nodes ("//ClassDef");
+        for (auto &class_def_select: class_defs)
+          {
+            auto class_def_node = class_def_select.node ();
+            auto glyph_attr = class_def_node.attribute ("glyph");
+            if (glyph_attr)
+              {
+                std::string cid_out = ct.convert (glyph_attr.value ());
+
+                if (cid_out == "")
+                  removes.push_back (class_def_node);
+                else
+                  glyph_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -333,6 +381,7 @@ int main (int argc, char *argv[])
   sort_single_pos_format2_coverage (doc);
 
   conv_pair_pos_format1 (ct, doc);
+  conv_pair_pos_format2 (ct, doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
@@ -355,26 +404,6 @@ int main (int argc, char *argv[])
             removes.push_back (glyph_node);
           else
             value_attr = cid_out.c_str ();
-        }
-    }
-
-  auto class_defs
-    = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//ClassDef");
-
-  for (auto it = class_defs.begin ();
-       it != class_defs.end ();
-       ++it)
-    {
-      auto class_def_node = it->node ();
-      auto glyph_attr = class_def_node.attribute ("glyph");
-      if (glyph_attr)
-        {
-          std::string cid_out = ct.convert (glyph_attr.value ());
-
-          if (cid_out == "")
-            removes.push_back (class_def_node);
-          else
-            glyph_attr = cid_out.c_str ();
         }
     }
 
