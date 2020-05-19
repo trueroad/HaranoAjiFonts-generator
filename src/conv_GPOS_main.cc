@@ -335,6 +335,54 @@ namespace
     for (auto &n: removes)
       n.parent ().remove_child (n);
   }
+
+  // Sort PairPos format 1 coverage
+  void sort_pair_pos_format1_coverage (pugi::xml_node &doc)
+  {
+    auto pair_pos_format1 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/PairPos[@Format='1']");
+
+    for (auto &pp: pair_pos_format1)
+      {
+        auto pair_pos_node = pp.node ();
+        auto glyphs = pair_pos_node.select_nodes ("Coverage/Glyph");
+        auto pairsets = pair_pos_node.select_nodes ("PairSet");
+        auto cov_node = pair_pos_node.child ("Coverage");
+        std::vector<std::pair<std::string, pugi::xml_node>> pairs;
+        std::vector<pugi::xml_node> removes;
+
+        auto it_g = glyphs.begin ();
+        auto it_p = pairsets.begin();
+        for (; it_g != glyphs.end () && it_p != pairsets.end ();
+             ++it_g, ++it_p)
+          {
+            auto glyph_node = it_g->node ();
+            auto pairset_node = it_p->node ();
+            removes.push_back (glyph_node);
+            removes.push_back (pairset_node);
+
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (!glyph_value_attr)
+              continue;
+
+            pairs.push_back
+              (std::make_pair (glyph_value_attr.value (), pairset_node));
+          }
+
+        std::sort (pairs.begin (), pairs.end ());
+
+        for (auto &p: pairs)
+          {
+            auto glyph_node = cov_node.append_child ("Glyph");
+            glyph_node.append_attribute ("value") = p.first.c_str ();
+
+            pair_pos_node.append_copy (p.second);
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -400,6 +448,7 @@ int main (int argc, char *argv[])
   conv_pair_pos_format1 (ct, doc);
   conv_pair_pos_format2 (ct, doc);
   remove_empty_pair_pos (doc);
+  sort_pair_pos_format1_coverage (doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
