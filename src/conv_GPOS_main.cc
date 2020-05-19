@@ -383,6 +383,37 @@ namespace
           n.parent ().remove_child (n);
       }
   }
+
+  // Sort PairPos format 2 coverage
+  void sort_pair_pos_format2_coverage (pugi::xml_node &doc)
+  {
+    auto pair_pos_format2_cov = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/PairPos[@Format='2']/Coverage");
+
+    for (auto &cov: pair_pos_format2_cov)
+      {
+        auto cov_node = cov.node ();
+        std::vector<std::string> cids;
+        std::vector<pugi::xml_node> removes;
+
+        for (auto n: cov_node.children ("Glyph"))
+          {
+            auto glyph = n.attribute ("value");
+            if (glyph)
+              cids.push_back (glyph.value ());
+            removes.push_back (n);
+          }
+        for (auto &n: removes)
+          cov_node.remove_child (n);
+
+        std::sort (cids.begin (), cids.end ());
+        for (auto &c: cids)
+          {
+            auto node = cov_node.append_child ("Glyph");
+            node.append_attribute ("value") = c.c_str ();
+          }
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -449,6 +480,7 @@ int main (int argc, char *argv[])
   conv_pair_pos_format2 (ct, doc);
   remove_empty_pair_pos (doc);
   sort_pair_pos_format1_coverage (doc);
+  sort_pair_pos_format2_coverage (doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
