@@ -553,33 +553,6 @@ int main (int argc, char *argv[])
 
   conv_mark_base_pos (ct, doc);
 
-  auto glyphs
-    = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
-
-  std::vector<pugi::xml_node> removes;
-  for (auto it = glyphs.begin ();
-       it != glyphs.end ();
-       ++it)
-    {
-      auto glyph_node = it->node ();
-      auto value_attr = glyph_node.attribute ("value");
-      if (value_attr &&
-          (value_attr.value ())[0] == 'c' &&
-          (value_attr.value ())[1] == 'i' &&
-          (value_attr.value ())[2] == 'd')
-        {
-          std::string cid_out = ct.convert (value_attr.value ());
-
-          if (cid_out == "")
-            removes.push_back (glyph_node);
-          else
-            value_attr = cid_out.c_str ();
-        }
-    }
-
-  for (auto &n: removes)
-    n.parent ().remove_child (n);
-
   auto coverages
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Coverage");
 
@@ -608,7 +581,8 @@ int main (int argc, char *argv[])
         }
     }
 
-  removes.clear ();
+  std::vector<pugi::xml_node> removes;
+
   auto mark_base_poses
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup/MarkBasePos");
 
