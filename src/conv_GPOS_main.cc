@@ -43,6 +43,41 @@
 #include "conv_table.hh"
 #include "version.hh"
 
+namespace
+{
+  // Convert SinglePos format 1
+  void conv_single_pos_format1 (conv_table &ct, pugi::xml_node &doc)
+  {
+    auto single_pos_format1 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/SinglePos[@Format='1']");
+
+    for (auto &sp: single_pos_format1)
+      {
+        auto single_pos_node = sp.node ();
+        std::vector<pugi::xml_node> removes;
+
+        auto glyphs = single_pos_node.select_nodes ("Coverage/Glyph");
+        for (auto &glyph_select: glyphs)
+          {
+            auto glyph_node = glyph_select.node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  removes.push_back (glyph_node);
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
+};
+
 int main (int argc, char *argv[])
 {
   std::cerr
@@ -96,6 +131,8 @@ int main (int argc, char *argv[])
                 << "\": " << result.description () << std::endl;
       return 1;
     }
+
+  conv_single_pos_format1 (ct, doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
