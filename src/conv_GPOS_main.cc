@@ -210,6 +210,66 @@ namespace
           n.parent ().remove_child (n);
       }
   }
+
+  // Convert PairPos format 1
+  void conv_pair_pos_format1 (conv_table &ct, pugi::xml_node &doc)
+  {
+    auto pair_pos_format1 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/PairPos[@Format='1']");
+
+    for (auto &pp: pair_pos_format1)
+      {
+        auto pair_pos_node = pp.node ();
+        auto glyphs = pair_pos_node.select_nodes ("Coverage/Glyph");
+        auto pairsets = pair_pos_node.select_nodes ("PairSet");
+        std::vector<pugi::xml_node> removes;
+
+        auto it_g = glyphs.begin ();
+        auto it_p = pairsets.begin();
+        for (; it_g != glyphs.end () && it_p != pairsets.end ();
+             ++it_g, ++it_p)
+          {
+            auto glyph_node = it_g->node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  {
+                    removes.push_back (glyph_node);
+                    removes.push_back (it_p->node ());
+                  }
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+        removes.clear ();
+
+        auto second_glyphs =
+          pair_pos_node.select_nodes ("PairSet/PairValueRecord/SecondGlyph");
+        for (auto &second_glyph_select: second_glyphs)
+          {
+            auto second_glyph_node = second_glyph_select.node ();
+            auto glyph_value_attr = second_glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  removes.push_back (second_glyph_node.parent ());
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -272,6 +332,8 @@ int main (int argc, char *argv[])
   sort_single_pos_format1_coverage (doc);
   sort_single_pos_format2_coverage (doc);
 
+  conv_pair_pos_format1 (ct, doc);
+
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
 
@@ -291,26 +353,6 @@ int main (int argc, char *argv[])
 
           if (cid_out == "")
             removes.push_back (glyph_node);
-          else
-            value_attr = cid_out.c_str ();
-        }
-    }
-
-  auto second_glyphs
-    = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//SecondGlyph");
-
-  for (auto it = second_glyphs.begin ();
-       it != second_glyphs.end ();
-       ++it)
-    {
-      auto second_glyph_node = it->node ();
-      auto value_attr = second_glyph_node.attribute ("value");
-      if (value_attr)
-        {
-          std::string cid_out = ct.convert (value_attr.value ());
-
-          if (cid_out == "")
-            removes.push_back (second_glyph_node.parent ());
           else
             value_attr = cid_out.c_str ();
         }
