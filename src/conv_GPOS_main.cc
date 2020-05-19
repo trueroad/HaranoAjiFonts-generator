@@ -553,34 +553,6 @@ int main (int argc, char *argv[])
 
   conv_mark_base_pos (ct, doc);
 
-  auto coverages
-    = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Coverage");
-
-  for (auto it = coverages.begin ();
-       it != coverages.end ();
-       ++it)
-    {
-      auto coverage_node = it->node ();
-      std::vector<std::string> cids;
-      std::vector<pugi::xml_node> nodes;
-      for (auto n: coverage_node.children ("Glyph"))
-        {
-          auto glyph = n.attribute ("value");
-          if (glyph)
-            cids.push_back (glyph.value ());
-          nodes.push_back (n);
-        }
-      for (auto n: nodes)
-        coverage_node.remove_child (n);
-
-      std::sort (cids.begin (), cids.end ());
-      for (auto c: cids)
-        {
-          auto n = coverage_node.append_child ("Glyph");
-          n.append_attribute ("value") = c.c_str ();
-        }
-    }
-
   std::vector<pugi::xml_node> removes;
 
   auto mark_base_poses
