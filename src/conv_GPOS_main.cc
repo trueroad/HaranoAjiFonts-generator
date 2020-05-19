@@ -506,6 +506,57 @@ namespace
     for (auto &n: removes)
       n.parent ().remove_child (n);
   }
+
+  // Sort MarkBasePos MarkCoverage
+  void sort_mark_base_pos_mark_coverage (pugi::xml_node &doc)
+  {
+    auto mark_base_pos = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/MarkBasePos");
+
+    for (auto &mbp: mark_base_pos)
+      {
+        auto mark_base_pos_node = mbp.node ();
+        auto glyphs =
+          mark_base_pos_node.select_nodes ("MarkCoverage/Glyph");
+        auto records =
+          mark_base_pos_node.select_nodes ("MarkArray/MarkRecord");
+        auto cov_node = mark_base_pos_node.child ("MarkCoverage");
+        auto mark_array_node = mark_base_pos_node.child ("MarkArray");
+        std::vector<std::pair<std::string, pugi::xml_node>> pairs;
+        std::vector<pugi::xml_node> removes;
+
+        auto it_g = glyphs.begin ();
+        auto it_r = records.begin();
+        for (; it_g != glyphs.end () && it_r != records.end ();
+             ++it_g, ++it_r)
+          {
+            auto glyph_node = it_g->node ();
+            auto record_node = it_r->node ();
+            removes.push_back (glyph_node);
+            removes.push_back (record_node);
+
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (!glyph_value_attr)
+              continue;
+
+            pairs.push_back
+              (std::make_pair (glyph_value_attr.value (), record_node));
+          }
+
+        std::sort (pairs.begin (), pairs.end ());
+
+        for (auto &p: pairs)
+          {
+            auto glyph_node = cov_node.append_child ("Glyph");
+            glyph_node.append_attribute ("value") = p.first.c_str ();
+
+            mark_array_node.append_copy (p.second);
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -576,6 +627,7 @@ int main (int argc, char *argv[])
 
   conv_mark_base_pos (ct, doc);
   remove_empty_mark_base_pos (doc);
+  sort_mark_base_pos_mark_coverage (doc);
 
   doc.save (std::cout, "  ", pugi::format_default, pugi::encoding_utf8);
 
