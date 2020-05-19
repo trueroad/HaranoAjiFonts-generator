@@ -131,6 +131,37 @@ namespace
     for (auto &n: removes)
       n.parent ().remove_child (n);
   }
+
+  // Sort SinglePos format 1 coverage
+  void sort_single_pos_format1_coverage (pugi::xml_node &doc)
+  {
+    auto single_pos_format1_cov = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/SinglePos[@Format='1']/Coverage");
+
+    for (auto &cov: single_pos_format1_cov)
+      {
+        auto cov_node = cov.node ();
+        std::vector<std::string> cids;
+        std::vector<pugi::xml_node> removes;
+
+        for (auto n: cov_node.children ("Glyph"))
+          {
+            auto glyph = n.attribute ("value");
+            if (glyph)
+              cids.push_back (glyph.value ());
+            removes.push_back (n);
+          }
+        for (auto &n: removes)
+          cov_node.remove_child (n);
+
+        std::sort (cids.begin (), cids.end ());
+        for (auto &c: cids)
+          {
+            auto node = cov_node.append_child ("Glyph");
+            node.append_attribute ("value") = c.c_str ();
+          }
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -190,6 +221,7 @@ int main (int argc, char *argv[])
   conv_single_pos_format1 (ct, doc);
   conv_single_pos_format2 (ct, doc);
   remove_empty_single_pos (doc);
+  sort_single_pos_format1_coverage (doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
