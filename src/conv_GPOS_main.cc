@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <pugixml.hpp>
@@ -162,6 +163,53 @@ namespace
           }
       }
   }
+
+  // Sort SinglePos format 2 coverage
+  void sort_single_pos_format2_coverage (pugi::xml_node &doc)
+  {
+    auto single_pos_format2 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/SinglePos[@Format='2']");
+
+    for (auto &sp: single_pos_format2)
+      {
+        auto single_pos_node = sp.node ();
+        auto glyphs = single_pos_node.select_nodes ("Coverage/Glyph");
+        auto values = single_pos_node.select_nodes ("Value");
+        auto cov_node = single_pos_node.child ("Coverage");
+        std::vector<std::pair<std::string, pugi::xml_node>> pairs;
+        std::vector<pugi::xml_node> removes;
+
+        auto it_g = glyphs.begin ();
+        auto it_v = values.begin();
+        for (; it_g != glyphs.end () && it_v != values.end (); ++it_g, ++it_v)
+          {
+            auto glyph_node = it_g->node ();
+            auto value_node = it_v->node ();
+            removes.push_back (glyph_node);
+            removes.push_back (value_node);
+
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (!glyph_value_attr)
+              continue;
+
+            pairs.push_back
+              (std::make_pair (glyph_value_attr.value (), value_node));
+          }
+
+        std::sort (pairs.begin (), pairs.end ());
+
+        for (auto &p: pairs)
+          {
+            auto glyph_node = cov_node.append_child ("Glyph");
+            glyph_node.append_attribute ("value") = p.first.c_str ();
+
+            single_pos_node.append_copy (p.second);
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -222,6 +270,7 @@ int main (int argc, char *argv[])
   conv_single_pos_format2 (ct, doc);
   remove_empty_single_pos (doc);
   sort_single_pos_format1_coverage (doc);
+  sort_single_pos_format2_coverage (doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
