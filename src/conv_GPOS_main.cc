@@ -414,6 +414,75 @@ namespace
           }
       }
   }
+
+  // Convert MarkBasePos
+  void conv_mark_base_pos (conv_table &ct, pugi::xml_node &doc)
+  {
+    auto mark_base_pos = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/MarkBasePos");
+
+    for (auto &mbp: mark_base_pos)
+      {
+        auto mark_base_pos_node = mbp.node ();
+        std::vector<pugi::xml_node> removes;
+
+        auto mark_glyphs =
+          mark_base_pos_node.select_nodes ("MarkCoverage/Glyph");
+        auto mark_records =
+          mark_base_pos_node.select_nodes ("MarkArray/MarkRecord");
+
+        auto it_mg = mark_glyphs.begin ();
+        auto it_mr = mark_records.begin ();
+        for (; it_mg != mark_glyphs.end () && it_mr != mark_records.end ();
+             ++it_mg, ++it_mr)
+          {
+            auto glyph_node = it_mg->node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  {
+                    removes.push_back (glyph_node);
+                    removes.push_back (it_mr->node ());
+                  }
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        auto base_glyphs =
+          mark_base_pos_node.select_nodes ("BaseCoverage/Glyph");
+        auto base_records =
+          mark_base_pos_node.select_nodes ("BaseArray/BaseRecord");
+
+        auto it_bg = base_glyphs.begin ();
+        auto it_br = base_records.begin ();
+        for (; it_bg != base_glyphs.end () && it_br != base_records.end ();
+             ++it_bg, ++it_br)
+          {
+            auto glyph_node = it_bg->node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  {
+                    removes.push_back (glyph_node);
+                    removes.push_back (it_br->node ());
+                  }
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+        removes.clear ();
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -481,6 +550,8 @@ int main (int argc, char *argv[])
   remove_empty_pair_pos (doc);
   sort_pair_pos_format1_coverage (doc);
   sort_pair_pos_format2_coverage (doc);
+
+  conv_mark_base_pos (ct, doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
