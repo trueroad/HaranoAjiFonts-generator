@@ -114,6 +114,23 @@ namespace
           n.parent ().remove_child (n);
       }
   }
+
+  // Remove empty SinglePos
+  void remove_empty_single_pos (pugi::xml_node &doc)
+  {
+    auto single_pos_coverage = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/SinglePos/Coverage");
+    std::vector<pugi::xml_node> removes;
+
+    for (auto &spc: single_pos_coverage)
+      {
+        auto glyph = spc.node ().child ("Glyph");
+        if (!glyph)
+          removes.push_back (spc.parent ());
+      }
+    for (auto &n: removes)
+      n.parent ().remove_child (n);
+  }
 };
 
 int main (int argc, char *argv[])
@@ -172,6 +189,7 @@ int main (int argc, char *argv[])
 
   conv_single_pos_format1 (ct, doc);
   conv_single_pos_format2 (ct, doc);
+  remove_empty_single_pos (doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
