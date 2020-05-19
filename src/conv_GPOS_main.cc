@@ -76,6 +76,44 @@ namespace
           n.parent ().remove_child (n);
       }
   }
+
+  // Convert SinglePos format 2
+  void conv_single_pos_format2 (conv_table &ct, pugi::xml_node &doc)
+  {
+    auto single_pos_format2 = doc.select_nodes
+      ("/ttFont/GPOS/LookupList/Lookup/SinglePos[@Format='2']");
+
+    for (auto &sp: single_pos_format2)
+      {
+        auto single_pos_node = sp.node ();
+        auto glyphs = single_pos_node.select_nodes ("Coverage/Glyph");
+        auto values = single_pos_node.select_nodes ("Value");
+        std::vector<pugi::xml_node> removes;
+
+        auto it_g = glyphs.begin ();
+        auto it_v = values.begin();
+        for (; it_g != glyphs.end () && it_v != values.end (); ++it_g, ++it_v)
+          {
+            auto glyph_node = it_g->node ();
+            auto glyph_value_attr = glyph_node.attribute ("value");
+            if (glyph_value_attr)
+              {
+                std::string cid_out = ct.convert (glyph_value_attr.value ());
+
+                if (cid_out == "")
+                  {
+                    removes.push_back (glyph_node);
+                    removes.push_back (it_v->node ());
+                  }
+                else
+                  glyph_value_attr = cid_out.c_str ();
+              }
+          }
+
+        for (auto &n: removes)
+          n.parent ().remove_child (n);
+      }
+  }
 };
 
 int main (int argc, char *argv[])
@@ -133,6 +171,7 @@ int main (int argc, char *argv[])
     }
 
   conv_single_pos_format1 (ct, doc);
+  conv_single_pos_format2 (ct, doc);
 
   auto glyphs
     = doc.select_nodes ("/ttFont/GPOS/LookupList/Lookup//Glyph");
