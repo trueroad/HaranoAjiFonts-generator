@@ -45,9 +45,26 @@
 class calc_width
 {
 public:
-  calc_width (const std::string &ros):
-    ros_ (ros)
+  calc_width (const std::string &ros, pugi::xml_document &doc):
+    ros_ (ros),
+    doc_ (doc)
   {
+    if (ros_ == "AKR")
+      {
+        // Get hangul width from CID+221
+        // It is first row of akr9-hangul.txt in
+        // https://github.com/adobe-type-tools/Adobe-KR
+        auto hangul_width_attr =
+          doc.select_node ("/ttFont/hmtx/mtx[@name='aji00221']")
+          .node ().attribute ("width");
+        if (hangul_width_attr)
+          {
+            hangul_width_ = hangul_width_attr.as_int ();
+            std::cerr << "hangul width: " << hangul_width_ << std::endl;
+          }
+        else
+          std::cerr << "error: cannot get hangul width" << std::endl;
+      }
   }
 
   int get_width (int cid)
@@ -157,7 +174,7 @@ private:
         ( 3059 <= cid && cid <= 11450) ||
         (12108 <= cid && cid <= 12150) ||
         (12237 <= cid && cid <= 13500))
-      return 1000; // Monospaced -> fwid
+      return hangul_width_; // Monospaced -> hangul width
     if (cid == 3057)
       return -1; // Two-em -> pwid
     if (cid == 3058)
@@ -173,6 +190,8 @@ private:
   }
 
   std::string ros_;
+  pugi::xml_document &doc_;
+  int hangul_width_ = -1; // default no change
 };
 
 int main (int argc, char *argv[])
@@ -236,7 +255,7 @@ int main (int argc, char *argv[])
       return 1;
     }
 
-  calc_width cw (ros);
+  calc_width cw (ros, doc);
 
   auto mtx_nodes
     = doc.select_nodes ("/ttFont/hmtx/mtx");
