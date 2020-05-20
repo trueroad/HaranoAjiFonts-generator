@@ -42,8 +42,29 @@
 #include "conv_table.hh"
 #include "version.hh"
 
-namespace
+class calc_width
 {
+public:
+  calc_width (const std::string &ros):
+    ros_ (ros)
+  {
+  }
+
+  int get_width (int cid)
+  {
+    if (ros_ == "AJ1")
+      return aj1_width (cid);
+    else if (ros_ == "AG1")
+      return ag1_width (cid);
+    else if (ros_ == "AC1")
+      return ac1_width (cid);
+    else if (ros_ == "AKR")
+      return akr_width (cid);
+
+    return -1; // no change
+  }
+
+private:
   // Adobe-Japan1 (AJ1)
   int aj1_width (int cid)
   {
@@ -151,19 +172,7 @@ namespace
     return -1; // no change
   }
 
-  int get_width (const std::string &ros, int cid)
-  {
-    if (ros == "AJ1")
-      return aj1_width (cid);
-    else if (ros == "AG1")
-      return ag1_width (cid);
-    else if (ros == "AC1")
-      return ac1_width (cid);
-    else if (ros == "AKR")
-      return akr_width (cid);
-
-    return -1; // no change
-  }
+  std::string ros_;
 };
 
 int main (int argc, char *argv[])
@@ -227,6 +236,8 @@ int main (int argc, char *argv[])
       return 1;
     }
 
+  calc_width cw (ros);
+
   auto mtx_nodes
     = doc.select_nodes ("/ttFont/hmtx/mtx");
 
@@ -246,7 +257,7 @@ int main (int argc, char *argv[])
       auto cid = std::stoi (cid_number_str);
 
       auto width = mtx_node.attribute ("width").as_int ();
-      auto fixed_width = get_width (ros, cid);
+      auto fixed_width = cw.get_width (cid);
 
       if (fixed_width < 0)
         continue; // pwid
