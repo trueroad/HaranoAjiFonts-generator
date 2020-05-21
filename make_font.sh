@@ -346,6 +346,21 @@ if [ "${FONT_LANG}" = "JP" ]; then
         CFF02.ttx \
         > letter_face01.tbl \
         || { echo error; exit 1; }
+elif [ "${FONT_LANG}" = "KR" ]; then
+    echo copying and rotating glyphs in CFF table...
+    ${SCRIPTDIR}/copy_and_rotate.py \
+        ${COMMONDATADIR}/copy_and_rotate_KR.tbl \
+        CFF01.ttx \
+        CFF02.ttx \
+        > copy_and_rotate.log \
+        || { echo error; exit 1; }
+
+    echo calculating letter face for shift table...
+    ${SCRIPTDIR}/calc_letter_face.py \
+        ${COMMONDATADIR}/shift_KR.lst \
+        CFF02.ttx \
+        > letter_face01.tbl \
+        || { echo error; exit 1; }
 else
     echo "skipping language-specific copying and rotating glyphs..."
     ln -s CFF01.ttx CFF02.ttx
@@ -358,7 +373,7 @@ ${SCRIPT_MAKE_ADJUST} \
     > adjust01.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" ]; then
+if [ "${FONT_LANG}" = "JP" -o "${FONT_LANG}" = "KR" ]; then
     echo making shift table...
     ${SCRIPTDIR}/make_shift.py \
         letter_face01.tbl \
@@ -385,6 +400,10 @@ if [ "${FONT_LANG}" = "JP" ]; then
     echo "making {h|v}mtx fixing table..."
     cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate.tbl > fix_mtx.tbl \
         || { echo error; exit 1; }
+elif [ "${FONT_LANG}" = "KR" ]; then
+    echo "making {h|v}mtx fixing table..."
+    cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate_KR.tbl > fix_mtx.tbl \
+        || { echo error; exit 1; }
 else
     echo "skipping language-specific {h|v}mtx fixing table making..."
     ln -s adjust02.tbl fix_mtx.tbl
@@ -405,7 +424,7 @@ ${SCRIPTDIR}/fix_mtx.py \
     > hmtx_lsb.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" ]; then
+if [ "${FONT_LANG}" = "JP" -o "${FONT_LANG}" = "KR" ]; then
     echo fixing TSB in vmtx table...
     ${SCRIPTDIR}/fix_mtx.py \
         letter_face02.tbl \
