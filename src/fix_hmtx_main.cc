@@ -133,6 +133,20 @@ private:
   // Adobe-KR (AKR)
   int akr_width (int cid)
   {
+    // pwid CIDs but require to set width related to hangul width
+    if (cid == 108)
+      return hangul_width_ / 2;
+    else if (cid == 110)
+      return hangul_width_ / 3;
+    else if (cid == 111)
+      return hangul_width_ / 4;
+    else if (cid == 112)
+      return hangul_width_ / 6;
+    else if (cid == 114)
+      return hangul_width_ / 8;
+    else if (cid == 115)
+      return hangul_width_ / 16;
+
     if ((    0 <= cid && cid <=     0) ||
         (  119 <= cid && cid <=   119) ||
         (  128 <= cid && cid <=   128) ||
