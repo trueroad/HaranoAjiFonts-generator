@@ -2,7 +2,7 @@
 // Harano Aji Fonts generator
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
-// gsub_single.cc:
+// gsub_single.hh:
 //   read `GSUB` table single substitution and create map
 //
 // Copyright (C) 2019 Masamichi Hosoda.
