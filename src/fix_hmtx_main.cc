@@ -34,7 +34,9 @@
 //
 
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include <pugixml.hpp>
@@ -64,6 +66,30 @@ public:
           }
         else
           std::cerr << "error: cannot get hangul width" << std::endl;
+
+        // Calc figure space width from digit width (CID+17 -- CID+26)
+        int digit_width_sum = 0;
+        int number_of_cids = 0;
+        std::cerr << "digit width:";
+        for (int cid = 17; cid < (26 + 1); ++cid)
+          {
+            std::stringstream ss;
+            ss << "/ttFont/hmtx/mtx[@name='aji"
+               << std::setw (5) << std::setfill ('0') << cid
+               << "']";
+
+            auto digit_width_attr = doc.select_node (ss.str ().c_str())
+              .node ().attribute ("width");
+            if (digit_width_attr)
+              {
+                int width = digit_width_attr.as_int ();
+                digit_width_sum += width;
+                ++number_of_cids;
+                std::cerr << " " << width;
+              }
+          }
+        figure_space_width_ = digit_width_sum / number_of_cids;
+        std::cerr << " -> " << figure_space_width_ << std::endl;
       }
   }
 
@@ -147,6 +173,10 @@ private:
     else if (cid == 115)
       return hangul_width_ / 16;
 
+    // pwid CID but set to figure space width calculated from digit width
+    if (cid == 113)
+      return figure_space_width_;
+
     if ((    0 <= cid && cid <=     0) ||
         (  119 <= cid && cid <=   119) ||
         (  128 <= cid && cid <=   128) ||
@@ -206,6 +236,7 @@ private:
   std::string ros_;
   pugi::xml_document &doc_;
   int hangul_width_ = -1; // default no change
+  int figure_space_width_ = -1; // default no change
 };
 
 int main (int argc, char *argv[])
