@@ -1,11 +1,10 @@
 #!/bin/sh
 
 SRC_FONTBASE=$1
+BUILD_FONTDIR=$2
 
 TTXVER=`ttx --version`
 TOOLVER="ttx ${TTXVER}"
-
-cd build/${SRC_FONTBASE}
 
 BASEDIR=../..
 BINDIR=${BASEDIR}/bin
@@ -13,6 +12,12 @@ SCRIPTDIR=${BASEDIR}/script
 COMMONDATADIR=${BASEDIR}/common-data
 TTXDIR=${BASEDIR}/ttx
 DOWNLOADDIR=${BASEDIR}/download
+
+if [ "${BUILD_FONTDIR}" == "" ]; then
+    cd build/${SRC_FONTBASE}
+else
+    cd ${BUILD_FONTDIR}
+fi
 
 case "${SRC_FONTBASE}" in
     SourceHanSansJP* )
@@ -46,11 +51,33 @@ case "${SRC_FONTBASE}" in
         FONT_TYPE=Serif
         ;;
     SourceHanSansKR* )
-        FONT_LANG=KR
+        case "${BUILD_FONTDIR}" in
+            *-KR )
+                FONT_LANG=KR
+                ;;
+            *-K1 )
+                FONT_LANG=K1
+                ;;
+            * )
+                echo invalid fontdir name
+                exit 1
+                ;;
+        esac
         FONT_TYPE=Sans
         ;;
     SourceHanSerifKR* )
-        FONT_LANG=KR
+        case "${BUILD_FONTDIR}" in
+            *-KR )
+                FONT_LANG=KR
+                ;;
+            *-K1 )
+                FONT_LANG=K1
+                ;;
+            * )
+                echo invalid fontdir name
+                exit 1
+                ;;
+        esac
         FONT_TYPE=Serif
         ;;
     * )
@@ -104,6 +131,17 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/akr9-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_kr.sed
+        SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
+        ;;
+    K1 )
+        CMAP=UniKS-UTF32-H
+        ROS_R=Adobe
+        ROS_O=Korea1
+        ROS_S=2
+        ROS=AK1
+
+        FEATURE_GSUB_FEA=${DOWNLOADDIR}/ak12-gsub.txt
+        FONT_NAME_SED=${BASEDIR}/font_name_k1.sed
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     * )

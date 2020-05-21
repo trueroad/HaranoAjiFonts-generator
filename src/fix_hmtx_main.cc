@@ -3,7 +3,7 @@
 // https://github.com/trueroad/HaranoAjiFonts-generator
 //
 // fix_hmtx_main.cc:
-//   fix {AJ1|AG1|AC1|AKR} hmtx width
+//   fix {AJ1|AG1|AC1|AKR|AK1} hmtx width
 //
 // Copyright (C) 2019, 2020 Masamichi Hosoda.
 // All rights reserved.
@@ -103,6 +103,8 @@ public:
       return ac1_width (cid);
     else if (ros_ == "AKR")
       return akr_width (cid);
+    else if (ros_ == "AK1")
+      return ak1_width (cid);
 
     return -1; // no change
   }
@@ -233,6 +235,17 @@ private:
     return -1; // no change
   }
 
+  // Adobe-Korea1 (AK1)
+  int ak1_width (int cid)
+  {
+    if (   1 <= cid && cid <=  100)
+      return -1; // pwid
+    if (8094 <= cid && cid <= 8190)
+      return 500; // hwid
+
+    return 1000; // fwid
+  }
+
   std::string ros_;
   pugi::xml_document &doc_;
   int hangul_width_ = -1; // default no change
@@ -243,7 +256,7 @@ int main (int argc, char *argv[])
 {
   std::cerr
     << "# fix_hmtx: Harano Aji Fonts generator " << version << std::endl
-    << "# (fix {AJ1|AG1|AC1|AKR} hmtx width)" << std::endl
+    << "# (fix {AJ1|AG1|AC1|AKR|AK1} hmtx width)" << std::endl
     << "# Copyright (C) 2019, 2020 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
@@ -255,11 +268,12 @@ int main (int argc, char *argv[])
         << std::endl
         << std::endl
         << "     ROS:" << std::endl
-        << "         {AJ1|AG1|AC1|AKR}" << std::endl
+        << "         {AJ1|AG1|AC1|AKR|AK1}" << std::endl
         << "     TABLE.TBL:" << std::endl
         << "         conversion table." << std::endl
         << "     aj1_hmtx.ttx:" << std::endl
-        << "         {AJ1|AG1|AC1|AKR} hmtx table which contains wrong width."
+        << "         {AJ1|AG1|AC1|AKR|AK1} "
+        "hmtx table which contains wrong width."
         << std::endl;
       return 1;
     }
