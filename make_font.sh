@@ -383,9 +383,21 @@ ${BINDIR}/conv_mtx \
     > vmtx_conv.ttx 2> vmtx_conv.log \
     || { echo error; exit 1; }
 
+echo calculating palt to pwid...
+${BINDIR}/palt_to_pwid \
+    table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
+    ${FEATURE_GSUB_FEA} ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx \
+    palt_to_pwid_copy.tbl palt_to_pwid_adjust.tbl \
+    > palt_to_pwid.log 2>&1 \
+    || { echo error; exit 1; }
+echo merging copy and rotate table...
+    cat ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
+    > copy_and_rotate01.tbl \
+    || { echo error; exit 1; }
+
 echo copying and rotating glyphs in CFF table...
 ${SCRIPTDIR}/copy_and_rotate.py \
-    ${COPY_AND_ROTATE_TABLE} \
+    copy_and_rotate01.tbl \
     CFF01.ttx \
     CFF02.ttx \
     > copy_and_rotate.log \
@@ -412,7 +424,7 @@ ${SCRIPTDIR}/make_shift.py \
     || { echo error; exit 1; }
 
 echo adding shift table to adjust table...
-cat adjust01.tbl shift.tbl > adjust02.tbl \
+cat adjust01.tbl shift.tbl palt_to_pwid_adjust.tbl > adjust02.tbl \
     || { echo error; exit 1; }
 
 echo adjusting CFF table...
@@ -424,7 +436,7 @@ ${SCRIPTDIR}/adjust.py \
     || { echo error; exit 1; }
 
 echo "making {h|v}mtx fixing table..."
-cat adjust02.tbl ${COPY_AND_ROTATE_TABLE} > fix_mtx.tbl \
+cat adjust02.tbl copy_and_rotate01.tbl > fix_mtx.tbl \
     || { echo error; exit 1; }
 
 echo "calculating letter face for fixing {h|v}mtx and GPOS conversion..."
