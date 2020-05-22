@@ -96,6 +96,8 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/aj17-gsub-jp04.fea
         FONT_NAME_SED=${BASEDIR}/font_name.sed
+        COPY_AND_ROTATE_TABLE=${COMMONDATADIR}/copy_and_rotate.tbl
+        SHIFT_LIST=${COMMONDATADIR}/shift.lst
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust.py
 
         JISX0208_MAPPING=${DOWNLOADDIR}/JISX0208-SourceHan-Mapping.txt
@@ -109,6 +111,8 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ag15-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_cn.sed
+        COPY_AND_ROTATE_TABLE=${COMMONDATADIR}/copy_and_rotate_CN.tbl
+        SHIFT_LIST=${COMMONDATADIR}/shift_CN.lst
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     TW )
@@ -120,6 +124,8 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ac17-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_tw.sed
+        COPY_AND_ROTATE_TABLE=${COMMONDATADIR}/copy_and_rotate_TW.tbl
+        SHIFT_LIST=${COMMONDATADIR}/shift_TW.lst
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     KR )
@@ -131,6 +137,8 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/akr9-gsub.fea
         FONT_NAME_SED=${BASEDIR}/font_name_kr.sed
+        COPY_AND_ROTATE_TABLE=${COMMONDATADIR}/copy_and_rotate_KR.tbl
+        SHIFT_LIST=${COMMONDATADIR}/shift_KR.lst
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     K1 )
@@ -142,6 +150,8 @@ case "${FONT_LANG}" in
 
         FEATURE_GSUB_FEA=${DOWNLOADDIR}/ak12-gsub.txt
         FONT_NAME_SED=${BASEDIR}/font_name_k1.sed
+        COPY_AND_ROTATE_TABLE=${COMMONDATADIR}/copy_and_rotate_K1.tbl
+        SHIFT_LIST=${COMMONDATADIR}/shift_K1.lst
         SCRIPT_MAKE_ADJUST=${SCRIPTDIR}/make_adjust_center.py
         ;;
     * )
@@ -373,40 +383,20 @@ ${BINDIR}/conv_mtx \
     > vmtx_conv.ttx 2> vmtx_conv.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" ]; then
-    echo copying and rotating glyphs in CFF table...
-    ${SCRIPTDIR}/copy_and_rotate.py \
-        ${COMMONDATADIR}/copy_and_rotate.tbl \
-        CFF01.ttx \
-        CFF02.ttx \
-        > copy_and_rotate.log \
-        || { echo error; exit 1; }
+echo copying and rotating glyphs in CFF table...
+${SCRIPTDIR}/copy_and_rotate.py \
+    ${COPY_AND_ROTATE_TABLE} \
+    CFF01.ttx \
+    CFF02.ttx \
+    > copy_and_rotate.log \
+    || { echo error; exit 1; }
 
-    echo calculating letter face for shift table...
-    ${SCRIPTDIR}/calc_letter_face.py \
-        ${COMMONDATADIR}/shift.lst \
-        CFF02.ttx \
-        > letter_face01.tbl \
-        || { echo error; exit 1; }
-elif [ "${FONT_LANG}" = "KR" ]; then
-    echo copying and rotating glyphs in CFF table...
-    ${SCRIPTDIR}/copy_and_rotate.py \
-        ${COMMONDATADIR}/copy_and_rotate_KR.tbl \
-        CFF01.ttx \
-        CFF02.ttx \
-        > copy_and_rotate.log \
-        || { echo error; exit 1; }
-
-    echo calculating letter face for shift table...
-    ${SCRIPTDIR}/calc_letter_face.py \
-        ${COMMONDATADIR}/shift_KR.lst \
-        CFF02.ttx \
-        > letter_face01.tbl \
-        || { echo error; exit 1; }
-else
-    echo "skipping language-specific copying and rotating glyphs..."
-    ln -s CFF01.ttx CFF02.ttx
-fi
+echo calculating letter face for shift table...
+${SCRIPTDIR}/calc_letter_face.py \
+    ${SHIFT_LIST} \
+    CFF02.ttx \
+    > letter_face01.tbl \
+    || { echo error; exit 1; }
 
 echo making adjust table...
 ${SCRIPT_MAKE_ADJUST} \
@@ -415,20 +405,15 @@ ${SCRIPT_MAKE_ADJUST} \
     > adjust01.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" -o "${FONT_LANG}" = "KR" ]; then
-    echo making shift table...
-    ${SCRIPTDIR}/make_shift.py \
-        letter_face01.tbl \
-        > shift.tbl \
-        || { echo error; exit 1; }
+echo making shift table...
+${SCRIPTDIR}/make_shift.py \
+    letter_face01.tbl \
+    > shift.tbl \
+    || { echo error; exit 1; }
 
-    echo adding shift table to adjust table...
-    cat adjust01.tbl shift.tbl > adjust02.tbl \
-        || { echo error; exit 1; }
-else
-    echo "skipping language-specific shift table making and merging..."
-    ln -s adjust01.tbl adjust02.tbl
-fi
+echo adding shift table to adjust table...
+cat adjust01.tbl shift.tbl > adjust02.tbl \
+    || { echo error; exit 1; }
 
 echo adjusting CFF table...
 ${SCRIPTDIR}/adjust.py \
@@ -438,18 +423,9 @@ ${SCRIPTDIR}/adjust.py \
     > adjust.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" ]; then
-    echo "making {h|v}mtx fixing table..."
-    cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate.tbl > fix_mtx.tbl \
-        || { echo error; exit 1; }
-elif [ "${FONT_LANG}" = "KR" ]; then
-    echo "making {h|v}mtx fixing table..."
-    cat adjust02.tbl ${COMMONDATADIR}/copy_and_rotate_KR.tbl > fix_mtx.tbl \
-        || { echo error; exit 1; }
-else
-    echo "skipping language-specific {h|v}mtx fixing table making..."
-    ln -s adjust02.tbl fix_mtx.tbl
-fi
+echo "making {h|v}mtx fixing table..."
+cat adjust02.tbl ${COPY_AND_ROTATE_TABLE} > fix_mtx.tbl \
+    || { echo error; exit 1; }
 
 echo "calculating letter face for fixing {h|v}mtx and GPOS conversion..."
 ${SCRIPTDIR}/calc_letter_face.py \
@@ -466,18 +442,13 @@ ${SCRIPTDIR}/fix_mtx.py \
     > hmtx_lsb.log \
     || { echo error; exit 1; }
 
-if [ "${FONT_LANG}" = "JP" -o "${FONT_LANG}" = "KR" ]; then
-    echo fixing TSB in vmtx table...
-    ${SCRIPTDIR}/fix_mtx.py \
-        letter_face02.tbl \
-        vmtx_conv.ttx \
-        vmtx.ttx \
-        > vmtx_tsb.log \
-        || { echo error; exit 1; }
-else
-    echo "skipping language-specific TSB fixing in vmtx table..."
-    ln -s vmtx_conv.ttx vmtx.ttx
-fi
+echo fixing TSB in vmtx table...
+${SCRIPTDIR}/fix_mtx.py \
+    letter_face02.tbl \
+    vmtx_conv.ttx \
+    vmtx.ttx \
+    > vmtx_tsb.log \
+    || { echo error; exit 1; }
 
 echo making conversion table for GPOS...
 ${SCRIPTDIR}/make_table_for_GPOS.py \
