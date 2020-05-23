@@ -26,6 +26,7 @@ case "${SRC_FONTBASE}" in
 
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSans
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSans/aj16-kanji.txt
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_sans.tbl
         ;;
     SourceHanSerifJP* )
         FONT_LANG=JP
@@ -33,30 +34,43 @@ case "${SRC_FONTBASE}" in
 
         AI0_SOURCEHAN=${DOWNLOADDIR}/AI0-SourceHanSerif
         AJ1X_KANJI=${DOWNLOADDIR}/SourceHanSerif/aj16-kanji.txt
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_serif.tbl
         ;;
     SourceHanSansCN* )
         FONT_LANG=CN
         FONT_TYPE=Sans
+
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_sans_CN.tbl
         ;;
     SourceHanSerifCN* )
         FONT_LANG=CN
         FONT_TYPE=Serif
+
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_serif_CN.tbl
         ;;
     SourceHanSansTW* )
         FONT_LANG=TW
         FONT_TYPE=Sans
+
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_sans_TW.tbl
         ;;
     SourceHanSerifTW* )
         FONT_LANG=TW
         FONT_TYPE=Serif
+
+        PALT_TO_PWID_FIXED=${COMMONDATADIR}/palt_to_pwid_fixed_serif_TW.tbl
         ;;
     SourceHanSansKR* )
         case "${BUILD_FONTDIR}" in
             *-KR )
                 FONT_LANG=KR
+                PALT_TO_PWID_FIXED=${COMMONDATADIR}/\
+palt_to_pwid_fixed_sans_KR.tbl
                 ;;
             *-K1 )
                 FONT_LANG=K1
+                PALT_TO_PWID_FIXED=${COMMONDATADIR}/\
+palt_to_pwid_fixed_sans_K1.tbl
                 ;;
             * )
                 echo invalid fontdir name
@@ -69,9 +83,13 @@ case "${SRC_FONTBASE}" in
         case "${BUILD_FONTDIR}" in
             *-KR )
                 FONT_LANG=KR
+                PALT_TO_PWID_FIXED=${COMMONDATADIR}/\
+palt_to_pwid_fixed_serif_KR.tbl
                 ;;
             *-K1 )
                 FONT_LANG=K1
+                PALT_TO_PWID_FIXED=${COMMONDATADIR}/\
+palt_to_pwid_fixed_serif_K1.tbl
                 ;;
             * )
                 echo invalid fontdir name
@@ -387,8 +405,12 @@ echo calculating palt to pwid...
 ${BINDIR}/palt_to_pwid \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}.G_P_O_S_.ttx \
     ${FEATURE_GSUB_FEA} ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx \
-    palt_to_pwid_copy.tbl palt_to_pwid_adjust.tbl \
+    palt_to_pwid_copy01.tbl palt_to_pwid_adjust.tbl \
     > palt_to_pwid.log 2>&1 \
+    || { echo error; exit 1; }
+echo merging palt_to_copy table...
+cat palt_to_pwid_copy01.tbl ${PALT_TO_PWID_FIXED} | sort | uniq \
+    > palt_to_pwid_copy.tbl \
     || { echo error; exit 1; }
 echo merging copy and rotate table...
     cat ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
