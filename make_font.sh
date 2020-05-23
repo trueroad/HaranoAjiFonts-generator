@@ -475,15 +475,20 @@ ${BINDIR}/conv_GPOS \
     > GPOS.ttx 2> GPOS.log \
    || { echo error; exit 1; }
 
+echo adding GSUB pwid substitution...
+${SCRIPTDIR}/add_gsub_single.py \
+    pwid palt_to_pwid_copy.tbl GSUB01.ttx GSUB02.ttx \
+    > GSUB_add_pwid.log \
+    || { echo error; exit 1; }
 if [ "${FONT_LANG}" = "JP" ]; then
     echo adding GSUB vert/vrt2 substitution...
     ${SCRIPTDIR}/add_gsub_v.py \
-        GSUB01.ttx GSUB.ttx \
+        GSUB02.ttx GSUB.ttx \
         > GSUB_add_v.log \
         || { echo error; exit 1; }
 else
     echo "skipping language-specific GSUB vert/vrt2 substitution adding..."
-    ln -s GSUB01.ttx GSUB.ttx
+    ln -s GSUB02.ttx GSUB.ttx
 fi
 
 echo symbolic linking other tables...
