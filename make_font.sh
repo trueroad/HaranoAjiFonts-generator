@@ -395,6 +395,11 @@ echo merging copy and rotate table...
     > copy_and_rotate01.tbl \
     || { echo error; exit 1; }
 
+echo setting hmtx width for pwid glyphs...
+${SCRIPTDIR}/set_hmtx_width.py \
+    palt_to_pwid_adjust.tbl hmtx_width.ttx hmtx_pwid_width.ttx \
+    > hmtx_pwid_width.log 2>&1 \
+    || { echo error; exit 1; }
 echo copying and rotating glyphs in CFF table...
 ${SCRIPTDIR}/copy_and_rotate.py \
     copy_and_rotate01.tbl \
@@ -413,7 +418,7 @@ ${SCRIPTDIR}/calc_letter_face.py \
 echo making adjust table...
 ${SCRIPT_MAKE_ADJUST} \
     table.tbl \
-    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx_width.ttx \
+    ${TTXDIR}/${SRC_FONTBASE}._h_m_t_x.ttx hmtx_pwid_width.ttx \
     > adjust01.tbl 2> make_adjust.log \
     || { echo error; exit 1; }
 
@@ -449,7 +454,7 @@ ${SCRIPTDIR}/calc_letter_face.py \
 echo fixing LSB in hmtx table...
 ${SCRIPTDIR}/fix_mtx.py \
     letter_face02.tbl \
-    hmtx_width.ttx \
+    hmtx_pwid_width.ttx \
     hmtx.ttx \
     > hmtx_lsb.log \
     || { echo error; exit 1; }
