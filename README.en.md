@@ -68,6 +68,10 @@ https://github.com/trueroad/HaranoAjiFontsTW
     + [
 https://github.com/trueroad/HaranoAjiFontsKR
 ](https://github.com/trueroad/HaranoAjiFontsKR)
+* (Experimental) Korean (K1): Adobe-Korea1
+    + [
+https://github.com/trueroad/HaranoAjiFontsK1
+](https://github.com/trueroad/HaranoAjiFontsK1)
 
 ## Usage
 
@@ -236,8 +240,57 @@ The Adobe-KR-9 Character Collection
 
 `make kr`
 
+#### (Experimental) File (K1)
+
+* Source Han fonts Region-specific Subset OTFs KR version
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifKR-ExtraLight.otf
+        - SourceHanSerifKR-Light.otf
+        - SourceHanSerifKR-Normal.otf
+        - SourceHanSerifKR-Regular.otf
+        - SourceHanSerifKR-Medium.otf
+        - SourceHanSerifKR-Bold.otf
+        - SourceHanSerifKR-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansKR-ExtraLight.otf
+        - SourceHanSansKR-Light.otf
+        - SourceHanSansKR-Regular.otf
+        - SourceHanSansKR-Medium.otf
+        - SourceHanSansKR-SemiBold.otf
+        - SourceHanSansKR-Bold.otf
+        - SourceHanSansKR-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniKS-UTF32-H
+* AK1-2 GSUB
+    + [
+AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
+](https://blogs.adobe.com/CCJKType/2012/01/afdko-features-tips-tricks-part-2.html)
+        - ak12-gsub.txt (download `gsub-012012.tar` and unpack)
+
+#### (Experimental) Generate fonts (K1)
+
+`make k1`
+
 ## Release Notes
 
+* [
+20200524
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200524)
+(JP, CN, TW, KR, K1)
+    + Add proportional Kana glyphs (JP)
+    + Add some space glyphs (JP, KR)
+    + Fix broken `GPOS` table such as palt (JP, CN, TW, KR)
+    + Change width of Monospaced glyphs in **experimental** Korean font (KR)
+    + Add **experimental** Korean font variation (K1)
+        + Korean: Adobe-Korea1, suffix K1
+            + UniKS-UTF32-H 1.008
+    + Update
+        + ttx 4.10.2
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 16887
+          (conversion 16678 + glyph processing 208 + .notdef 1)
+        - HaranoAjiGothic: 16892
+          (conversion 16683 + glyph processing 208 + .notdef 1)
 * [
 20200516
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200516)

@@ -74,6 +74,10 @@ https://github.com/trueroad/HaranoAjiFontsTW
     + [
 https://github.com/trueroad/HaranoAjiFontsKR
 ](https://github.com/trueroad/HaranoAjiFontsKR)
+* （実験的）韓国語 (K1)：Adobe-Korea1 対応
+    + [
+https://github.com/trueroad/HaranoAjiFontsK1
+](https://github.com/trueroad/HaranoAjiFontsK1)
 
 ## Adobe-Japan1 (AJ1) v.s. Adobe-Identity0 (AI0)
 
@@ -191,6 +195,9 @@ AJ1 で全角幅の CID に割り当たったため、
       幅上書きや位置調整をしていません
 + AJ1 CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
 + AJ1 CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
+
+原ノ味フォント 20200524 からプロポーショナルかなを搭載しています。
+源ノフォントの palt に従って幅と位置を調整したものです。
 
 また、ダミーグリフは全角幅ですが、
 これも AJ1 の文字幅で上書きしています。
@@ -417,6 +424,38 @@ The Adobe-KR-9 Character Collection
 
 `make kr` で生成できます。
 
+#### （実験的）ファイル (K1)
+
+* Source Han フォント Region-specific Subset OTFs KR 版
+    + [Source Han Serif](https://github.com/adobe-fonts/source-han-serif)
+        - SourceHanSerifKR-ExtraLight.otf
+        - SourceHanSerifKR-Light.otf
+        - SourceHanSerifKR-Normal.otf
+        - SourceHanSerifKR-Regular.otf
+        - SourceHanSerifKR-Medium.otf
+        - SourceHanSerifKR-Bold.otf
+        - SourceHanSerifKR-Heavy.otf
+    + [Source Han Sans](https://github.com/adobe-fonts/source-han-sans)
+        - SourceHanSansKR-ExtraLight.otf
+        - SourceHanSansKR-Light.otf
+        - SourceHanSansKR-Regular.otf
+        - SourceHanSansKR-Medium.otf
+        - SourceHanSansKR-SemiBold.otf
+        - SourceHanSansKR-Bold.otf
+        - SourceHanSansKR-Heavy.otf
+* [CMap](https://github.com/adobe-type-tools/cmap-resources)
+    + UniKS-UTF32-H
+* AK1-2 の GSUB 情報
+    + [
+AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
+](https://blogs.adobe.com/CCJKType/2012/01/afdko-features-tips-tricks-part-2.html)
+      からダウンロードできる `gsub-012012.tar` を解凍して得られる
+      `ak12-gsub.txt`
+
+#### （実験的）生成 (K1)
+
+`make k1` で生成できます。
+
 ## 詳細
 
 ### CID の対応
@@ -573,6 +612,18 @@ AJ1-7 の GSUB が入手可能です。
 縮小で細くなってしまうなどデザイン的な問題が発生するため、
 なかなか難しいです。
 
+プロポーショナルかなについては、
+機械的変形とは異なった方法で搭載しています。
+源ノフォントのかなグリフは全角のものしかありませんが、
+GPOS テーブルに palt （プロポーショナルメトリクス）があります。
+そこで、全角かなグリフを palt のパラメータに従って幅と位置を調整した上で、
+AJ1 GSUB pwid 情報に従ってプロポーショナルかなのCIDに配置し、
+原ノ味フォントの pwid にも追加しています。
+これによって[
+palt 指定時と pwid 指定時のかな出力が同じになります
+](https://twitter.com/zr_tex8r/status/1262022045740625920)
+。
+
 また、横組み専用かな、縦組み専用かな、ルビ用かな、などが抜けていますが、
 ここに通常のかなのグリフをそのままコピーして搭載する方法も考えられます。
 ただ、本来は別のデザインのグリフが必要なのに、
@@ -653,6 +704,16 @@ CID をすべて AI0 CID から AJ1 CID に変換しています。
 また、ダミーグリフの CharString をサブルーチン化することで
 ファイルサイズ低減を図っています。
 
+原ノ味フォント 20200524 から、
+AJ1, AKR 規格にあるスペースのグリフを一部追加しています (JP, KR)。
+これは、AJ1 や AKR に規定のあるスペースのグリフで、
+これまで搭載されていなかったグリフを追加したものです。
+なお、回転やイタリックなど、
+他の関連グリフが存在していないものについては追加していません。
+また、プロポーショナルかななどの追加をしています (JP)。
+これは、全角かなグリフを palt に従って調整し、
+プロポーショナルかなのCIDに配置したものです。
+
 #### `hmtx`, `vmtx`
 
 `hmtx`, `vmtx` 用の変換プログラムで
@@ -673,6 +734,15 @@ LSB （左サイドベアリング）と TSB （上サイドベアリング）�
 
 原ノ味フォント 20200516 から、
 KR で AKR の横幅が Monospaced になっているものは全角幅としています。
+
+原ノ味フォント 20200524 から、
+KR で AKR の横幅が Monospaced になっているものは、
+AKR CID+221 （U+AC00、[
+akr-hangul.txt
+](https://github.com/adobe-type-tools/Adobe-KR/blob/master/akr9-hangul.txt)
+の最初に出てくる CID） の横幅に揃えました。
+その他、KR で追加したスペースのグリフについて、横幅を
+AKR CID+221 の幅や数字グリフの幅を元に設定しています。
 
 #### `VORG`
 
@@ -702,6 +772,9 @@ KR のみ `GPOS` テーブルを削除しています。
 これはテーブルの変換がうまくいっていない（ttx でフォント生成はできるが
 Windows がフォントとして認識してくれない）ためです。
 
+原ノ味フォント 20200524 で、
+palt などの `GPOS` が壊れていたものを修正しています。
+
 #### `GSUB`
 
 `GSUB` 用の変換プログラムで
@@ -721,6 +794,26 @@ chain context があるのは KR のみです。
 
 ## 履歴
 
+* [
+20200524
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200524)
+(JP, CN, TW, KR, K1)
+    + プロポーショナルかなのグリフを追加しました (JP)
+    + 一部のスペースグリフを追加しました (JP, KR)
+    + palt などの `GPOS` テーブルが壊れていたのを修正しました (JP, CN, TW, KR)
+    + **実験的な**韓国語フォントで Monospaced グリフの幅を変更しました (KR)
+    + **実験的に**韓国語フォントのバリエーションを追加しました (K1)
+    + これまで Adobe-KR 対応でサフィックス KR のフォントがありましたが、
+      Adobe-Korea1 対応でサフィックス K1 のフォントを追加しました
+        + 韓国語：Adobe-Korea1 対応、サフィックス K1
+            + UniKS-UTF32-H 1.008
+    + バージョンアップ
+        - ttx 4.10.2
+    + グリフ数 (JP)
+        - 原ノ味明朝：16887
+          （変換 16678 ＋グリフ加工 208 ＋ .notdef 1）
+        - 原ノ味角ゴシック：16892
+          （変換 16683 ＋グリフ加工 208 ＋ .notdef 1）
 * [
 20200516
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200516)
