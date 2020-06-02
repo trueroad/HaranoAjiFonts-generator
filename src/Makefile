@@ -7,6 +7,7 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	check_table_CMap \
 	fix_hmtx \
 	palt_to_pwid \
+	add_cmap \
 
 all: version.hh $(BIN)
 
@@ -50,6 +51,7 @@ CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o
 FIX_HMTX_OBJS = fix_hmtx_main.o conv_table.o
 PALT_TO_PWID_OBJS = palt_to_pwid_main.o gpos_single.o \
 	conv_table.o  aj1x-gsub.o
+ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
@@ -60,7 +62,8 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(CONV_VORG_OBJS) $(CONV_MTX_OBJS) \
 	$(CHECK_TABLE_CMAP_OBJS) \
 	$(FIX_HMTX_OBJS) \
-	$(PALT_TO_PWID_OBJS)
+	$(PALT_TO_PWID_OBJS) \
+	$(ADD_CMAP_OBJS)
 
 
 #
@@ -144,6 +147,9 @@ fix_hmtx: $(FIX_HMTX_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 palt_to_pwid: $(PALT_TO_PWID_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+add_cmap: $(ADD_CMAP_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 VERSION := $(shell cat ../version.txt)

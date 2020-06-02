@@ -347,19 +347,6 @@ ${BINDIR}/conv_cmap \
     table.tbl ${TTXDIR}/${SRC_FONTBASE}._c_m_a_p.ttx \
     > cmap01.ttx 2> cmap.log \
     || { echo error; exit 1; }
-if [ "${FONT_LANG}" = "KR" ]; then
-    echo "adding glyphs to cmap..."
-    ${SCRIPTDIR}/add_cmap_kr.py cmap01.ttx cmap02.ttx \
-        > cmap_additional_glyphs.log \
-        || { echo error; exit 1; }
-    # cmap table format 4 subtable size exceeds the limit.
-    echo "reducing size of cmap format 4..."
-    ${SCRIPTDIR}/fill_gaps_cmap.py cmap02.ttx cmap.ttx \
-        > cmap_fill_gaps.log \
-        || { echo error; exit 1; }
-else
-    ln -s cmap01.ttx cmap.ttx
-fi
 echo converting CFF table...
 ${BINDIR}/conv_CFF \
     ${ROS_R} ${ROS_O} ${ROS_S} \
@@ -416,6 +403,21 @@ echo merging copy and rotate table...
     cat ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
     > copy_and_rotate01.tbl \
     || { echo error; exit 1; }
+
+echo "adding glyphs to cmap..."
+${BINDIR}/add_cmap table.tbl copy_and_rotate01.tbl \
+    ${CMAP_FILE} cmap01.ttx cmap02.ttx \
+    > add_cmap.log 2> add_cmap_err.log \
+    || { echo error; exit 1; }
+if [ "${FONT_LANG}" = "TW" -o "${FONT_LANG}" = "KR" ]; then
+    # cmap table format 4 subtable size exceeds the limit.
+    echo "reducing size of cmap format 4..."
+    ${SCRIPTDIR}/fill_gaps_cmap.py cmap02.ttx cmap.ttx \
+        > cmap_fill_gaps.log \
+        || { echo error; exit 1; }
+else
+    ln -s cmap02.ttx cmap.ttx
+fi
 
 echo setting hmtx width for pwid glyphs...
 ${SCRIPTDIR}/set_hmtx_width.py \
