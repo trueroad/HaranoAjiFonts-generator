@@ -409,11 +409,12 @@ ${BINDIR}/add_cmap table.tbl copy_and_rotate01.tbl \
     ${CMAP_FILE} cmap01.ttx cmap02.ttx \
     > add_cmap.log 2> add_cmap_err.log \
     || { echo error; exit 1; }
-if [ "${FONT_LANG}" = "TW" -o "${FONT_LANG}" = "KR" ]; then
+if [ "${FONT_LANG}" = "TW" -a "${FONT_TYPE}" = "Sans" ] || \
+    [ "${FONT_LANG}" = "KR" ]; then
     # cmap table format 4 subtable size exceeds the limit.
-    echo "reducing size of cmap format 4..."
-    ${SCRIPTDIR}/fill_gaps_cmap.py cmap02.ttx cmap.ttx \
-        > cmap_fill_gaps.log \
+    echo "truncating cmap format 4..."
+    ${SCRIPTDIR}/truncate_cmap_format4.py cmap02.ttx cmap.ttx \
+        > cmap_truncate.log \
         || { echo error; exit 1; }
 else
     ln -s cmap02.ttx cmap.ttx
@@ -533,12 +534,6 @@ echo converting root ttx file...
 sed -f ${BASEDIR}/font_tables.sed ${TTXDIR}/${SRC_FONTBASE}.ttx \
     > output.ttx \
     || { echo error; exit 1; }
-
-if [ "${FONT_LANG}" = "KR" ]; then
-    # ***FIX ME*** The `GPOS` table conversion seems incomplete for KR.
-    echo "removing GPOS table (KR workaround)..."
-    sed -i -e 's/<GPOS \(.*\)\/>/<!--GPOS \1\/-->/g' output.ttx
-fi
 
 ttx -b --recalc-timestamp output.ttx \
     || { echo error; exit 1; }

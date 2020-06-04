@@ -3,8 +3,8 @@
 # Harano Aji Fonts generator
 # https://github.com/trueroad/HaranoAjiFonts-generator
 #
-# fill_gaps_cmap.py:
-#   Fill the gaps in the cmap table to reduce the size of format 4.
+# truncate_cmap_format4.py:
+#   Truncate cmap table format 4 subtable.
 #
 # Copyright (C) 2020 Masamichi Hosoda.
 # All rights reserved.
@@ -39,7 +39,7 @@ import xml.etree.ElementTree as ET
 
 def main ():
     if len(sys.argv) <= 2:
-        print("Usage: fill_gaps_cmap.py " \
+        print("Usage: truncate_cmap_format4.py " \
               "INPUT.cmap.ttx OUTPUT.cmap.ttx")
         exit(1)
 
@@ -49,38 +49,18 @@ def main ():
     tree = ET.parse(input_filename)
     root = tree.getroot()
 
-    # Fill the gaps for format 4
     for format4 in root.findall("./cmap/cmap_format_4"):
-        codes = []
+        removes = []
         for map in format4.findall("./map"):
             code = int(map.attrib["code"], 0)
-            codes.append(code)
-        codes.sort()
+            # CJK Unified Ideographs U+4E00..U+9FFF
+            # CJK Compatibility Ideographs U+F900..U+FAFF
+            if (0x4e00 <= code and code <= 0x9fff) or \
+               (0xf900 <= code and code <= 0xfaff):
+                removes.append(map)
 
-        before = -9999
-        for code in codes:
-            if code == (before + 2):
-                element = ET.SubElement(format4, "map")
-                element.set("code", "0x{:x}".format(code - 1))
-                element.set("name", ".notdef")
-            before = code
-
-    # Format 12 for Unicode BMP must be same as format 4
-    for format12 in root.findall("./cmap/cmap_format_12"):
-        codes = []
-        for map in format12.findall("./map"):
-            code = int(map.attrib["code"], 0)
-            if code < 0x10000:
-                codes.append(code)
-        codes.sort()
-
-        before = -9999
-        for code in codes:
-            if code == (before + 2):
-                element = ET.SubElement(format12, "map")
-                element.set("code", "0x{:x}".format(code - 1))
-                element.set("name", ".notdef")
-            before = code
+        for r in removes:
+            format4.remove (r)
 
     tree.write(output_filename)
 
