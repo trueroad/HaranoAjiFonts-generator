@@ -18,3 +18,6 @@ aji00231	aji00422	0
 aji00231	aji00422	0
 # CID+633 -> CID+8229 (AJ1, Full-width, Generic space)
 aji00633	aji08229	0
+#
+# CID+14 -> CID+151 (U+00AD -> CMap CID+151, cmap CID+14)
+aji00014	aji00151	0
