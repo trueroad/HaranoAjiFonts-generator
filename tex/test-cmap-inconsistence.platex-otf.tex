@@ -1,0 +1,92 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20200xxx cmap CMap 不一致グリフ一覧
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\title{原ノ味フォント20200xxx CMap cmap不一致グリフ一覧 \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  このファイルはAJ1 CMapと、原ノ味フォント生成途中に得られたcmapテーブルで、
+  同じUnicodeコードポイントから異なるCIDへマッピングされたグリフを集め、
+  他のフォントと比較して確認するためのものである。
+  そのために、同じDVIから、原ノ味フォント埋め込みPDFと
+  フォント非埋め込みPDFの双方を生成している。
+  小塚フォントを持つAcrobat Readerでフォント非埋め込みPDFを開くと、
+  小塚フォントを使った表示を見ることができる。
+  同じAcrobat Readerで原ノ味フォント埋め込みPDFを開くと、
+  原ノ味フォントを使った表示を見ることができる。
+  これにより双方の表示を比較し、
+  デザインの差を除いて同じような表示になれば、
+  原ノ味フォントのグリフは正しいがcmapテーブルには問題があり、
+  cmapテーブルをCMapで上書きすべきであると考えることができる。
+}
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\Huge\colorbox{gray1}{#1}\textmd{~}}}
+
+\mcfamily
+{\Large 明朝}
+
+U+00AD→CMap CID+151, cmap CID+14
+
+\test{\CID{151}} \test{\CID{14}}
+
+U+2EB3→CMap CID+14189, cmap CID+18384
+
+\test{\CID{14189}} \test{\CID{18384}} 
+
+U+2EC1→CMap CID+1931, cmap CID+20210
+
+\test{\CID{1931}} \test{\CID{20210}} 
+
+U+2FCA→CMap CID+2055, cmap CID+8717
+
+\test{\CID{2055}} \test{\CID{8717}} 
+
+U+884B→CMap CID+19777, cmap CID+22467
+
+\test{\CID{19777}} \test{\CID{22467}} 
+
+U+F95F→CMap CID+13971, cmap CID+3297
+
+\test{\CID{13971}} \test{\CID{3297}} 
+
+\gtfamily
+{\Large ゴシック}
+
+U+00AD→CMap CID+151, cmap CID+14
+
+\test{\CID{151}} \test{\CID{14}} 
+
+U+2F2C→CMap CID+4658, cmap CID+16837
+
+\test{\CID{4658}} \test{\CID{16837}} 
+
+U+2FCA→CMap CID+2055, cmap CID+8717
+
+\test{\CID{2055}} \test{\CID{8717}} 
+
+U+884B→CMap CID+19777, cmap CID+22467
+
+\test{\CID{19777}} \test{\CID{22467}} 
+
+U+F95F→CMap CID+13971, cmap CID+3297
+
+\test{\CID{13971}} \test{\CID{3297}} 
+
+\end{document}
