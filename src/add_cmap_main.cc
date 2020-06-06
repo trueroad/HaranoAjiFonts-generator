@@ -67,6 +67,18 @@ namespace
         auto cid = std::stoi (name.substr (3));
         if (cid != cid_CMap)
           {
+            if (bexist)
+              {
+                auto map_node = m.node ();
+                {
+                  std::stringstream ss;
+                  ss << "aji"
+                     << std::setw (5) << std::setfill ('0')
+                     << cid_CMap;
+                  map_node.attribute ("name").set_value (ss.str ().c_str ());
+                }
+                std::cout << "changed: ";
+              }
             std::cout
               << "warning: no match: U+"
               << std::setw (4) << std::setfill ('0')
