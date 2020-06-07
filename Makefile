@@ -61,15 +61,18 @@ bin/make_conv_table:
 
 build/%/output.otf: ttx/%.ttx bin/make_conv_table
 	mkdir -p build/$*
-	./make_font.sh $*
+	-ln -s ../../make/Makefile.in build/$*/Makefile
+	$(MAKE) -C build/$*
 
 build/%-KR/output.otf: ttx/%.ttx bin/make_conv_table
 	mkdir -p build/$*-KR
-	./make_font.sh $* build/$*-KR
+	-ln -s ../../make/Makefile.in build/$*-KR/Makefile
+	$(MAKE) -C build/$*-KR
 
 build/%-K1/output.otf: ttx/%.ttx bin/make_conv_table
 	mkdir -p build/$*-K1
-	./make_font.sh $* build/$*-K1
+	-ln -s ../../make/Makefile.in build/$*-K1/Makefile
+	$(MAKE) -C build/$*-K1
 
 
 $(OUTPUT_FAMILY_SANS)-%.otf: build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf
