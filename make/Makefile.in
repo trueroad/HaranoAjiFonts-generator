@@ -1,0 +1,4 @@
+BASEDIR = ../..
+MAKEDIR = $(BASEDIR)/make
+
+include $(MAKEDIR)/make_font.mk
