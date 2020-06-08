@@ -59,54 +59,81 @@ bin/make_conv_table:
 	$(MAKE) -C src
 	$(MAKE) -C src install
 
-build/%/output.otf: ttx/%.ttx bin/make_conv_table
-	mkdir -p build/$*
-	-ln -s ../../make/Makefile.in build/$*/Makefile
-	$(MAKE) -C build/$*
+build/$(OUTPUT_FAMILY_SANS)-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SANS)JP-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
 
-build/%-KR/output.otf: ttx/%.ttx bin/make_conv_table
-	mkdir -p build/$*-KR
-	-ln -s ../../make/Makefile.in build/$*-KR/Makefile
-	$(MAKE) -C build/$*-KR
+build/$(OUTPUT_FAMILY_SERIF)-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SERIF)JP-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
 
-build/%-K1/output.otf: ttx/%.ttx bin/make_conv_table
-	mkdir -p build/$*-K1
-	-ln -s ../../make/Makefile.in build/$*-K1/Makefile
-	$(MAKE) -C build/$*-K1
+build/$(OUTPUT_FAMILY_SANS)CN-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SANS)CN-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SERIF)CN-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SERIF)CN-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SANS)TW-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SANS)TW-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SERIF)TW-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SERIF)TW-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SANS)KR-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SANS)KR-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SERIF)KR-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SERIF)KR-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SANS)K1-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SANS)KR-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+build/$(OUTPUT_FAMILY_SERIF)K1-%/output.otf: \
+		ttx/$(ORIGINAL_FAMILY_SERIF)KR-%.ttx bin/make_conv_table
+	mkdir -p $(dir $@)
+	-ln -s ../../make/Makefile.in $(dir $@)Makefile
+	$(MAKE) -C $(dir $@)
+
+%.otf: build/%/output.otf
+	$(MAKE) -C $(dir $<) install
 
 
-$(OUTPUT_FAMILY_SANS)-%.otf: build/$(ORIGINAL_FAMILY_SANS)JP-%/output.otf
-	cp $< $@
-$(OUTPUT_FAMILY_SERIF)-%.otf: build/$(ORIGINAL_FAMILY_SERIF)JP-%/output.otf
-	cp $< $@
-
-$(OUTPUT_FAMILY_SANS)CN-%.otf: build/$(ORIGINAL_FAMILY_SANS)CN-%/output.otf
-	cp $< $@
-$(OUTPUT_FAMILY_SERIF)CN-%.otf: build/$(ORIGINAL_FAMILY_SERIF)CN-%/output.otf
-	cp $< $@
-
-$(OUTPUT_FAMILY_SANS)TW-%.otf: build/$(ORIGINAL_FAMILY_SANS)TW-%/output.otf
-	cp $< $@
-$(OUTPUT_FAMILY_SERIF)TW-%.otf: build/$(ORIGINAL_FAMILY_SERIF)TW-%/output.otf
-	cp $< $@
-
-$(OUTPUT_FAMILY_SANS)KR-%.otf: \
-		build/$(ORIGINAL_FAMILY_SANS)KR-%-KR/output.otf
-	cp $< $@
-$(OUTPUT_FAMILY_SERIF)KR-%.otf: \
-		build/$(ORIGINAL_FAMILY_SERIF)KR-%-KR/output.otf
-	cp $< $@
-
-$(OUTPUT_FAMILY_SANS)K1-%.otf: \
-		build/$(ORIGINAL_FAMILY_SANS)KR-%-K1/output.otf
-	cp $< $@
-$(OUTPUT_FAMILY_SERIF)K1-%.otf: \
-		build/$(ORIGINAL_FAMILY_SERIF)KR-%-K1/output.otf
-	cp $< $@
-
-
-NODELETE_FILES = ttx/%.ttx build/%/output.otf \
-		build/%-KR/output.otf build/%-K1/output.otf
+NODELETE_FILES = ttx/%.ttx build/%/output.otf %.otf \
+		build/$(OUTPUT_FAMILY_SANS)-%/output.otf \
+		build/$(OUTPUT_FAMILY_SERIF)-%/output.otf \
+		build/$(OUTPUT_FAMILY_SANS)CN-%/output.otf \
+		build/$(OUTPUT_FAMILY_SERIF)CN-%/output.otf \
+		build/$(OUTPUT_FAMILY_SANS)TW-%/output.otf \
+		build/$(OUTPUT_FAMILY_SERIF)TW-%/output.otf \
+		build/$(OUTPUT_FAMILY_SANS)KR-%/output.otf \
+		build/$(OUTPUT_FAMILY_SERIF)KR-%/output.otf \
+		build/$(OUTPUT_FAMILY_SANS)K1-%/output.otf \
+		build/$(OUTPUT_FAMILY_SERIF)K1-%/output.otf
 
 .SECONDARY: $(NODELETE_FILES)
 .PRECIOUS: $(NODELETE_FILES)
