@@ -209,7 +209,7 @@ table_for_GPOS.tbl: table.tbl letter_face02.tbl
 	@echo "making conversion table for GPOS..."
 	@$(SCRIPTDIR)/make_table_for_GPOS.py \
 		$+ \
-		> $@
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 
 ### Convert ###
@@ -236,7 +236,7 @@ cmap01.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._c_m_a_p.ttx
 	@echo "converting cmap table..."
 	@$(BINDIR)/conv_cmap \
 		$+ \
-		> $@ 2> cmap.log
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Convert CFF table
 CFF01.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE).C_F_F_.ttx
@@ -266,7 +266,7 @@ GSUB01.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx
 	@echo "converting GSUB table..."
 	@$(BINDIR)/conv_GSUB \
 		$+ \
-		> $@ 2> GSUB.log
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Convert VORG table
 VORG.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE).V_O_R_G_.ttx
@@ -313,7 +313,7 @@ hmtx.ttx: letter_face02.tbl hmtx_pwid_width.ttx
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
 		$@ \
-		> hmtx_lsb.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 
 ### Fix vmtx ###
@@ -324,7 +324,7 @@ vmtx.ttx: letter_face02.tbl vmtx_conv.ttx
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
 		$@ \
-		> vmtx_tsb.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 
 ### Fix cmap ###
@@ -333,7 +333,7 @@ vmtx.ttx: letter_face02.tbl vmtx_conv.ttx
 cmap02.ttx: table.tbl copy_and_rotate01.tbl ${CMAP_FILE} cmap01.ttx
 	@echo "adding glyphs to cmap..."
 	@$(BINDIR)/add_cmap $+ $@ \
-		> add_cmap.log 2> add_cmap_err.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Truncate cmap table
 ifeq ($(FONT_LANG),KR)
@@ -350,7 +350,7 @@ cmap.ttx: cmap02.ttx
 	@echo "truncating cmap format 4..."
 	@$(SCRIPTDIR)/truncate_cmap_format4.py \
 		$< $@ \
-		> cmap_truncate.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 else
 cmap.ttx: cmap02.ttx
 	@echo "skipping truncating cmap format 4..."
@@ -366,7 +366,7 @@ CFF02.ttx: copy_and_rotate01.tbl CFF01.ttx
 	@$(SCRIPTDIR)/copy_and_rotate.py \
 		$+ \
 		$@ \
-		> copy_and_rotate.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Adjust CFF table
 CFF.ttx: adjust02.tbl CFF02.ttx
@@ -374,7 +374,7 @@ CFF.ttx: adjust02.tbl CFF02.ttx
 	@$(SCRIPTDIR)/adjust.py \
 		$+ \
 		$@ \
-		> adjust.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 
 ### Fix GSUB ###
@@ -386,7 +386,7 @@ GSUB02.ttx: palt_to_pwid_copy.tbl GSUB01.ttx
 		pwid \
 		$+ \
 		$@ \
-		> GSUB_add_pwid.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Add GSUB vert/vert2 substitution
 ifeq ($(FONT_LANG),JP)
@@ -395,7 +395,7 @@ GSUB.ttx: GSUB02.ttx
 	@$(SCRIPTDIR)/add_gsub_v.py \
 		$< \
 		$@ \
-		> GSUB_add_v.log
+		> $(addsuffix .log,$(basename $@)) 2>&1
 else
 GSUB.ttx: GSUB02.ttx
 	@echo \
@@ -413,7 +413,7 @@ palt_to_pwid_copy01.tbl palt_to_pwid_adjust.tbl: \
 	@$(BINDIR)/palt_to_pwid \
 		$+ \
 		palt_to_pwid_copy01.tbl palt_to_pwid_adjust.tbl \
-		> palt_to_pwid.log 2>&1
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl ${PALT_TO_PWID_FIXED}
 	@echo "merging palt_to_copy table..."
@@ -431,14 +431,14 @@ letter_face01.tbl: $(SHIFT_LIST) CFF02.ttx
 	@echo "calculating letter face for shift table..."
 	@$(SCRIPTDIR)/calc_letter_face.py \
 		$+ \
-		> $@ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Make shift table
 shift.tbl: letter_face01.tbl
 	@echo "making shift table..."
 	@$(SCRIPTDIR)/make_shift.py \
 		$< \
-		> $@
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Make adjust table
 adjust01.tbl: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
@@ -446,7 +446,7 @@ adjust01.tbl: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
 	@echo "making adjust table..."
 	@$(SCRIPT_MAKE_ADJUST) \
 		$+ \
-		> $@ 2> make_adjust.log
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Add shift table to adjust table
 adjust02.tbl: adjust01.tbl shift.tbl palt_to_pwid_adjust.tbl
@@ -464,7 +464,7 @@ letter_face02.tbl: fix_mtx.tbl CFF.ttx
 	"calculating letter face for fixing {h|v}mtx and GPOS conversion..."
 	@$(SCRIPTDIR)/calc_letter_face.py \
 		$+ \
-		> $@
+		> $@ 2> $(addsuffix .log,$(basename $@))
 
 
 ### Other tables ###
