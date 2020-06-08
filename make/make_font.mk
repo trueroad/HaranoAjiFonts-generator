@@ -205,7 +205,7 @@ table.tbl: table-vert2.tbl table24.tbl
 
 
 # Make conversion table for GPOS
-table_for_GPOS.tbl: table.tbl letter_face02.tbl
+table_for_GPOS.tbl: table.tbl letter_face.tbl
 	@echo "making conversion table for GPOS..."
 	@$(SCRIPTDIR)/make_table_for_GPOS.py \
 		$+ \
@@ -276,14 +276,14 @@ VORG.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE).V_O_R_G_.ttx
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Convert hmtx table
-hmtx_conv.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx
+hmtx01.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx
 	@echo "converting hmtx table..."
 	@$(BINDIR)/conv_mtx \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Convert vmtx table
-vmtx_conv.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._v_m_t_x.ttx
+vmtx01.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._v_m_t_x.ttx
 	@echo "converting vmtx table..."
 	@$(BINDIR)/conv_mtx \
 		$+ \
@@ -293,14 +293,14 @@ vmtx_conv.ttx: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._v_m_t_x.ttx
 ### Fix hmtx ###
 
 # Fix widths in hmtx table
-hmtx_width.ttx: table.tbl hmtx_conv.ttx
+hmtx02.ttx: table.tbl hmtx01.ttx
 	@echo "fixing widths in hmtx table..."
 	@$(BINDIR)/fix_hmtx \
 		$(ROS) $+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Set hmtx width for pwid glyphs
-hmtx_pwid_width.ttx: palt_to_pwid_adjust.tbl hmtx_width.ttx
+hmtx03.ttx: adjust_pwid.tbl hmtx02.ttx
 	@echo "setting hmtx width for pwid glyphs..."
 	@$(SCRIPTDIR)/set_hmtx_width.py \
 		$+ \
@@ -308,7 +308,7 @@ hmtx_pwid_width.ttx: palt_to_pwid_adjust.tbl hmtx_width.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Fix LSB in hmtx table
-hmtx.ttx: letter_face02.tbl hmtx_pwid_width.ttx
+hmtx.ttx: letter_face.tbl hmtx03.ttx
 	@echo "fixing LSB in hmtx table..."
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
@@ -319,7 +319,7 @@ hmtx.ttx: letter_face02.tbl hmtx_pwid_width.ttx
 ### Fix vmtx ###
 
 # Fix TSB in vmtx table
-vmtx.ttx: letter_face02.tbl vmtx_conv.ttx
+vmtx.ttx: letter_face.tbl vmtx01.ttx
 	@echo "fixing TSB in vmtx table..."
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
@@ -330,7 +330,7 @@ vmtx.ttx: letter_face02.tbl vmtx_conv.ttx
 ### Fix cmap ###
 
 # Add CIDs to cmap table
-cmap02.ttx: table.tbl copy_and_rotate01.tbl ${CMAP_FILE} cmap01.ttx
+cmap02.ttx: table.tbl copy_and_rotate_do.tbl ${CMAP_FILE} cmap01.ttx
 	@echo "adding glyphs to cmap..."
 	@$(BINDIR)/add_cmap $+ $@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
@@ -361,7 +361,7 @@ endif
 ### Fix CFF ###
 
 # Copy and rotate glyphs in CFF table
-CFF02.ttx: copy_and_rotate01.tbl CFF01.ttx
+CFF02.ttx: copy_and_rotate_do.tbl CFF01.ttx
 	@echo "copying and rotating glyphs in CFF table..."
 	@$(SCRIPTDIR)/copy_and_rotate.py \
 		$+ \
@@ -369,7 +369,7 @@ CFF02.ttx: copy_and_rotate01.tbl CFF01.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Adjust CFF table
-CFF.ttx: adjust02.tbl CFF02.ttx
+CFF.ttx: adjust.tbl CFF02.ttx
 	@echo "adjusting CFF table..."
 	@$(SCRIPTDIR)/adjust.py \
 		$+ \
@@ -406,20 +406,20 @@ endif
 
 ### palt to pwid ###
 
-palt_to_pwid_copy01.tbl palt_to_pwid_adjust.tbl: \
+palt_to_pwid_copy01.tbl adjust_pwid.tbl: \
 		table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_P_O_S_.ttx \
 		$(FEATURE_GSUB_FEA) $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx
 	@echo "calculating palt to pwid..."
 	@$(BINDIR)/palt_to_pwid \
 		$+ \
-		palt_to_pwid_copy01.tbl palt_to_pwid_adjust.tbl \
+		palt_to_pwid_copy01.tbl adjust_pwid.tbl \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl ${PALT_TO_PWID_FIXED}
 	@echo "merging palt_to_copy table..."
 	@cat $+ | sort | uniq > $@
 
-copy_and_rotate01.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl
+copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl
 	@echo "merging copy and rotate table..."
 	@cat $+ > $@
 
@@ -442,24 +442,24 @@ shift.tbl: letter_face01.tbl
 
 # Make adjust table
 adjust01.tbl: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
-		hmtx_pwid_width.ttx
+		hmtx03.ttx
 	@echo "making adjust table..."
 	@$(SCRIPT_MAKE_ADJUST) \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Add shift table to adjust table
-adjust02.tbl: adjust01.tbl shift.tbl palt_to_pwid_adjust.tbl
+adjust.tbl: adjust01.tbl shift.tbl adjust_pwid.tbl
 	@echo "adding shift table to adjust table..."
 	@cat $+ > $@
 
 # Make {h|v}mtx fixing table
-fix_mtx.tbl: adjust02.tbl copy_and_rotate01.tbl
+fix_mtx.tbl: adjust.tbl copy_and_rotate_do.tbl
 	@echo "making {h|v}mtx fixing table..."
 	@cat $+ > $@
 
 # Calc letter face for fixing {h|v}mtx and GPOS conversion
-letter_face02.tbl: fix_mtx.tbl CFF.ttx
+letter_face.tbl: fix_mtx.tbl CFF.ttx
 	@echo \
 	"calculating letter face for fixing {h|v}mtx and GPOS conversion..."
 	@$(SCRIPTDIR)/calc_letter_face.py \
