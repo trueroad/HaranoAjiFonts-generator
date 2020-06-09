@@ -52,51 +52,13 @@
 namespace
 {
   void check_and_add (pugi::xml_node table_node,
+                      const std::map<int, int> &map_cmap,
                       const std::set<int> &exists,
                       int uni_CMap, int cid_CMap)
   {
     bool bexist = (exists.find (cid_CMap) != exists.end());
 
-    std::stringstream ss;
-    ss << "map[@code='0x" << std::hex << uni_CMap << "']";
-
-    auto m = table_node.select_node (ss.str ().c_str ());
-    if (m)
-      {
-        std::string name = m.node ().attribute ("name").value ();
-        auto cid = std::stoi (name.substr (3));
-        if (cid != cid_CMap)
-          {
-            if (bexist)
-              {
-                auto map_node = m.node ();
-                {
-                  std::stringstream ss;
-                  ss << "aji"
-                     << std::setw (5) << std::setfill ('0')
-                     << cid_CMap;
-                  map_node.attribute ("name").set_value (ss.str ().c_str ());
-                }
-                std::cout << "changed: ";
-              }
-            std::cout
-              << "warning: no match: U+"
-              << std::setw (4) << std::setfill ('0')
-              << std::hex << std::uppercase
-              << uni_CMap
-              << " -> CMap CID+"
-              << std::setfill (' ')
-              << std::dec << std::nouppercase
-              << cid_CMap;
-            if (!bexist)
-              std::cout << " (miss)";
-            std::cout
-              << ", cmap CID+"
-              << cid
-              << std::endl;
-          }
-      }
-    else
+    if (map_cmap.find (uni_CMap) == map_cmap.end ())
       {
         if (bexist)
           {
@@ -133,6 +95,76 @@ namespace
           << cid_CMap
           << std::endl;
       }
+    else
+      {
+        if (map_cmap.at (uni_CMap) == cid_CMap)
+          return;
+
+        if (bexist)
+          {
+            std::stringstream ss_select;
+            ss_select << "map[@code='0x" << std::hex << uni_CMap << "']";
+
+            auto map_node =
+              table_node.select_node (ss_select.str ().c_str ()).node ();
+            if (map_node)
+              {
+                std::stringstream ss;
+                ss << "aji"
+                   << std::setw (5) << std::setfill ('0')
+                   << cid_CMap;
+                map_node.attribute ("name").set_value (ss.str ().c_str ());
+                std::cout << "changed: ";
+              }
+          }
+        std::cout
+          << "warning: no match: U+"
+          << std::setw (4) << std::setfill ('0')
+          << std::hex << std::uppercase
+          << uni_CMap
+          << " -> CMap CID+"
+          << std::setfill (' ')
+          << std::dec << std::nouppercase
+          << cid_CMap;
+        if (!bexist)
+          std::cout << " (miss)";
+        std::cout
+          << ", cmap CID+"
+          << map_cmap.at (uni_CMap)
+          << std::endl;
+      }
+  }
+
+  std::map<int, int> load_cmap_table (pugi::xml_node table_node)
+  {
+    std::map<int, int> map;
+
+    for (auto &m: table_node.children ("map"))
+      {
+        auto uni = m.attribute ("code").as_int ();
+        std::string name = m.attribute ("name").value ();
+        auto cid = std::stoi (name.substr (3));
+
+        if (map.find (uni) != map.end ())
+          {
+            std::cerr
+              << "error: duplicate code in cmap table: U+"
+              << std::setw (4) << std::setfill ('0')
+              << std::hex << std::uppercase
+              << uni
+              << " -> CID+"
+              << std::setfill (' ')
+              << std::dec << std::nouppercase
+              << cid
+              << std::endl;
+
+            continue;
+          }
+
+        map[uni] = cid;
+      }
+
+    return map;
   }
 
   std::set<int> load_cr_cids (const std::string &filename)
@@ -273,11 +305,13 @@ int main (int argc, char *argv[])
   for (auto &t: cmap_format4)
     {
       auto table_node = t.node ();
+      auto map_cmap = load_cmap_table (table_node);
 
       for (auto &c: cmf.get_map ())
         {
-          if (c.first < 0x10000)
-            check_and_add (table_node, exists, c.first, c.second);
+          if (c.first >= 0x10000)
+            break;
+          check_and_add (table_node, map_cmap, exists, c.first, c.second);
         }
     }
 
@@ -285,9 +319,10 @@ int main (int argc, char *argv[])
   for (auto &t: cmap_format12)
     {
       auto table_node = t.node ();
+      auto map_cmap = load_cmap_table (table_node);
 
       for (auto &c: cmf.get_map ())
-        check_and_add (table_node, exists, c.first, c.second);
+        check_and_add (table_node, map_cmap, exists, c.first, c.second);
     }
 
   doc.save_file (cmap_out_filename.c_str (), "  ",
