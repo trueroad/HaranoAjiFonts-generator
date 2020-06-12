@@ -684,6 +684,40 @@ Windows がフォントとして認識してくれません。
 なお format 12 も BMP の範囲は format 4 と同じである必要があるため、
 BMP 範囲内のみ同じ処理を入れてあります。
 
+原ノ味フォント 20200612 から、
+AJ1 の CMap と比較して不足しているところを追加、
+食い違っているところを修正するようにしました。
+これにより `cmap` テーブルに U+FF0D 'FULLWIDTH HYPHEN-MINUS'
+が搭載されていない[
+問題
+](https://github.com/trueroad/HaranoAjiFonts/issues/4)が修正され、
+pTeX/upTeX のように CMap を使う場合と、
+LuaTeX/XeTeX のように cmap テーブルを使う場合とで、
+同じグリフが使えるようになります。
+また、KR で入れていた[
+Unicode コードポイントで一つだけ抜けているものに .notdef を割り当てる加工
+](https://github.com/trueroad/HaranoAjiFonts-generator/commit/3eb47da6025e58d228c9d3f2bef54e87904e8e39)
+をやめ、代わりに[
+Adobe-KR
+](https://github.com/adobe-type-tools/Adobe-KR)
+のドキュメントに記載されている format 4 から
+CJK Unified Ideographs (U+4E00..U+9FFF) と
+CJK Compatibility Ideographs (U+F900..U+FAFF)
+のブロックを削除する方法に変更しました。
+これは .notdef を割り当てる加工をしていて、
+かつ（関係ないはずの） `GPOS` テーブルが存在すると、
+なぜか Windows がフォントを認識してくれないことが分かったためです。
+OpenType 仕様的には（というか Windows 向けとしては）
+format 4 と format 12 の BMP 部分は一致するようにするのが推奨されていますが、
+サイズ的に収まらないので仕方がなく
+Adobe お勧めの対処法に従った処理を行ったものです。
+通常は format 4 ではなく、該当のブロックを含めすべての使用可能な
+Unicode コードポイントが搭載されている format 12 が使われるため問題ありません。
+また、前バージョンまでは KR のみ format 4
+サイズが超過したため対策していましたが、今回は上記 `cmap` 追加に伴い、
+TW の HaranoAjiGothicTW でもサイズ超過したため対策しています。
+TW の HaranoAjiMinchoTW では超過しなかったため対策していません。
+
 #### `CFF`
 
 `CFF` 用の変換プログラムで
@@ -713,6 +747,15 @@ AJ1, AKR 規格にあるスペースのグリフを一部追加しています (
 また、プロポーショナルかななどの追加をしています (JP)。
 これは、全角かなグリフを palt に従って調整し、
 プロポーショナルかなのCIDに配置したものです。
+
+原ノ味フォント 20200612 から、
+AJ1 CID+151 を AJ1 CID+14 からのコピーで追加しました (JP)。
+源ノフォントでは U+002D 'HYPHEN-MINUS' と U+00AD 'SOFT HYPHEN'
+が同じ AI0 CID にマップされているのに対して、AJ1 では別になっており
+それぞれ AJ1 CID+14 と AJ1 CID+151 にマップされています。
+これまで原ノ味フォントは AJ1 CID+14 のみ搭載していましたが、
+源ノでは同じグリフなので AJ1 CID+151 にコピーすることにしました。
+これにより U+00AD が使えるようになりました。
 
 #### `hmtx`, `vmtx`
 
@@ -775,6 +818,13 @@ Windows がフォントとして認識してくれない）ためです。
 原ノ味フォント 20200524 で、
 palt などの `GPOS` が壊れていたものを修正しています。
 
+原ノ味フォント 20200612 で、
+KR に搭載していなかった `GPOS` を搭載するようにしました。
+これは、`cmap` での format 4 のサイズ制限対策をしていて、
+かつ `GPOS` テーブルが存在すると、関係ないはずなのになぜか
+Windows がフォントを認識しないということがわかったため、
+`cmap` の対策を別の方法に変更したことによるものです。
+
 #### `GSUB`
 
 `GSUB` 用の変換プログラムで
@@ -794,6 +844,34 @@ chain context があるのは KR のみです。
 
 ## 履歴
 
+* [
+20200612
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200612)
+(JP, CN, TW, KR, K1)
+    + `cmap` テーブルが AJ1 などの CMap と比較して不足しているところを追加、
+      食い違っていたところを修正しました
+      (JP, CN, TW, KR, K1)
+        + これにより `cmap` テーブルに U+FF0D 'FULLWIDTH HYPHEN-MINUS'
+          が搭載されていない[
+問題
+](https://github.com/trueroad/HaranoAjiFonts/issues/4)が修正されました
+        + これまでと同じくグリフを搭載していない（ダミーグリフの）
+          CID に紐づく Unicode コードポイントは `cmap` に搭載していません
+    + AJ1 CID+151 を AJ1 CID+14 からのコピーで追加しました (JP)
+    + `cmap` テーブル format 4 がサイズ制限を超える場合の対策を変更しました
+      (TW, KR)
+    + `GPOS` テーブルを搭載しました (KR)
+    + 生成プログラムの改良をしました
+        + 各フォントの生成をシェルスクリプトから make に変更しました
+        + ビルドディレクトリ、ログファイル、中間ファイルの名称を変更しました
+    + バージョンアップ
+        + ttx 4.12.0
+    + グリフ数 (JP)
+        + 原ノ味明朝：16888
+          （変換 16678 ＋グリフ加工 209 ＋ .notdef 1）
+        + 原ノ味角ゴシック：16893
+          （変換 16683 ＋グリフ加工 209 ＋ .notdef 1）
+        + 上記 1 グリフ追加に伴い増加しています
 * [
 20200524
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200524)

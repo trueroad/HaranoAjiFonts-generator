@@ -274,6 +274,24 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20200612
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200612)
+(JP, CN, TW, KR, K1)
+    + Add `cmap` table from CMap such as AJ1
+      and change CID in `cmap` table according to CMap (JP, CN, TW, KR, K1)
+    + Add AJ1 CID+151 by copying from AJ1 CID+14 (JP)
+    + Change size reducing method for size exceeded `cmap` table format 4
+      (TW, KR)
+    + Add `GPOS` table (KR)
+    + Improve generator
+    + Update
+        + ttx 4.12.0
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 16888
+          (conversion 16678 + glyph processing 209 + .notdef 1)
+        - HaranoAjiGothic: 16893
+          (conversion 16683 + glyph processing 209 + .notdef 1)
+* [
 20200524
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200524)
 (JP, CN, TW, KR, K1)
