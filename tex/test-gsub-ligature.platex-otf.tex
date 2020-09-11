@@ -1,0 +1,37 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント GSUB リガチャ置き換えグリフ
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\usepackage{test-gsub-ligature}
+
+\title{原ノ味フォント GSUB リガチャ置き換えグリフ \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily
+{\Large 明朝}
+
+\testAll
+
+\clearpage
+
+\gtfamily
+{\Large ゴシック}
+
+\testAll
+
+\end{document}

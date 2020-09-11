@@ -1,0 +1,46 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント GSUB リガチャ置き換えグリフ
+% テスト用マクロ
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{70pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+
+\newcommand{\testAll}{%
+  CID+16209 -- CID+16213
+
+  \test{\CID{16209}}%
+  \test{\CID{16210}}%
+  \test{\CID{16211}}%
+  \test{\CID{16212}}%
+  \test{\CID{16213}}
+
+  CID+16214 -- CID+16218
+
+  \test{\CID{16214}}%
+  \test{\CID{16215}}%
+  \test{\CID{16216}}%
+  \test{\CID{16217}}%
+  \test{\CID{16218}}
+
+  CID+16219 -- CID+16221, CID+16246
+
+  \test{\CID{16219}}%
+  \test{\CID{16220}}%
+  \test{\CID{16221}}%
+  \test{\CID{16246}}
+
+  CID+16343 (vert from CID+16246)
+
+  \test{\CID{16343}}%
+
+  CID+15712 (pwid modified from CID+16246)
+
+  \test{\CID{15712}}
+
+  CID+20565, CID+20576
+
+  \test{\CID{20565}}%
+  \test{\CID{20576}}
+}
