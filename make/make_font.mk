@@ -99,6 +99,30 @@ table-vert.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
 		$(FEATURE_GSUB_FEA) \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
+table-ccmp.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature ccmp)..."
+	@$(BINDIR)/make_ligature_table \
+		$< ccmp $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table-liga.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature liga)..."
+	@$(BINDIR)/make_ligature_table \
+		$< liga $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table-dlig.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature dlig)..."
+	@$(BINDIR)/make_ligature_table \
+		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
 # Merge conversion tables from GSUB features pass 1
 table11.tbl: table-fwid.tbl table10.tbl
 	@echo "merging convertion tables (fwid)..."
@@ -124,8 +148,26 @@ table14.tbl: table-ruby.tbl table13.tbl
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table20.tbl: table-vert.tbl table14.tbl
+table15.tbl: table-vert.tbl table14.tbl
 	@echo "merging convertion tables (vert)..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table16.tbl: table-ccmp.tbl table15.tbl
+	@echo "merging convertion tables (ccmp)..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table17.tbl: table-liga.tbl table16.tbl
+	@echo "merging convertion tables (liga)..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table20.tbl: table-dlig.tbl table17.tbl
+	@echo "merging convertion tables (dlig)..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
@@ -172,6 +214,30 @@ table-vert2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
 		$(FEATURE_GSUB_FEA) \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
+table-ccmp2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature ccmp) pass 2..."
+	@$(BINDIR)/make_ligature_table \
+		$< ccmp $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table-liga2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature liga) pass 2..."
+	@$(BINDIR)/make_ligature_table \
+		$< liga $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table-dlig2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (OpenType feature dlig) pass 2..."
+	@$(BINDIR)/make_ligature_table \
+		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
 # Merge conversion tables from GSUB features pass 2
 table21.tbl: table-fwid2.tbl table20.tbl
 	@echo "merging convertion tables (fwid) pass 2..."
@@ -197,8 +263,26 @@ table24.tbl: table-ruby2.tbl table23.tbl
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table.tbl: table-vert2.tbl table24.tbl
+table25.tbl: table-vert2.tbl table24.tbl
 	@echo "merging convertion tables (vert) pass 2..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table26.tbl: table-ccmp2.tbl table25.tbl
+	@echo "merging convertion tables (ccmp) pass 2..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table27.tbl: table-liga2.tbl table26.tbl
+	@echo "merging convertion tables (liga) pass 2..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+table.tbl: table-dlig2.tbl table27.tbl
+	@echo "merging convertion tables (dlig) pass 2..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
