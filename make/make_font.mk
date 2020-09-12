@@ -115,13 +115,13 @@ table-liga.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
 		$(FEATURE_GSUB_FEA) \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table-dlig.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
-		$(FEATURE_GSUB_FEA)
-	@echo "making conversion table (OpenType feature dlig)..."
-	@$(BINDIR)/make_ligature_table \
-		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
-		$(FEATURE_GSUB_FEA) \
-		> $@ 2> $(addsuffix .log,$(basename $@))
+#table-dlig.tbl: table10.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+#		$(FEATURE_GSUB_FEA)
+#	@echo "making conversion table (OpenType feature dlig)..."
+#	@$(BINDIR)/make_ligature_table \
+#		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+#		$(FEATURE_GSUB_FEA) \
+#		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Merge conversion tables from GSUB features pass 1
 table11.tbl: table-fwid.tbl table10.tbl
@@ -160,17 +160,17 @@ table16.tbl: table-ccmp.tbl table15.tbl
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table17.tbl: table-liga.tbl table16.tbl
+table20.tbl: table-liga.tbl table16.tbl
 	@echo "merging convertion tables (liga)..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table20.tbl: table-dlig.tbl table17.tbl
-	@echo "merging convertion tables (dlig)..."
-	@$(BINDIR)/merge_table \
-		$+ \
-		> $@ 2> $(addsuffix .log,$(basename $@))
+#table20.tbl: table-dlig.tbl table17.tbl
+#	@echo "merging convertion tables (dlig)..."
+#	@$(BINDIR)/merge_table \
+#		$+ \
+#		> $@ 2> $(addsuffix .log,$(basename $@))
 
 
 # Conversion tables from GSUB features pass 2
@@ -230,13 +230,13 @@ table-liga2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
 		$(FEATURE_GSUB_FEA) \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table-dlig2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
-		$(FEATURE_GSUB_FEA)
-	@echo "making conversion table (OpenType feature dlig) pass 2..."
-	@$(BINDIR)/make_ligature_table \
-		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
-		$(FEATURE_GSUB_FEA) \
-		> $@ 2> $(addsuffix .log,$(basename $@))
+#table-dlig2.tbl: table20.tbl $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+#		$(FEATURE_GSUB_FEA)
+#	@echo "making conversion table (OpenType feature dlig) pass 2..."
+#	@$(BINDIR)/make_ligature_table \
+#		$< dlig $(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+#		$(FEATURE_GSUB_FEA) \
+#		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Merge conversion tables from GSUB features pass 2
 table21.tbl: table-fwid2.tbl table20.tbl
@@ -275,17 +275,17 @@ table26.tbl: table-ccmp2.tbl table25.tbl
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table27.tbl: table-liga2.tbl table26.tbl
+table.tbl: table-liga2.tbl table26.tbl
 	@echo "merging convertion tables (liga) pass 2..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table.tbl: table-dlig2.tbl table27.tbl
-	@echo "merging convertion tables (dlig) pass 2..."
-	@$(BINDIR)/merge_table \
-		$+ \
-		> $@ 2> $(addsuffix .log,$(basename $@))
+#table.tbl: table-dlig2.tbl table27.tbl
+#	@echo "merging convertion tables (dlig) pass 2..."
+#	@$(BINDIR)/merge_table \
+#		$+ \
+#		> $@ 2> $(addsuffix .log,$(basename $@))
 
 
 # Make conversion table for GPOS
