@@ -474,19 +474,26 @@ GSUB02.ttx: palt_to_pwid_copy.tbl GSUB01.ttx
 
 # Add GSUB vert/vert2 substitution
 ifeq ($(FONT_LANG),JP)
-GSUB.ttx: GSUB02.ttx
+GSUB03.ttx: GSUB02.ttx
 	@echo "adding GSUB vert/vrt2 substitution..."
 	@$(SCRIPTDIR)/add_gsub_v.py \
 		$< \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB.ttx: GSUB02.ttx
+GSUB03.ttx: GSUB02.ttx
 	@echo \
 	"skipping language-specific GSUB vert/vrt2 substitution adding..."
 	@ln -s $< $@
 endif
 
+# Integrate GSUB vert lookup tables
+GSUB.ttx: GSUB03.ttx
+	@echo "integrating GSUB vert lookup tables..."
+	@$(SCRIPTDIR)/integrate_gsub_vert.py \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 ### palt to pwid ###
 
