@@ -497,6 +497,23 @@ GSUB.ttx: GSUB03.ttx
 
 ### palt to pwid ###
 
+palt_to_pwid_kana01.tbl: table.tbl
+	@echo "making kana pwid table..."
+	@$(BINDIR)/make_kana_pwid_table \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+ifeq ($(FONT_LANG),JP)
+palt_to_pwid_kana.tbl: palt_to_pwid_kana01.tbl
+	@echo "filtering kana pwid table..."
+	@cat $+ | grep -v "^#" > $@
+else
+palt_to_pwid_kana.tbl:
+	@touch $@
+endif
+
 palt_to_pwid_copy01.tbl adjust_pwid.tbl: \
 		table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_P_O_S_.ttx \
 		$(FEATURE_GSUB_FEA) $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx
@@ -506,7 +523,8 @@ palt_to_pwid_copy01.tbl adjust_pwid.tbl: \
 		palt_to_pwid_copy01.tbl adjust_pwid.tbl \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl ${PALT_TO_PWID_FIXED}
+palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl palt_to_pwid_kana.tbl \
+		${PALT_TO_PWID_FIXED}
 	@echo "merging palt_to_copy table..."
 	@cat $+ | sort | uniq > $@
 
