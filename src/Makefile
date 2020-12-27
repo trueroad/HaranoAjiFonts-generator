@@ -9,6 +9,7 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	palt_to_pwid \
 	add_cmap \
 	ttx_formatter \
+	make_kana_pwid_table \
 
 all: version.hh $(BIN)
 
@@ -56,6 +57,8 @@ PALT_TO_PWID_OBJS = palt_to_pwid_main.o gpos_single.o \
 	conv_table.o  aj1x-gsub.o
 ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o
 TTX_FORMATTER_OBJS = ttx_formatter_main.o
+MAKE_KANA_PWID_TABLE_OBJS = make_kana_pwid_table_main.o \
+	conv_table.o aj1x-gsub.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
@@ -68,7 +71,8 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(FIX_HMTX_OBJS) \
 	$(PALT_TO_PWID_OBJS) \
 	$(ADD_CMAP_OBJS) \
-	$(TTX_FORMATTER_OBJS)
+	$(TTX_FORMATTER_OBJS) \
+	$(MAKE_KANA_PWID_TABLE_OBJS) \
 
 
 #
@@ -161,6 +165,9 @@ add_cmap: $(ADD_CMAP_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 ttx_formatter: $(TTX_FORMATTER_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+make_kana_pwid_table: $(MAKE_KANA_PWID_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 VERSION := $(shell cat ../version.txt)
