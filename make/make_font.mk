@@ -275,17 +275,51 @@ table26.tbl: table-ccmp2.tbl table25.tbl
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table.tbl: table-liga2.tbl table26.tbl
+table30.tbl: table-liga2.tbl table26.tbl
 	@echo "merging convertion tables (liga) pass 2..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-#table.tbl: table-dlig2.tbl table27.tbl
+#table30.tbl: table-dlig2.tbl table27.tbl
 #	@echo "merging convertion tables (dlig) pass 2..."
 #	@$(BINDIR)/merge_table \
 #		$+ \
 #		> $@ 2> $(addsuffix .log,$(basename $@))
+
+
+# JP specific conversion table 2
+ifeq ($(FONT_LANG),JP)
+table-vkana.tbl: table30.tbl \
+		$(TTXDIR)/$(SRC_FONTBASE).G_S_U_B_.ttx \
+		$(FEATURE_GSUB_FEA)
+	@echo "making conversion table (from VKana)..."
+	@$(BINDIR)/make_vkana_table \
+		$+ \
+		$@ copy_vkana.tbl feature_vkna.tbl \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+copy_vkana.tbl: table-vkana.tbl
+
+feature_vkna.tbl: table-vkana.tbl
+
+table.tbl: table-vkana.tbl table30.tbl
+	@echo "merging convertion tables (VKana)..."
+	@$(BINDIR)/merge_table \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+else
+table.tbl: table30.tbl
+	@echo \
+	"skipping language-specific conversion table 2 making and merging..."
+	@ln -s $< $@
+
+copy_vkana.tbl:
+	@touch $@
+
+feature_vkna.tbl:
+	@touch $@
+endif
 
 
 # Make conversion table for GPOS
@@ -528,7 +562,8 @@ palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl palt_to_pwid_kana.tbl \
 	@echo "merging palt_to_copy table..."
 	@cat $+ | sort | uniq > $@
 
-copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl
+copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
+		copy_vkana.tbl
 	@echo "merging copy and rotate table..."
 	@cat $+ > $@
 
