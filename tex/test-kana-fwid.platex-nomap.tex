@@ -1,0 +1,92 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント全角かなグリフ一覧
+% CTAN haranoaji パッケージ収録分
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage[deluxe]{otf}
+\usepackage{lmodern}
+\usepackage[noalphabet,otf]{pxchfon}
+\usepackage{xcolor}
+
+% haranoaji パッケージ収録の 7 フォントを割り当てる
+% （pxchfon のプリセット haranoaji と同じ）
+\setminchofont{HaranoAjiMincho-Regular.otf}
+\setlightminchofont{HaranoAjiMincho-Light.otf}
+\setboldminchofont{HaranoAjiMincho-Bold.otf}
+\setgothicfont{HaranoAjiGothic-Medium.otf}
+\setmediumgothicfont{HaranoAjiGothic-Regular.otf}
+\setboldgothicfont{HaranoAjiGothic-Bold.otf}
+\setxboldgothicfont{HaranoAjiGothic-Heavy.otf}
+\setmarugothicfont{HaranoAjiGothic-Medium.otf}
+
+\usepackage{test-kana-fwid}
+
+\title{原ノ味フォント全角かなグリフ一覧\\
+--- CTAN haranoaji パッケージ収録分 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  原ノ味フォント02012xx版は、
+  横組み用のCID+12269小書き「こ」およびCID+12271小書き「コ」、
+  縦組み用のCID+12270小書き「こ」およびCID+12272小書き「コ」
+  を搭載していない。
+  これは、源ノフォントがこれらのグリフを搭載していないためである。
+}
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily\ltseries
+{\huge 原ノ味明朝\textmd{Light}}
+
+\testAll
+
+\clearpage
+
+\mcfamily\mdseries
+{\huge 原ノ味明朝\textmd{Regular}}
+
+\testAll
+
+\clearpage
+
+\mcfamily\bfseries
+{\huge 原ノ味明朝\textmd{Bold}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\mdseries
+{\huge 原ノ味角ゴシック\textmd{Regular}}
+
+\testAll
+
+\clearpage
+
+\mgfamily % 丸ゴシックの代替が角ゴシックMediumなのでそれを利用
+{\huge 原ノ味角ゴシック\textmd{Medium}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\bfseries
+{\huge 原ノ味角ゴシック\textmd{Bold}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\ebseries
+{\huge 原ノ味角ゴシック\textmd{Heavy}}
+
+\testAll
+
+\end{document}
