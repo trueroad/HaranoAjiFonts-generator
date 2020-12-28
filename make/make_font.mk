@@ -522,10 +522,19 @@ GSUB03.ttx: GSUB02.ttx
 endif
 
 # Integrate GSUB vert lookup tables
-GSUB.ttx: GSUB03.ttx
+GSUB04.ttx: GSUB03.ttx
 	@echo "integrating GSUB vert lookup tables..."
 	@$(SCRIPTDIR)/integrate_gsub_vert.py \
 		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+# Remove VKana from GSUB vert
+GSUB.ttx: feature_vkna.tbl GSUB04.ttx
+	@echo "removing VKana from GSUB vert..."
+	@$(SCRIPTDIR)/remove_gsub_single.py \
+		vert \
+		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
