@@ -37,6 +37,63 @@
 #define INCLUDE_GUARD_AJ1X_KANA_HH
 
 inline bool
+is_aj1x_kana_fullwidth_h (int cid)
+{
+  if ((  643 <= cid && cid <=   644) ||
+      (  651 <= cid && cid <=   654) ||
+      cid ==   660 ||
+      (  842 <= cid && cid <=  1010) ||
+      ( 7958 <= cid && cid <=  7960) ||
+      ( 8313 <= cid && cid <=  8316) ||
+      cid == 12181 ||
+      cid == 12269 ||
+      cid == 12271 ||
+      cid == 16195 ||
+      (16209 <= cid && cid <= 16221) ||
+      (16236 <= cid && cid <= 16252) ||
+      (16326 <= cid && cid <= 16327))
+    return true;
+
+  return false;
+}
+
+inline bool
+is_aj1x_kana_fullwidth_v (int cid)
+{
+  if (cid ==  7891 ||
+      ( 7918 <= cid && cid <=  7939) ||
+      ( 8264 <= cid && cid <=  8265) ||
+      ( 8271 <= cid && cid <=  8272) ||
+      (12108 <= cid && cid <= 12110) ||
+      cid == 12270 ||
+      cid == 12272 ||
+      (16333 <= cid && cid <= 16349))
+    return true;
+
+  return false;
+}
+
+inline bool
+is_aj1x_kana_tuned_h (int cid)
+{
+  if ((12273 <= cid && cid <= 12455) ||
+      (16352 <= cid && cid <= 16381))
+    return true;
+
+  return false;
+}
+
+inline bool
+is_aj1x_kana_tuned_v (int cid)
+{
+  if ((12456 <= cid && cid <= 12638) ||
+      (16382 <= cid && cid <= 16411))
+    return true;
+
+  return false;
+}
+
+inline bool
 is_aj1x_kana_propotional_h (int cid)
 {
   if (15449 <= cid && cid <= 15452)
