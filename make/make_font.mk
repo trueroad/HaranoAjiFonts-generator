@@ -530,13 +530,44 @@ GSUB04.ttx: GSUB03.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Remove VKana from GSUB vert
-GSUB.ttx: feature_vkna.tbl GSUB04.ttx
+ifeq ($(FONT_LANG),JP)
+GSUB05.ttx: feature_vkna.tbl GSUB04.ttx
 	@echo "removing VKana from GSUB vert..."
 	@$(SCRIPTDIR)/remove_gsub_single.py \
 		vert \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+GSUB05.ttx: GSUB04.ttx
+	@echo \
+	"skipping language-specific GSUB vert substitution removing..."
+	@ln -s $< $@
+endif
+
+# Add GSUB vkna
+ifeq ($(FONT_LANG),JP)
+GSUB06.ttx: GSUB05.ttx
+	@echo "adding GSUB vkna table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		vkna \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB.ttx: feature_vkna.tbl GSUB06.ttx
+	@echo "adding GSUB vkna substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		vkna \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+GSUB.ttx: GSUB05.ttx
+	@echo \
+	"skipping language-specific GSUB vkna substitution adding..."
+	@ln -s $< $@
+endif
 
 ### palt to pwid ###
 
