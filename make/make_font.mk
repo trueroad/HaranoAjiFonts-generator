@@ -550,6 +550,7 @@ ifeq ($(FONT_LANG),JP)
 GSUB06.ttx: GSUB05.ttx
 	@echo "adding GSUB vkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		append dummy \
 		vkna \
 		$< \
 		$@ \
