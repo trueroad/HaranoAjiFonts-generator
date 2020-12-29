@@ -38,16 +38,19 @@
 import sys
 import xml.etree.ElementTree as ET
 
-def create_lookup (root):
+def append_lookup (root):
     ll = root.find ("./GSUB/LookupList")
-    max_index = 0
+    i = 0
     for l in ll.findall ("./Lookup"):
         index = int (l.attrib["index"])
-        if (max_index < index):
-            max_index = index
+        if i != index:
+            print ("Lookup index error: index {}, expected {}". \
+                   format (index, i))
+            exit (1);
+        i += 1;
 
     new_l = ET.SubElement (ll, "Lookup")
-    new_l.attrib["index"] = str (max_index + 1)
+    new_l.attrib["index"] = str (i)
     new_lt = ET.SubElement (new_l, "LookupType")
     new_lt.attrib["value"] = "1"
     new_lf = ET.SubElement (new_l, "LookupFlag")
@@ -56,18 +59,21 @@ def create_lookup (root):
     new_ss.attrib["Format"] = "2"
     new_ss.attrib["index"] = "0"
 
-    return (max_index + 1)
+    return i
 
 def create_feature_record (root, tag, lookup_index):
     fl = root.find ("./GSUB/FeatureList")
-    max_index = 0
+    i = 0
     for fr in fl.findall ("./FeatureRecord"):
         index = int (fr.attrib["index"])
-        if (max_index < index):
-            max_index = index
+        if i != index:
+            print ("FeatureReocrd index error: index {}, expected {}". \
+                   format (index, i))
+            exit (1);
+        i += 1;
 
     new_fr = ET.SubElement (fl, "FeatureRecord")
-    new_fr.attrib["index"] = str (max_index + 1)
+    new_fr.attrib["index"] = str (i)
     new_ft = ET.SubElement (new_fr, "FeatureTag")
     new_ft.attrib["value"] = tag
     new_f = ET.SubElement (new_fr, "Feature")
@@ -75,7 +81,7 @@ def create_feature_record (root, tag, lookup_index):
     new_lli.attrib["index"] = "0"
     new_lli.attrib["value"] = str (lookup_index)
 
-    return (max_index + 1)
+    return i
 
 def main ():
     if len (sys.argv) != 4:
@@ -90,7 +96,7 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
-    lookup_index = create_lookup (root)
+    lookup_index = append_lookup (root)
 
     xpath = "./GSUB/ScriptList/ScriptRecord/Script/DefaultLangSys"
     for ls in root.findall (xpath):
