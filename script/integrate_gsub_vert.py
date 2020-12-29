@@ -143,6 +143,16 @@ def main ():
             for elem in elem_lookup_list.findall (xpath):
                 elem_lookup_list.remove (elem)
 
+    for elem_lookup_list in root.findall ("./GSUB/LookupList"):
+        i = 0
+        for l in elem_lookup_list.findall ("./Lookup"):
+            index = int (l.attrib["index"])
+            if i != index:
+                print ("Lookup index error: index {}, expected {}". \
+                       format (index, i))
+                exit (1);
+            i += 1
+
     tree.write (output_filename)
 
 if __name__ == "__main__":
