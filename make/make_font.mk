@@ -451,6 +451,14 @@ hmtx.ttx: letter_face.tbl hmtx03.ttx
 
 ### Fix vmtx ###
 
+# Set vmtx height for pwidvert glyphs
+vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
+	@echo "setting vmtx height for pwid glyphs..."
+	@$(SCRIPTDIR)/set_vmtx_height.py \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
 # Fix TSB in vmtx table
 vmtx.ttx: letter_face.tbl vmtx01.ttx
 	@echo "fixing TSB in vmtx table..."
@@ -739,7 +747,43 @@ palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl palt_to_pwid_kana.tbl \
 	@echo "merging palt_to_copy table..."
 	@cat $+ | sort | uniq > $@
 
-copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
+### vpal to pwidvert ###
+
+vpal_to_pwidvert_kana01.tbl: table.tbl
+	@echo "making kana pwidvert table..."
+	@$(BINDIR)/make_kana_pwidvert_table \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+ifeq ($(FONT_LANG),JP)
+vpal_to_pwidvert_kana.tbl: vpal_to_pwidvert_kana01.tbl
+	@echo "filtering kana pwidvert table..."
+	@cat $+ | grep -v "^#" > $@
+else
+valt_to_pwidvert_kana.tbl:
+	@touch $@
+endif
+
+vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl: \
+		table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_P_O_S_.ttx \
+		$(FEATURE_GSUB_FEA) $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
+		$(TTXDIR)/$(SRC_FONTBASE)._v_m_t_x.ttx
+	@echo "calculating vpal to pwidvert..."
+	@$(BINDIR)/vpal_to_pwidvert \
+		$+ \
+		vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl \
+		height_pwidvert.tbl \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+vpal_to_pwidvert_copy.tbl: vpal_to_pwidvert_copy01.tbl \
+		vpal_to_pwidvert_kana.tbl
+	@echo "merging vpal_to_copy table..."
+	@cat $+ | sort | uniq > $@
+
+copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} \
+		palt_to_pwid_copy.tbl vpal_to_pwidvert_copy.tbl \
 		copy_vkana.tbl copy_hkana.tbl
 	@echo "merging copy and rotate table..."
 	@cat $+ > $@
@@ -770,7 +814,7 @@ adjust01.tbl: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # Add shift table to adjust table
-adjust.tbl: adjust01.tbl shift.tbl adjust_pwid.tbl
+adjust.tbl: adjust01.tbl shift.tbl adjust_pwid.tbl adjust_pwidvert.tbl
 	@echo "adding shift table to adjust table..."
 	@cat $+ > $@
 
