@@ -38,6 +38,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -134,6 +135,7 @@ int main (int argc, char *argv[])
     }
 
   calc_width cw ("AJ1");
+  std::set<int> outs;
 
   for (const auto &vkna: ag_vkna.get_map ())
     {
@@ -164,6 +166,7 @@ int main (int argc, char *argv[])
             << cid_out
             << "\t0"
             << std::endl;
+          outs.insert (cid_out);
         }
     }
 
@@ -196,6 +199,33 @@ int main (int argc, char *argv[])
             << cid_out
             << "\t0"
             << std::endl;
+          outs.insert (cid_out);
+        }
+    }
+
+  for (const auto &vert: ag_vert.get_map ())
+    {
+      if (is_aj1x_kana_propotional_v (vert.second) &&
+          ag_pwid.get_rev ().find (vert.first) !=
+          ag_pwid.get_rev ().end ())
+        {
+          auto cid_base = ag_pwid.get_rev ().at (vert.first);
+          if (outs.find (vert.second) == outs.end () &&
+              std::find (ct.get_cid_outs ().begin (),
+                         ct.get_cid_outs ().end (),
+                         cid_base) != ct.get_cid_outs ().end ())
+            {
+              std::cout
+                << "aji"
+                << std::setw (5) << std::setfill ('0')
+                << cid_base
+                << "\taji"
+                << std::setw (5) << std::setfill ('0')
+                << vert.second
+                << "\t0"
+                << std::endl;
+              continue;
+            }
         }
     }
 
