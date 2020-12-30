@@ -102,8 +102,8 @@ def insert_lookup (root, insert_index):
             l = ll.find ("./Lookup[@index='" + str (renum_index) + "']")
             l.attrib["index"] = str (renum_index + 1)
 
-            xpath = "./GSUB/FeatureList/FeatureRecord/Feature" + \
-                "/LookupListIndex[@value='" + str (renum_index) + "']"
+            xpath = "./GSUB//LookupListIndex[@value='" + \
+                str (renum_index) + "']"
             for lli in root.findall (xpath):
                 lli.attrib["value"] = str (renum_index + 1)
 
