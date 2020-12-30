@@ -303,6 +303,15 @@ copy_vkana.tbl: table-vkana.tbl
 
 feature_vkna.tbl: table-vkana.tbl
 
+copy_hkana.tbl: table30.tbl $(FEATURE_GSUB_FEA)
+	@echo "making copy table (from horizontal Kana)..."
+	@$(BINDIR)/make_hkana_table \
+		$+ \
+		$@ feature_hkna.tbl \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+feature_hkna.tbl: copy_hkana.tbl
+
 table.tbl: table-vkana.tbl table30.tbl
 	@echo "merging convertion tables (VKana)..."
 	@$(BINDIR)/merge_table \
@@ -318,6 +327,12 @@ copy_vkana.tbl:
 	@touch $@
 
 feature_vkna.tbl:
+	@touch $@
+
+copy_hkana.tbl:
+	@touch $@
+
+feature_hkna.tbl:
 	@touch $@
 endif
 
@@ -601,6 +616,23 @@ GSUB07.ttx: feature_expt.tbl GSUB06.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 GSUB08.ttx: GSUB07.ttx
+	@echo "adding GSUB hkna table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		after fwid \
+		hkna \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB09.ttx: feature_hkna.tbl GSUB08.ttx
+	@echo "adding GSUB hkna substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		hkna \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB10.ttx: GSUB09.ttx
 	@echo "adding GSUB hojo table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before hwid \
@@ -609,7 +641,7 @@ GSUB08.ttx: GSUB07.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB09.ttx: feature_hojo.tbl GSUB08.ttx
+GSUB11.ttx: feature_hojo.tbl GSUB10.ttx
 	@echo "adding GSUB hojo substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		hojo \
@@ -617,7 +649,7 @@ GSUB09.ttx: feature_hojo.tbl GSUB08.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB10.ttx: GSUB09.ttx
+GSUB12.ttx: GSUB11.ttx
 	@echo "adding GSUB pkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before pwid \
@@ -626,7 +658,7 @@ GSUB10.ttx: GSUB09.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB11.ttx: feature_pkna.tbl GSUB10.ttx
+GSUB13.ttx: feature_pkna.tbl GSUB12.ttx
 	@echo "adding GSUB pkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		pkna \
@@ -634,7 +666,7 @@ GSUB11.ttx: feature_pkna.tbl GSUB10.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB12.ttx: GSUB11.ttx
+GSUB14.ttx: GSUB13.ttx
 	@echo "adding GSUB trad table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before vert \
@@ -643,7 +675,7 @@ GSUB12.ttx: GSUB11.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB13.ttx: feature_trad.tbl GSUB12.ttx
+GSUB15.ttx: feature_trad.tbl GSUB14.ttx
 	@echo "adding GSUB trad substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		trad \
@@ -651,7 +683,7 @@ GSUB13.ttx: feature_trad.tbl GSUB12.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB14.ttx: GSUB13.ttx
+GSUB16.ttx: GSUB15.ttx
 	@echo "adding GSUB vkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		after vert \
@@ -660,7 +692,7 @@ GSUB14.ttx: GSUB13.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB.ttx: feature_vkna.tbl GSUB14.ttx
+GSUB.ttx: feature_vkna.tbl GSUB16.ttx
 	@echo "adding GSUB vkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		vkna \
@@ -708,7 +740,7 @@ palt_to_pwid_copy.tbl: palt_to_pwid_copy01.tbl palt_to_pwid_kana.tbl \
 	@cat $+ | sort | uniq > $@
 
 copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} palt_to_pwid_copy.tbl \
-		copy_vkana.tbl
+		copy_vkana.tbl copy_hkana.tbl
 	@echo "merging copy and rotate table..."
 	@cat $+ > $@
 
