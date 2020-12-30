@@ -7,6 +7,7 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	check_table_CMap \
 	fix_hmtx \
 	palt_to_pwid \
+	vpal_to_pwidvert \
 	add_cmap \
 	ttx_formatter \
 	make_kana_pwid_table \
@@ -58,6 +59,8 @@ CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o
 FIX_HMTX_OBJS = fix_hmtx_main.o conv_table.o
 PALT_TO_PWID_OBJS = palt_to_pwid_main.o gpos_single.o \
 	conv_table.o  aj1x-gsub.o
+VPAL_TO_PWIDVERT_OBJS = vpal_to_pwidvert_main.o gpos_single.o \
+	conv_table.o aj1x-gsub.o
 ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o
 TTX_FORMATTER_OBJS = ttx_formatter_main.o
 MAKE_KANA_PWID_TABLE_OBJS = make_kana_pwid_table_main.o \
@@ -79,6 +82,7 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(CHECK_TABLE_CMAP_OBJS) \
 	$(FIX_HMTX_OBJS) \
 	$(PALT_TO_PWID_OBJS) \
+	$(VPAL_TO_PWIDVERT_OBJS) \
 	$(ADD_CMAP_OBJS) \
 	$(TTX_FORMATTER_OBJS) \
 	$(MAKE_KANA_PWID_TABLE_OBJS) \
@@ -171,6 +175,9 @@ fix_hmtx: $(FIX_HMTX_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 palt_to_pwid: $(PALT_TO_PWID_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+vpal_to_pwidvert: $(VPAL_TO_PWIDVERT_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 add_cmap: $(ADD_CMAP_OBJS)
