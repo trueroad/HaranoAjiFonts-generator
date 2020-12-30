@@ -200,8 +200,8 @@ def main ():
         print ("inserting {} before {}".format (feature, existing_feature))
         lookup_index = \
             insert_lookup (root, \
-                           get_insert_index_after_feature (root, \
-                                                           existing_feature))
+                           get_insert_index_before_feature (root, \
+                                                            existing_feature))
     elif position_reference == "append":
         print ("appending {}".format (feature))
         lookup_index = append_lookup (root)
