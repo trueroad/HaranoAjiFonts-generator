@@ -38,6 +38,19 @@
 import sys
 import xml.etree.ElementTree as ET
 
+def get_max_index (root):
+    for elem_lookup_list in root.findall ("./GSUB/LookupList"):
+        i = 0
+        for l in elem_lookup_list.findall ("./Lookup"):
+            index = int (l.attrib["index"])
+            if i != index:
+                print ("Lookup index error: index {}, expected {}". \
+                       format (index, i))
+                exit (1);
+            i += 1
+
+    return i - 1
+
 def get_vrt2_index (root):
     vrt2 = set ()
 
@@ -101,6 +114,8 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
+    max_index = get_max_index (root)
+    print ("max lookup table index: {}".format (max_index))
     vrt2_index = get_vrt2_index (root)
     print ("vrt2 lookup table index: {}".format (vrt2_index))
 
@@ -143,15 +158,30 @@ def main ():
             for elem in elem_lookup_list.findall (xpath):
                 elem_lookup_list.remove (elem)
 
-    for elem_lookup_list in root.findall ("./GSUB/LookupList"):
-        i = 0
-        for l in elem_lookup_list.findall ("./Lookup"):
-            index = int (l.attrib["index"])
-            if i != index:
-                print ("Lookup index error: index {}, expected {}". \
-                       format (index, i))
-                exit (1);
-            i += 1
+    remove_index = sorted (remove_index)
+    for i in reversed (remove_index):
+        if i == max_index:
+            max_index -= 1
+            remove_index.remove (i)
+
+    for i in reversed (remove_index):
+        for renum_index in range (i + 1, max_index + 1):
+            print ("renumbering lookup index {} to {}".\
+                   format (renum_index, renum_index - 1))
+            xpath = "./GSUB/LookupList/Lookup[@index='" + \
+                str (renum_index) + "']"
+            for l in root.findall (xpath):
+                l.attrib["index"] = str (renum_index - 1)
+
+            xpath = "./GSUB//LookupListIndex[@value='" + \
+                str (renum_index) + "']"
+            for lli in root.findall (xpath):
+                lli.attrib["value"] = str (renum_index - 1)
+        max_index -= 1
+
+    if get_max_index (root) !=  max_index:
+        print ("max lookup index error")
+        exit (1)
 
     tree.write (output_filename)
 
