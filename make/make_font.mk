@@ -545,18 +545,122 @@ GSUB05.ttx: GSUB04.ttx
 	@ln -s $< $@
 endif
 
-# Add GSUB vkna
+# Add GSUB substitutes
 ifeq ($(FONT_LANG),JP)
+feature_expt.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making GSUB expt table..."
+	@$(BINDIR)/make_gsub_single_table \
+		expt \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+feature_hojo.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making GSUB hojo table..."
+	@$(BINDIR)/make_gsub_single_table \
+		hojo \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+feature_pkna.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making GSUB pkna table..."
+	@$(BINDIR)/make_gsub_single_table \
+		pkna \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+feature_trad.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making GSUB trad table..."
+	@$(BINDIR)/make_gsub_single_table \
+		trad \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
 GSUB06.ttx: GSUB05.ttx
+	@echo "adding GSUB expt table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		before fwid \
+		expt \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB07.ttx: feature_expt.tbl GSUB06.ttx
+	@echo "adding GSUB expt substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		expt \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB08.ttx: GSUB07.ttx
+	@echo "adding GSUB hojo table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		before hwid \
+		hojo \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB09.ttx: feature_hojo.tbl GSUB08.ttx
+	@echo "adding GSUB hojo substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		hojo \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB10.ttx: GSUB09.ttx
+	@echo "adding GSUB pkna table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		before pwid \
+		pkna \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB11.ttx: feature_pkna.tbl GSUB10.ttx
+	@echo "adding GSUB pkna substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		pkna \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB12.ttx: GSUB11.ttx
+	@echo "adding GSUB trad table..."
+	@$(SCRIPTDIR)/add_gsub_single_table.py \
+		before vert \
+		trad \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB13.ttx: feature_trad.tbl GSUB12.ttx
+	@echo "adding GSUB trad substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		trad \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB14.ttx: GSUB13.ttx
 	@echo "adding GSUB vkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
-		append dummy \
+		after vert \
 		vkna \
 		$< \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB.ttx: feature_vkna.tbl GSUB06.ttx
+GSUB.ttx: feature_vkna.tbl GSUB14.ttx
 	@echo "adding GSUB vkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		vkna \
@@ -566,7 +670,7 @@ GSUB.ttx: feature_vkna.tbl GSUB06.ttx
 else
 GSUB.ttx: GSUB05.ttx
 	@echo \
-	"skipping language-specific GSUB vkna substitution adding..."
+	"skipping language-specific GSUB substitution adding..."
 	@ln -s $< $@
 endif
 
