@@ -11,6 +11,7 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	add_cmap \
 	ttx_formatter \
 	make_kana_pwid_table \
+	make_kana_pwidvert_table \
 	make_vkana_table \
 	make_hkana_table \
 	make_gsub_single_table \
@@ -64,6 +65,8 @@ VPAL_TO_PWIDVERT_OBJS = vpal_to_pwidvert_main.o gpos_single.o \
 ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o
 TTX_FORMATTER_OBJS = ttx_formatter_main.o
 MAKE_KANA_PWID_TABLE_OBJS = make_kana_pwid_table_main.o \
+	conv_table.o aj1x-gsub.o
+MAKE_KANA_PWIDVERT_TABLE_OBJS = make_kana_pwidvert_table_main.o \
 	conv_table.o aj1x-gsub.o
 MAKE_VKANA_TABLE_OBJS = make_vkana_table_main.o \
 	conv_table.o aj1x-gsub.o gsub_single.o
@@ -187,6 +190,9 @@ ttx_formatter: $(TTX_FORMATTER_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_kana_pwid_table: $(MAKE_KANA_PWID_TABLE_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+make_kana_pwidvert_table: $(MAKE_KANA_PWIDVERT_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_vkana_table: $(MAKE_VKANA_TABLE_OBJS)
