@@ -1,0 +1,55 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント202012xx横組み最適化かなグリフ一覧
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\usepackage{test-kana-hkna}
+
+\title{原ノ味フォント202012xx横組み最適化かなグリフ一覧\\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  このファイルは原ノ味フォントのグリフが正しく生成されているか、
+  他のフォントと比較して確認するためのものである。
+  そのために、同じDVIから、原ノ味フォント埋め込みPDFと
+  フォント非埋め込みPDFの双方を生成している。
+  小塚フォントを持つAcrobat Readerでフォント非埋め込みPDFを開くと、
+  小塚フォントを使った表示を見ることができる。
+  同じAcrobat Readerで原ノ味フォント埋め込みPDFを開くと、
+  原ノ味フォントを使った表示を見ることができる。
+  これにより双方の表示を比較し、
+  デザインの差を除いて同じような表示になれば、
+  原ノ味フォントのグリフが正しいと考えることができる。
+
+  原ノ味フォント02012xx版は、
+  CID+12295小書き「こ」およびCID+12385小書き「コ」を搭載していない。
+  これは、源ノフォントがこれらのグリフを搭載していないためである。
+}
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily
+{\huge 明朝}
+
+\testAll
+
+\clearpage
+
+\gtfamily
+{\huge ゴシック}
+
+\testAll
+
+\end{document}
