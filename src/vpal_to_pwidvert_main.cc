@@ -372,7 +372,7 @@ int main (int argc, char *argv[])
         << std::setw (5) << std::setfill ('0')
         << aj1_cid_dst << "\t"
         << width << "\t0\t"
-        << gv.yPlacement << "\t1\t1"
+        << -gv.yPlacement << "\t1\t1"
         << std::endl;
       ofs_height_tbl
         << "aji"
