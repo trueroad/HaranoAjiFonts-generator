@@ -529,23 +529,32 @@ GSUB02.ttx: palt_to_pwid_copy.tbl GSUB01.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
+# Add GSUB pwidvert substitution
+GSUB03.ttx: feature_vert_from_pwidvert.tbl GSUB02.ttx
+	@echo "adding GSUB pwidvert substitution..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		pwid \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
 # Add GSUB vert/vert2 substitution
 ifeq ($(FONT_LANG),JP)
-GSUB03.ttx: GSUB02.ttx
+GSUB10.ttx: GSUB03.ttx
 	@echo "adding GSUB vert/vrt2 substitution..."
 	@$(SCRIPTDIR)/add_gsub_v.py \
 		$< \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB03.ttx: GSUB02.ttx
+GSUB10.ttx: GSUB03.ttx
 	@echo \
 	"skipping language-specific GSUB vert/vrt2 substitution adding..."
 	@ln -s $< $@
 endif
 
 # Integrate GSUB vert lookup tables
-GSUB04.ttx: GSUB03.ttx
+GSUB11.ttx: GSUB10.ttx
 	@echo "integrating GSUB vert lookup tables..."
 	@$(SCRIPTDIR)/integrate_gsub_vert.py \
 		$< \
@@ -554,7 +563,7 @@ GSUB04.ttx: GSUB03.ttx
 
 # Remove VKana from GSUB vert
 ifeq ($(FONT_LANG),JP)
-GSUB05.ttx: feature_vkna.tbl GSUB04.ttx
+GSUB20.ttx: feature_vkna.tbl GSUB11.ttx
 	@echo "removing VKana from GSUB vert..."
 	@$(SCRIPTDIR)/remove_gsub_single.py \
 		vert \
@@ -562,7 +571,7 @@ GSUB05.ttx: feature_vkna.tbl GSUB04.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB05.ttx: GSUB04.ttx
+GSUB20.ttx: GSUB11.ttx
 	@echo \
 	"skipping language-specific GSUB vert substitution removing..."
 	@ln -s $< $@
@@ -606,7 +615,7 @@ feature_trad.tbl: table.tbl copy_and_rotate_do.tbl
 		> $@ \
 		2> $(addsuffix .log,$(basename $@))
 
-GSUB06.ttx: GSUB05.ttx
+GSUB21.ttx: GSUB20.ttx
 	@echo "adding GSUB expt table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before fwid \
@@ -615,7 +624,7 @@ GSUB06.ttx: GSUB05.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB07.ttx: feature_expt.tbl GSUB06.ttx
+GSUB22.ttx: feature_expt.tbl GSUB21.ttx
 	@echo "adding GSUB expt substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		expt \
@@ -623,7 +632,7 @@ GSUB07.ttx: feature_expt.tbl GSUB06.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB08.ttx: GSUB07.ttx
+GSUB23.ttx: GSUB22.ttx
 	@echo "adding GSUB hkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		after fwid \
@@ -632,7 +641,7 @@ GSUB08.ttx: GSUB07.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB09.ttx: feature_hkna.tbl GSUB08.ttx
+GSUB24.ttx: feature_hkna.tbl GSUB23.ttx
 	@echo "adding GSUB hkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		hkna \
@@ -640,7 +649,7 @@ GSUB09.ttx: feature_hkna.tbl GSUB08.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB10.ttx: GSUB09.ttx
+GSUB25.ttx: GSUB24.ttx
 	@echo "adding GSUB hojo table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before hwid \
@@ -649,7 +658,7 @@ GSUB10.ttx: GSUB09.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB11.ttx: feature_hojo.tbl GSUB10.ttx
+GSUB26.ttx: feature_hojo.tbl GSUB25.ttx
 	@echo "adding GSUB hojo substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		hojo \
@@ -657,7 +666,7 @@ GSUB11.ttx: feature_hojo.tbl GSUB10.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB12.ttx: GSUB11.ttx
+GSUB27.ttx: GSUB26.ttx
 	@echo "adding GSUB pkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before pwid \
@@ -666,7 +675,7 @@ GSUB12.ttx: GSUB11.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB13.ttx: feature_pkna.tbl GSUB12.ttx
+GSUB28.ttx: feature_pkna.tbl GSUB27.ttx
 	@echo "adding GSUB pkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		pkna \
@@ -674,7 +683,7 @@ GSUB13.ttx: feature_pkna.tbl GSUB12.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB14.ttx: GSUB13.ttx
+GSUB29.ttx: GSUB28.ttx
 	@echo "adding GSUB trad table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		before vert \
@@ -683,7 +692,7 @@ GSUB14.ttx: GSUB13.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB15.ttx: feature_trad.tbl GSUB14.ttx
+GSUB30.ttx: feature_trad.tbl GSUB29.ttx
 	@echo "adding GSUB trad substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		trad \
@@ -691,7 +700,7 @@ GSUB15.ttx: feature_trad.tbl GSUB14.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB16.ttx: GSUB15.ttx
+GSUB40.ttx: GSUB30.ttx
 	@echo "adding GSUB vkna table..."
 	@$(SCRIPTDIR)/add_gsub_single_table.py \
 		after vert \
@@ -700,7 +709,7 @@ GSUB16.ttx: GSUB15.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB.ttx: feature_vkna.tbl GSUB16.ttx
+GSUB.ttx: feature_vkna.tbl GSUB40.ttx
 	@echo "adding GSUB vkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		vkna \
@@ -708,7 +717,7 @@ GSUB.ttx: feature_vkna.tbl GSUB16.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB.ttx: GSUB05.ttx
+GSUB.ttx: GSUB20.ttx
 	@echo \
 	"skipping language-specific GSUB substitution adding..."
 	@ln -s $< $@
@@ -761,10 +770,6 @@ ifeq ($(FONT_LANG),JP)
 vpal_to_pwidvert_kana.tbl: vpal_to_pwidvert_kana01.tbl
 	@echo "filtering kana pwidvert table..."
 	@cat $+ | grep -v "^#" > $@
-else
-vpal_to_pwidvert_kana.tbl:
-	@touch $@
-endif
 
 vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl: \
 		table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_P_O_S_.ttx \
@@ -781,6 +786,25 @@ vpal_to_pwidvert_copy.tbl: vpal_to_pwidvert_copy01.tbl \
 		vpal_to_pwidvert_kana.tbl
 	@echo "merging vpal_to_copy table..."
 	@cat $+ | sort | uniq > $@
+
+feature_vert_from_pwidvert.tbl: vpal_to_pwidvert_copy.tbl $(FEATURE_GSUB_FEA)
+	@echo "making GSUB vert table from pwidvert..."
+	@$(BINDIR)/make_gsub_vert_from_pwidvert \
+		$+ \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+else
+adjust_pwidvert.tbl:
+	@touch $@
+
+vpal_to_pwidvert_copy.tbl:
+	@touch $@
+
+feature_vert_from_pwidvert.tbl:
+	@touch $@
+endif
+
+### Copy and rotate ###
 
 copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} \
 		palt_to_pwid_copy.tbl vpal_to_pwidvert_copy.tbl \
