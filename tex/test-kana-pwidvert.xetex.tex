@@ -1,0 +1,65 @@
+% -*- coding: utf-8 mode:tex -*-
+
+\font\f="[HaranoAjiMincho-Medium.otf]"
+\f
+
+原ノ味フォント202012xxプロポーショナルかな縦組みテスト（失敗）
+
+LuaLaTeX ではプロポーショナルかな縦組みのテストがうまくいかなかったので、
+
+XeTeX でテストしてみる。
+
+XeTeX でも +pwid, +vert によるプロポーショナルかな縦組みグリフ選択は
+
+うまくいかないようなので、 CID 直接指定も用いている。
+
+しかし、CID 直接指定ではプロポーショナルかな縦組みグリフが選択されるが、
+
+余計な文字間スペースが挿入されて高さが全角と変わらないように見える。
+
+（+vpal の場合は通常の全角グリフが選択されるが、
+負の文字間スペースが挿入されて、
+
+プロポーショナルに見える。）
+
+\font\hgr="[HaranoAjiGothic-Regular.otf]:vertical,+vert"
+\hgr
+ちょっと+vert
+
+\font\hgrvpal="[HaranoAjiGothic-Regular.otf]:vertical,+vert,+vpal"
+\hgrvpal
+ちょっと+vert,+vpal
+
+\font\hgrpwidvert="[HaranoAjiGothic-Regular.otf]:vertical,+pwid,+vert"
+\hgrpwidvert
+ちょっと+pwid,+vert
+
+\font\hgrdirect="[HaranoAjiGothic-Regular.otf]:vertical"
+\hgrdirect
+\XeTeXglyph16017%ち
+\XeTeXglyph16055%ょ
+\XeTeXglyph16019%っ
+\XeTeXglyph16024%と
+direct
+
+\font\hmr="[HaranoAjiMincho-Regular.otf]:vertical,+vert"
+\hmr
+ちょっと+vert
+
+\font\hmrvpal="[HaranoAjiMincho-Regular.otf]:vertical,+vert,+vpal"
+\hmrvpal
+ちょっと+vert,+vpal
+
+\font\hmrpwidvert="[HaranoAjiMincho-Regular.otf]:vertical,+pwid,+vert"
+\hmrpwidvert
+ちょっと+pwid,+vert
+
+\font\hmrdirect="[HaranoAjiMincho-Regular.otf]:vertical"
+\hmrdirect
+\XeTeXglyph16017%ち
+\XeTeXglyph16055%ょ
+\XeTeXglyph16019%っ
+\XeTeXglyph16024%と
+direct
+
+\bye
