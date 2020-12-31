@@ -1,0 +1,84 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 202012xx プロポーショナルかな 縦組みテスト
+
+\documentclass[tate]{jlreq}
+
+\title{原ノ味フォント202012xxプロポーショナルかな縦組みテスト（失敗）}
+
+\author{細田 真道}
+
+\tfont\hmrnone=HaranoAjiMincho-Regular:jfm=propv;+vert
+\tfont\hmrvpal=HaranoAjiMincho-Regular:jfm=propv;+vert;+vpal
+\tfont\hmrpwidvert=HaranoAjiMincho-Regular:jfm=propv;+pwid;+vert
+
+\tfont\hgrnone=HaranoAjiGothic-Regular:jfm=propv;+vert
+\tfont\hgrvpal=HaranoAjiGothic-Regular:jfm=propv;+vert;+vpal
+\tfont\hgrpwidvert=HaranoAjiGothic-Regular:jfm=propv;+pwid;+vert
+
+\tfont\sernone=SourceHanSerif-Regular:jfm=propv;+vert
+\tfont\servpal=SourceHanSerif-Regular:jfm=propv;+vert;+vpal
+\tfont\serpwidvert=SourceHanSerif-Regular:jfm=propv;+pwid;+vert
+
+\tfont\sarnone=SourceHanSans-Regular:jfm=propv;+vert
+\tfont\sarvpal=SourceHanSans-Regular:jfm=propv;+vert;+vpal
+\tfont\sarpwidvert=SourceHanSans-Regular:jfm=propv;+pwid;+vert
+
+\begin{document}
+
+\maketitle
+
+\section*{概要}
+
+残念ながら2020年12月xx日現在、本テストはうまく動いてくれない。
+
+原ノ味と源ノで共通のはずの+vpalの動作が共通しておかしいように見える。
+どちらもグリフの位置は変更されているが、高さが低くなっていない。
+
+また、原ノ味202012xxで搭載したプロポーショナルかな縦組みは、
++pwid適用後に+vertを適用することでグリフが得られる
+（Adobe-Japan1のサイトで配布されているGSUBと同じ）ようになっているが、
+選択されたグリフはプロポーショナルかな横組み用になっていた。
+つまり、本テストで必要となる
+プロポーショナルかな縦組み用を選択できていない
+（選択されたプロポーショナルかな横組み用の高さは
+  全角と同じなので変わらない）。
+
+源ノは+pwidが無く、+vertのみが適用されるため、問題ないように見える
+（もちろんプロポーショナルにはなっていない）。
+
+\clearpage
+
+\section*{原ノ味明朝Regular}
+
+\hmrnone\hbox{\tate\vrule ちょっと\vrule +vert}
+
+\hmrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+
+\hmrpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
+
+\section*{原ノ味角ゴシックRegular}
+
+\hgrnone\hbox{\tate\vrule ちょっと\vrule +vert}
+
+\hgrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+
+\hgrpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
+
+\section*{源ノ明朝Regular}
+
+\sernone\hbox{\tate\vrule ちょっと\vrule +vert}
+
+\servpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+
+\serpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
+
+\section*{源ノ角ゴシックRegular}
+
+\sarnone\hbox{\tate\vrule ちょっと\vrule +vert}
+
+\sarvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+
+\sarpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
+
+\end{document}
