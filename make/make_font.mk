@@ -460,7 +460,7 @@ vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Fix TSB in vmtx table
-vmtx.ttx: letter_face.tbl vmtx01.ttx
+vmtx.ttx: letter_face.tbl vmtx02.ttx
 	@echo "fixing TSB in vmtx table..."
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
@@ -771,7 +771,7 @@ vpal_to_pwidvert_kana.tbl: vpal_to_pwidvert_kana01.tbl
 	@echo "filtering kana pwidvert table..."
 	@cat $+ | grep -v "^#" > $@
 
-vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl: \
+vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl height_pwidvert.tbl: \
 		table.tbl $(TTXDIR)/$(SRC_FONTBASE).G_P_O_S_.ttx \
 		$(FEATURE_GSUB_FEA) $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
 		$(TTXDIR)/$(SRC_FONTBASE)._v_m_t_x.ttx
@@ -794,6 +794,9 @@ feature_vert_from_pwidvert.tbl: vpal_to_pwidvert_copy.tbl $(FEATURE_GSUB_FEA)
 		> $@ \
 		2> $(addsuffix .log,$(basename $@))
 else
+height_pwidvert.tbl:
+	@touch $@
+
 adjust_pwidvert.tbl:
 	@touch $@
 
