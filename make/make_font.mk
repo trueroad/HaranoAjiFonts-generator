@@ -762,7 +762,7 @@ vpal_to_pwidvert_kana.tbl: vpal_to_pwidvert_kana01.tbl
 	@echo "filtering kana pwidvert table..."
 	@cat $+ | grep -v "^#" > $@
 else
-valt_to_pwidvert_kana.tbl:
+vpal_to_pwidvert_kana.tbl:
 	@touch $@
 endif
 
