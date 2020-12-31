@@ -30,6 +30,7 @@ ifeq ($(FONT_TYPE),Sans)
 AI0_SOURCEHAN = $(DOWNLOADDIR)/AI0-SourceHanSans
 AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSans/aj16-kanji.txt
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_sans.tbl
+VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans.tbl
 DEST_FONTBASE = $(DEST_NAME)Gothic-$(FONT_WEIGHT)
 endif
 
@@ -38,6 +39,7 @@ ifeq ($(FONT_TYPE),Serif)
 AI0_SOURCEHAN = $(DOWNLOADDIR)/AI0-SourceHanSerif
 AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSerif/aj16-kanji.txt
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_serif.tbl
+VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif.tbl
 DEST_FONTBASE = $(DEST_NAME)Mincho-$(FONT_WEIGHT)
 endif
 
@@ -62,12 +64,14 @@ SRC_LANG = CN
 # CN Sans
 ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_CN.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_CN.tbl
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # CN Serif
 ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_CN.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_CN.tbl
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -91,12 +95,14 @@ SRC_LANG = TW
 # TW Sans
 ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_TW.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_TW.tbl
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # TW Serif
 ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_TW.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_TW.tbl
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -120,12 +126,14 @@ SRC_LANG = KR
 # KR Sans
 ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_KR.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_KR.tbl
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # KR Serif
 ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_KR.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_KR.tbl
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -149,12 +157,14 @@ SRC_LANG = KR
 # K1 Sans
 ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_K1.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_K1.tbl
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # K1 Serif
 ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_K1.tbl
+VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_K1.tbl
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -172,29 +182,30 @@ SRC_FONTBASE = SourceHan$(FONT_TYPE)$(SRC_LANG)-$(FONT_WEIGHT)
 .PHONY: debug
 
 debug:
-	@echo "FONT_TYPE             $(FONT_TYPE)"
-	@echo "FONT_LANG             $(FONT_LANG)"
-	@echo "FONT_WEIGHT           $(FONT_WEIGHT)"
+	@echo "FONT_TYPE              $(FONT_TYPE)"
+	@echo "FONT_LANG              $(FONT_LANG)"
+	@echo "FONT_WEIGHT            $(FONT_WEIGHT)"
 	@echo ""
-	@echo "TTXVER                $(TTXVER)"
-	@echo "TOOLVER               $(TOOLVER)"
+	@echo "TTXVER                 $(TTXVER)"
+	@echo "TOOLVER                $(TOOLVER)"
 	@echo ""
-	@echo "CMAP                  $(CMAP)"
-	@echo "ROS_R-ROS_O-ROS_S     $(ROS_R)-$(ROS_O)-$(ROS_S)"
-	@echo "ROS                   $(ROS)"
-	@echo "SRC_LANG              $(SRC_LANG)"
+	@echo "CMAP                   $(CMAP)"
+	@echo "ROS_R-ROS_O-ROS_S      $(ROS_R)-$(ROS_O)-$(ROS_S)"
+	@echo "ROS                    $(ROS)"
+	@echo "SRC_LANG               $(SRC_LANG)"
 	@echo ""
-	@echo "AI0_SOURCEHAN         $(AI0_SOURCEHAN)"
-	@echo "AJ1X_KANJI            $(AJ1X_KANJI)"
-	@echo "PALT_TO_PWID_FIXED    $(PALT_TO_PWID_FIXED)"
+	@echo "AI0_SOURCEHAN          $(AI0_SOURCEHAN)"
+	@echo "AJ1X_KANJI             $(AJ1X_KANJI)"
+	@echo "PALT_TO_PWID_FIXED     $(PALT_TO_PWID_FIXED)"
+	@echo "VPAL_TO_PWIDVERT_FIXED $(VPAL_TO_PWIDVERT_FIXED)"
 	@echo ""
-	@echo "FEATURE_GSUB_FEA      $(FEATURE_GSUB_FEA)"
-	@echo "FONT_NAME_SED         $(FONT_NAME_SED)"
-	@echo "COPY_AND_ROTATE_TABLE $(COPY_AND_ROTATE_TABLE)"
-	@echo "SHIFT_LIST            $(SHIFT_LIST)"
-	@echo "SCRIPT_MAKE_ADJUST    $(SCRIPT_MAKE_ADJUST)"
-	@echo "JISX0208_MAPPING      $(JISX0208_MAPPING)"
+	@echo "FEATURE_GSUB_FEA       $(FEATURE_GSUB_FEA)"
+	@echo "FONT_NAME_SED          $(FONT_NAME_SED)"
+	@echo "COPY_AND_ROTATE_TABLE  $(COPY_AND_ROTATE_TABLE)"
+	@echo "SHIFT_LIST             $(SHIFT_LIST)"
+	@echo "SCRIPT_MAKE_ADJUST     $(SCRIPT_MAKE_ADJUST)"
+	@echo "JISX0208_MAPPING       $(JISX0208_MAPPING)"
 	@echo ""
-	@echo "CMAP_FILE             $(CMAP_FILE)"
-	@echo "SRC_FONTBASE          $(SRC_FONTBASE)"
-	@echo "DEST_FONTBASE         $(DEST_FONTBASE)"
+	@echo "CMAP_FILE              $(CMAP_FILE)"
+	@echo "SRC_FONTBASE           $(SRC_FONTBASE)"
+	@echo "DEST_FONTBASE          $(DEST_FONTBASE)"

@@ -783,7 +783,7 @@ vpal_to_pwidvert_copy01.tbl adjust_pwidvert.tbl: \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 vpal_to_pwidvert_copy.tbl: vpal_to_pwidvert_copy01.tbl \
-		vpal_to_pwidvert_kana.tbl
+		vpal_to_pwidvert_kana.tbl ${VPAL_TO_PWIDVERT_FIXED}
 	@echo "merging vpal_to_copy table..."
 	@cat $+ | sort | uniq > $@
 
