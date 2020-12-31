@@ -15,6 +15,7 @@ BIN = make_conv_table make_glyphorder make_kanji_table \
 	make_vkana_table \
 	make_hkana_table \
 	make_gsub_single_table \
+	make_gsub_vert_from_pwidvert \
 
 all: version.hh $(BIN)
 
@@ -74,6 +75,8 @@ MAKE_HKANA_TABLE_OBJS = make_hkana_table_main.o \
 	conv_table.o aj1x-gsub.o
 MAKE_GSUB_SINGLE_TABLE_OBJS = make_gsub_single_table_main.o \
 	conv_table.o copy_and_rotate_table.o aj1x-gsub.o gsub_single.o
+MAKE_GSUB_VERT_FROM_PWIDVERT_OBJS = make_gsub_vert_from_pwidvert_main.o \
+	copy_and_rotate_table.o aj1x-gsub.o gsub_single.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
@@ -91,7 +94,8 @@ OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
 	$(MAKE_KANA_PWID_TABLE_OBJS) \
 	$(MAKE_VKANA_TABLE_OBJS) \
 	$(MAKE_HKANA_TABLE_OBJS) \
-	$(MAKE_GSUB_SINGLE_TABLE_OBJS)
+	$(MAKE_GSUB_SINGLE_TABLE_OBJS) \
+	$(MAKE_GSUB_VERT_FROM_PWIDVERT_OBJS)
 
 
 #
@@ -202,6 +206,9 @@ make_hkana_table: $(MAKE_HKANA_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_gsub_single_table: $(MAKE_GSUB_SINGLE_TABLE_OBJS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+make_gsub_vert_from_pwidvert: $(MAKE_GSUB_VERT_FROM_PWIDVERT_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 VERSION := $(shell cat ../version.txt)
