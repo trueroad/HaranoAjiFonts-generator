@@ -274,6 +274,21 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20210101
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20210101)
+(JP, CN, TW, KR, K1)
+    + Based on SourceHanSans 2.002 (JP, CN, TW, KR, K1)
+    + Add many Kana glyphs (JP)
+    + Add many GSUB features and entries (JP)
+    + Update
+        + SourceHanSans 2.002
+        + ttx 4.18.2
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 17554
+          (conversion 16862 + glyph processing 691 + .notdef 1)
+        - HaranoAjiGothic: 17559
+          (conversion 16867 + glyph processing 691 + .notdef 1)
+* [
 20200912
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20200912)
 (JP)
@@ -439,7 +454,7 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 
 ## LICENSE
 
-Copyright (C) 2019, 2020 Masamichi Hosoda
+Copyright (C) 2019-2021 Masamichi Hosoda
 
 The license of the generator is BSD 2-Clause. See [LICENSE](./LICENSE).
 The license of the generated fonts is SIL Open Font License 1.1.
