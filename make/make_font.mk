@@ -533,7 +533,7 @@ GSUB02.ttx: palt_to_pwid_copy.tbl GSUB01.ttx
 GSUB03.ttx: feature_vert_from_pwidvert.tbl GSUB02.ttx
 	@echo "adding GSUB pwidvert substitution..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
-		pwid \
+		vert \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
