@@ -1,21 +1,29 @@
 % -*- coding: utf-8 mode:tex -*-
 
-% 原ノ味フォント 20210101 プロポーショナルかな縦組みテスト
+% 原ノ味フォント 20210102 プロポーショナルかな縦組みテスト
 
 \font\f="[HaranoAjiMincho-Medium.otf]"
 \f
 
-原ノ味フォント20210101プロポーショナルかな縦組みテスト（失敗）
+原ノ味フォント20210102プロポーショナルかな縦組みテスト
 
-LuaLaTeX ではプロポーショナルかな縦組みのテストがうまくいかなかったので、
+LuaLaTeX でのプロポーショナルかな縦組みのテストは +vpal がおかしかったので、
 
 XeTeX でテストしてみる。
 
-XeTeX でも +pwid, +vert によるプロポーショナルかな縦組みグリフ選択は
+2021 年 1 月 2 日時点の XeTeX では +pwid, +vert や direct がおかしいが、
 
-うまくいかないようなので、 CID 直接指定も用いている。
+2020 年春頃の XeTeX ならば問題ないように見えるので、その結果を述べる。
 
-しかし、CID 直接指定ではプロポーショナルかな縦組みグリフが選択されるが、
++vpal は XeTeX ではうまくいっているように見える。
+
++pwid, +vert も XeTeX でもうまくいっているように見えるが、
+
+なぜか原ノ味の +vpal とは微妙にズレていて、源ノの +vpal と同じように見える。
+
+（原ノ味の +vpal は小書き以外が横書き用になり +vpal が無いのかもしれない。）
+
+CID 直接指定ではプロポーショナルかな縦組みグリフが選択されているが、
 
 余計な文字間スペースが挿入されて高さが全角と変わらないように見える。
 
@@ -26,6 +34,8 @@ XeTeX でも +pwid, +vert によるプロポーショナルかな縦組みグリ
 
 \font\hgr="[HaranoAjiGothic-Regular.otf]:vertical,+vert"
 \hgr
+原ノ味角ゴシックReguar
+
 ちょっと+vert
 
 \font\hgrvpal="[HaranoAjiGothic-Regular.otf]:vertical,+vert,+vpal"
@@ -46,6 +56,8 @@ direct
 
 \font\hmr="[HaranoAjiMincho-Regular.otf]:vertical,+vert"
 \hmr
+原ノ味明朝Regular
+
 ちょっと+vert
 
 \font\hmrvpal="[HaranoAjiMincho-Regular.otf]:vertical,+vert,+vpal"
@@ -63,5 +75,33 @@ direct
 \XeTeXglyph16019%っ
 \XeTeXglyph16024%と
 direct
+
+\font\sar="[SourceHanSans-Regular.otf]:vertical,+vert"
+\sar
+源ノ角ゴシックRegular
+
+ちょっと+vert
+
+\font\sarvpal="[SourceHanSans-Regular.otf]:vertical,+vert,+vpal"
+\sarvpal
+ちょっと+vert,+vpal
+
+\font\sarpwidvert="[SourceHanSans-Regular.otf]:vertical,+pwid,+vert"
+\sarpwidvert
+ちょっと+pwid,+vert
+
+\font\ser="[SourceHanSerif-Regular.otf]:vertical,+vert"
+\ser
+源ノ明朝Regular
+
+ちょっと+vert
+
+\font\servpal="[SourceHanSerif-Regular.otf]:vertical,+vert,+vpal"
+\servpal
+ちょっと+vert,+vpal
+
+\font\serpwidvert="[SourceHanSerif-Regular.otf]:vertical,+pwid,+vert"
+\serpwidvert
+ちょっと+pwid,+vert
 
 \bye
