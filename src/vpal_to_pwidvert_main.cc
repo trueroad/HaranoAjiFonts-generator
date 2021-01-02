@@ -5,7 +5,7 @@
 // vpal_to_pwidvert_main.cc:
 //   Create tables for `GPOS` vpal to `GSUB' pwid vert conversion
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(Create tables for `GPOS` vpal to `GSUB' pwid vert conversion)"
     << std::endl
-    << "Copyright (C) 2020 Masamichi Hosoda"
+    << "Copyright (C) 2020, 2021 Masamichi Hosoda"
     << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator"
     << std::endl
@@ -372,7 +372,7 @@ int main (int argc, char *argv[])
         << std::setw (5) << std::setfill ('0')
         << aj1_cid_dst << "\t"
         << width << "\t0\t"
-        << -gv.yPlacement << "\t1\t1"
+        << gv.yPlacement << "\t1\t1"
         << std::endl;
       ofs_height_tbl
         << "aji"
