@@ -274,6 +274,17 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20210102
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20210102)
+(JP)
+    + Fix proportional vertical GSUB substitution
+    + Fix proportional vertical Kana glyph
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 17554
+          (conversion 16862 + glyph processing 691 + .notdef 1)
+        - HaranoAjiGothic: 17559
+          (conversion 16867 + glyph processing 691 + .notdef 1)
+* [
 20210101
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20210101)
 (JP, CN, TW, KR, K1)
