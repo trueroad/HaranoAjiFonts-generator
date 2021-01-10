@@ -338,12 +338,24 @@ endif
 
 
 # Make conversion table for GPOS
-table_for_GPOS.tbl: table.tbl letter_face.tbl
+table_for_GPOS_01.tbl: table.tbl letter_face.tbl
 	@echo "making conversion table for GPOS..."
 	@$(SCRIPTDIR)/make_table_for_GPOS.py \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
+ifeq ($(FONT_LANG),JP)
+table_for_GPOS.tbl: table_for_GPOS_01.tbl
+	@echo "modifying language specified conversion table for GPOS..."
+	@$(BINDIR)/modify_table_vkana_gpos \
+		$< \
+		$(FEATURE_GSUB_FEA) \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+else
+table_for_GPOS.tbl: table_for_GPOS_01.tbl
+	@echo "skipping language specified conversion table for GPOS..."
+	@ln -s $< $@
+endif
 
 ### Convert ###
 
