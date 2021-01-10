@@ -1,11 +1,11 @@
 % -*- coding: utf-8 mode:tex -*-
 
-% 原ノ味フォント 20210102 プロポーショナルかな縦組みテスト
+% 原ノ味フォント 2021xxxx プロポーショナルかな縦組みテスト
 
 \font\f="[HaranoAjiMincho-Medium.otf]"
 \f
 
-原ノ味フォント20210102プロポーショナルかな縦組みテスト
+原ノ味フォント2021xxxxプロポーショナルかな縦組みテスト
 
 LuaLaTeX でのプロポーショナルかな縦組みのテストは +vpal がおかしかったので、
 
@@ -17,15 +17,11 @@ xdvipdfmx 20200315（TeX Live 2020初版）または
 
 xdvipdfmx 20210109（プロポーショナル縦組み修正 r57357）の結果を述べる。
 
-+vpal は XeTeX ではうまくいっているように見えるが、
++vpal は XeTeX ではうまくいっているよう（源ノと原ノ味でほぼ同じ）に見える。
 
-原ノ味 20210102 の vpal には問題があって少しズレている。
+（原ノ味は +vpal には +vkna を併用する必要がある。）
 
-+pwid, +vert は XeTeX でもうまくいっていて、
-
-原ノ味の +vpal とは微妙にズレているが、源ノの +vpal と同じように見える。
-
-（原ノ味 20210102 の vpal に問題があるからズレるものと思われる。）
++pwid, +vert は XeTeX でもうまくいっていて、+vpal とほぼ同じように見える。
 
 CID 直接指定ではプロポーショナルかな縦組みグリフが選択されているが、
 
@@ -42,9 +38,9 @@ CID 直接指定ではプロポーショナルかな縦組みグリフが選択�
 
 ちょっと+vert
 
-\font\hgrvpal="[HaranoAjiGothic-Regular.otf]:vertical,+vert,+vpal"
+\font\hgrvpal="[HaranoAjiGothic-Regular.otf]:vertical,+vert,+vkna,+vpal"
 \hgrvpal
-ちょっと+vert,+vpal
+ちょっと+vert,+vkna,+vpal
 
 \font\hgrpwidvert="[HaranoAjiGothic-Regular.otf]:vertical,+pwid,+vert"
 \hgrpwidvert
@@ -64,9 +60,9 @@ direct
 
 ちょっと+vert
 
-\font\hmrvpal="[HaranoAjiMincho-Regular.otf]:vertical,+vert,+vpal"
+\font\hmrvpal="[HaranoAjiMincho-Regular.otf]:vertical,+vert,+vkna,+vpal"
 \hmrvpal
-ちょっと+vert,+vpal
+ちょっと+vert,+vkna,+vpal
 
 \font\hmrpwidvert="[HaranoAjiMincho-Regular.otf]:vertical,+pwid,+vert"
 \hmrpwidvert
