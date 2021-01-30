@@ -1,21 +1,21 @@
 % -*- coding: utf-8 mode:latex -*-
 
-% 原ノ味フォント 20210102 プロポーショナルかな 縦組みテスト
+% 原ノ味フォント 20210102/20210130 プロポーショナルかな 縦組みテスト
 
 \documentclass[tate,paper={297mm,210mm}]{jlreq}
 
 \usepackage{luatexja-otf}
 
-\title{原ノ味フォント20210102 \\ プロポーショナルかな縦組みテスト}
+\title{原ノ味フォント20210102/20210130 \\ プロポーショナルかな縦組みテスト}
 
 \author{細田 真道}
 
 \tfont\hmrnone=HaranoAjiMincho-Regular:jfm=propv;+vert
-\tfont\hmrvpal=HaranoAjiMincho-Regular:jfm=propv;+vert;+vpal
+\tfont\hmrvpal=HaranoAjiMincho-Regular:jfm=propv;+vert;+vkna;+vpal
 \tfont\hmrpwidvert=HaranoAjiMincho-Regular:jfm=propv;+pwid;+vert
 
 \tfont\hgrnone=HaranoAjiGothic-Regular:jfm=propv;+vert
-\tfont\hgrvpal=HaranoAjiGothic-Regular:jfm=propv;+vert;+vpal
+\tfont\hgrvpal=HaranoAjiGothic-Regular:jfm=propv;+vert;+vkna;+vpal
 \tfont\hgrpwidvert=HaranoAjiGothic-Regular:jfm=propv;+pwid;+vert
 
 \tfont\sernone=SourceHanSerif-Regular:jfm=propv;+vert
@@ -35,7 +35,8 @@
 LuaTeX-ja 20210103.0は+vpalがうまく扱えない（チケット\#41106）ようで、
 原ノ味と源ノともに+vpalの動作がおかしい。
 どちらもグリフの位置は変更されているが、高さが低くならなかった。
-（それとは別に原ノ味20210102は、かなのvpalに問題がある。）
+（それとは別に原ノ味20210102は、かなのvpalに問題があったが、
+  原ノ味20210130 でvknaと併用することでvpalが使えるようになっている。）
 
 原ノ味20210102以降のプロポーショナルかな縦組みは、
 +pwid適用後に+vertを適用することでグリフが得られる
@@ -56,7 +57,7 @@ AJ1フォントではないため、CID直接指定はできない。
 
 \hmrnone\hbox{\tate\vrule ちょっと\vrule +vert}
 
-\hmrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+\hmrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vkna;+vpal}
 
 \hmrpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
 
@@ -70,7 +71,7 @@ AJ1フォントではないため、CID直接指定はできない。
 
 \hgrnone\hbox{\tate\vrule ちょっと\vrule +vert}
 
-\hgrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vpal}
+\hgrvpal\hbox{\tate\vrule ちょっと\vrule +vert;+vkna;+vpal}
 
 \hgrpwidvert\hbox{\tate\vrule ちょっと\vrule +pwid;+vert}
 
