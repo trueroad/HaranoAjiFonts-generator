@@ -32,6 +32,7 @@ AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSans/aj16-kanji.txt
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_sans.tbl
 VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_sans.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_sans.lst
 DEST_FONTBASE = $(DEST_NAME)Gothic-$(FONT_WEIGHT)
 endif
 
@@ -42,13 +43,13 @@ AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSerif/aj16-kanji.txt
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_serif.tbl
 VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_serif.lst
 DEST_FONTBASE = $(DEST_NAME)Mincho-$(FONT_WEIGHT)
 endif
 
 # JP Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/aj17-gsub-jp04.fea
 FONT_NAME_SED = $(BASEDIR)/font_name.sed
-SHIFT_LIST = $(COMMONDATADIR)/shift.lst
 SCRIPT_MAKE_ADJUST=$(SCRIPTDIR)/make_adjust.py
 JISX0208_MAPPING=$(DOWNLOADDIR)/JISX0208-SourceHan-Mapping.txt
 endif
@@ -67,6 +68,7 @@ ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_CN.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_CN.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif_CN.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_sans_CN.lst
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -75,13 +77,13 @@ ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_CN.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_CN.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif_CN.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_serif_CN.lst
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # CN Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ag15-gsub.fea
 FONT_NAME_SED = $(BASEDIR)/font_name_cn.sed
-SHIFT_LIST = $(COMMONDATADIR)/shift_CN.lst
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
 
@@ -99,6 +101,7 @@ ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_TW.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_TW.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_sans_TW.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_sans_TW.lst
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -107,13 +110,13 @@ ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_TW.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_TW.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif_TW.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_serif_TW.lst
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # TW Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ac17-gsub.fea
 FONT_NAME_SED = $(BASEDIR)/font_name_tw.sed
-SHIFT_LIST = $(COMMONDATADIR)/shift_TW.lst
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
 
@@ -131,6 +134,7 @@ ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_KR.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_KR.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_sans_KR.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_sans_KR.lst
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -139,13 +143,13 @@ ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_KR.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_KR.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif_KR.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_serif_KR.lst
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # KR Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/akr9-gsub.fea
 FONT_NAME_SED = $(BASEDIR)/font_name_kr.sed
-SHIFT_LIST = $(COMMONDATADIR)/shift_KR.lst
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
 
@@ -163,6 +167,7 @@ ifeq ($(FONT_TYPE),Sans)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_sans_K1.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans_K1.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_sans_K1.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_sans_K1.lst
 DEST_FONTBASE = $(DEST_NAME)Gothic$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
@@ -171,13 +176,13 @@ ifeq ($(FONT_TYPE),Serif)
 PALT_TO_PWID_FIXED=$(COMMONDATADIR)/palt_to_pwid_fixed_serif_K1.tbl
 VPAL_TO_PWIDVERT_FIXED=$(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif_K1.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif_K1.tbl
+SHIFT_LIST = $(COMMONDATADIR)/shift_serif_K1.lst
 DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # K1 Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ak12-gsub.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_k1.sed
-SHIFT_LIST = $(COMMONDATADIR)/shift_K1.lst
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
 
