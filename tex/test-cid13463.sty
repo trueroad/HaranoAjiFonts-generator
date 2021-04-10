@@ -1,0 +1,14 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 2021041x CID+13463 グリフ
+% テスト用マクロ
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{70pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+
+\newcommand{\testAll}{%
+  CID+13463, CID+2510
+
+  \test{\CID{13463}}%
+  \test{\CID{2510}}}

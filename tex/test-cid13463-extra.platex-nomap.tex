@@ -1,0 +1,109 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20210410 CID+13463 グリフ
+% CTAN haranoaji-extra パッケージ収録分
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage[deluxe]{otf}
+\usepackage{lmodern}
+\usepackage[noalphabet,otf]{pxchfon}
+\usepackage{xcolor}
+
+% haranoaji-extra パッケージ収録の 7 フォントを、
+% 故意にプリセットとは異なるウェイト・ファミリーに割り振る
+\setminchofont{HaranoAjiMincho-Medium.otf}
+\setlightminchofont{HaranoAjiMincho-ExtraLight.otf}
+\setboldminchofont{HaranoAjiMincho-Heavy.otf}
+\setmediumgothicfont{HaranoAjiGothic-ExtraLight.otf}
+\setboldgothicfont{HaranoAjiGothic-Light.otf}
+\setxboldgothicfont{HaranoAjiGothic-Normal.otf}
+\setmarugothicfont{HaranoAjiMincho-SemiBold.otf}
+
+\usepackage{test-cid13463}
+
+\title{原ノ味フォント 20210410 CID+13463 グリフ \\
+--- CTAN haranoaji extra パッケージ収録分 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  源ノ角ゴシック2.003版（2021年4月8日リリース）は、
+  U+4E08 U+E0101（\CID{13463}、AJ1 CID+13463相当）の
+  グリフ（グリフ名uni4E08uE0101-JP）がなくなった。
+  これはU+4E08（\CID{2510}、AJ1 CID+2510相当）の
+  グリフ（グリフ名uni4E08-CN）と統合されたものと思われる。
+  これらは源ノ明朝1.001版（2017年5月8日リリース、
+  2021年4月10日現在の最新版）では
+  前者がヒゲ付き「\CID{13463}」後者がヒゲ無し「\CID{2510}」となっていて
+  グリフが異なる。
+  しかし、源ノ角ゴシックの一つ前の版である
+  2.002版（2020年11月3日リリース）では、
+  前者「{\gtfamily{\CID{13463}}}」後者「{\gtfamily{\CID{2510}}}」ともに
+  ヒゲ無しのよく似たグリフになっていた。
+  一方、小塚フォントでは、小塚明朝ではヒゲ有無の区別があるが、
+  小塚ゴシックでは双方ともヒゲ無しになっているようである。
+
+  源ノ角ゴシック2.002版をベースとした原ノ味角ゴシック20210130版では、
+  前者のグリフをCID+13463に、後者のグリフをCID+2510にマッピングしていた。
+  しかし、源ノ角ゴシック2.003版では前者のグリフが無くなってしまったので、
+  原ノ味角ゴシック20210410版では
+  後者のグリフをCID+13463にコピーすることにする。
+
+  本ファイルはCID+13463とCID+2510のグリフを比較するためのものである。
+}
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily\ltseries
+{\Large 原ノ味明朝\textmd{ExtraLight}}
+
+\testAll
+
+\vspace{\baselineskip}
+
+\mcfamily\mdseries
+{\Large 原ノ味明朝\textmd{Medium}}
+
+\testAll
+
+\vspace{\baselineskip}
+
+\mgfamily % 丸ゴシックの代替を明朝SemiBoldにしたのでそれを利用
+{\Large 原ノ味明朝\textmd{SemiBold}}
+
+\testAll
+
+\vspace{\baselineskip}
+
+\mcfamily\bfseries
+{\Large 原ノ味明朝\textmd{Heavy}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\mdseries
+{\Large 原ノ味角ゴシック\textmd{ExtraLight}}
+
+\testAll
+
+\vspace{\baselineskip}
+
+\gtfamily\bfseries
+{\Large 原ノ味角ゴシック\textmd{Light}}
+
+\testAll
+
+\vspace{\baselineskip}
+
+\gtfamily\ebseries
+{\Large 原ノ味角ゴシック\textmd{Normal}}
+
+\testAll
+
+\end{document}
