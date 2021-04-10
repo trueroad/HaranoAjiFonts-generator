@@ -21,3 +21,6 @@ aji00633	aji08229	0
 #
 # CID+14 -> CID+151 (U+00AD -> CMap CID+151, cmap CID+14)
 aji00014	aji00151	0
+#
+# CID+2510 -> CID+13463 (uni4E08uE0101-JP in old SorceHanSans 2.002)
+aji02510	aji13463	0
