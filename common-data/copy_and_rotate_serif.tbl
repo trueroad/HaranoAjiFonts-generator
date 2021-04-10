@@ -1,0 +1,23 @@
+# name_src name_dst angle
+# CID+666 -> CID+7895 (GSUB vert/vrt2, `‖` U+2016 'DOUBLE VERTICAL LINE')
+aji00666	aji07895	90
+# CID+707 -> CID+8269 (GSUB vert/vrt2, `°` U+00B0 'DEGREE SIGN')
+aji00707	aji08269	0
+# CID+708 -> CID+8273 (GSUB vert/vrt2, `′` U+2032 'PRIME')
+aji00708	aji08273	0
+# CID+709 -> CID+8283 (GSUB vert/vrt2, `″` U+2033 'DOUBLE PRIME')
+aji00709	aji08283	0
+# CID+12176 -> CID+12178 (GSUB vert/vrt2, `✂` U+2702 'BLACK SCISSORS')
+aji12176	aji12178	90
+#
+# CID+231 -> CID+326 (AJ1, Half-width, Katakana space)
+aji00231	aji00326	0
+# CID+231 -> CID+422 (AJ1, Half-width, Generic space)
+aji00231	aji00422	0
+# CID+231 -> CID+515 (AJ1, Half-width, Hiragana space)
+aji00231	aji00422	0
+# CID+633 -> CID+8229 (AJ1, Full-width, Generic space)
+aji00633	aji08229	0
+#
+# CID+14 -> CID+151 (U+00AD -> CMap CID+151, cmap CID+14)
+aji00014	aji00151	0
