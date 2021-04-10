@@ -125,7 +125,7 @@ Make `download` directory and put the following files in it.
 * Source Han's JIS X 0208 mapping file
     + [
 Adobe-Japan1-6 vs Source Han
-](https://blogs.adobe.com/CCJKType/2019/03/aj16-vs-source-han.html)
+](https://ccjktype.fonts.adobe.com/2019/03/aj16-vs-source-han.html)
         - JISX0208-SourceHan-Mapping.txt
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniJIS2004-UTF32-H
@@ -264,7 +264,7 @@ The Adobe-KR-9 Character Collection
 * AK1-2 GSUB
     + [
 AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
-](https://blogs.adobe.com/CCJKType/2012/01/afdko-features-tips-tricks-part-2.html)
+](https://ccjktype.fonts.adobe.com/2012/01/afdko-features-tips-tricks-part-2.html)
         - ak12-gsub.txt (download `gsub-012012.tar` and unpack)
 
 #### (Experimental) Generate fonts (K1)

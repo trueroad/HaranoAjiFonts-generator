@@ -392,7 +392,7 @@ C++ で xml や CMap などから CID の対照表を作り、 C++ や sed で�
 * 源ノフォントの JIS X 0208 mapping ファイル
     + [
 Adobe-Japan1-6 vs Source Han
-](https://blogs.adobe.com/CCJKType/2019/03/aj16-vs-source-han.html)
+](https://ccjktype.fonts.adobe.com/2019/03/aj16-vs-source-han.html)
       から `JISX0208-SourceHan-Mapping.txt`
       （本文中最初のパラグライフの最初の文中 maping file と
       と書いてあるところにリンクがあります）
@@ -536,7 +536,7 @@ The Adobe-KR-9 Character Collection
 * AK1-2 の GSUB 情報
     + [
 AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
-](https://blogs.adobe.com/CCJKType/2012/01/afdko-features-tips-tricks-part-2.html)
+](https://ccjktype.fonts.adobe.com/2012/01/afdko-features-tips-tricks-part-2.html)
       からダウンロードできる `gsub-012012.tar` を解凍して得られる
       `ak12-gsub.txt`
 
