@@ -25,13 +25,6 @@ table-cmap.tbl: $(TTXDIR)/$(SRC_FONTBASE)._c_m_a_p.ttx $(CMAP_FILE)
 
 # JP specific conversion table
 ifeq ($(FONT_LANG),JP)
-table-jisx0208.tbl: $(JISX0208_MAPPING)
-	@echo \
-	"making conversion table (from JISX0208-SourceHan-Mapping.txt)..."
-	@$(BINDIR)/make_jisx0208_table \
-		$< $(FONT_TYPE) \
-		> $@ 2> $(addsuffix .log,$(basename $@))
-
 table-kanji.tbl: $(AI0_SOURCEHAN) $(AJ1X_KANJI)
 	@echo \
 	"making conversion table (from AI0-SourceHan and aj16-kanji.txt)..."
@@ -39,14 +32,8 @@ table-kanji.tbl: $(AI0_SOURCEHAN) $(AJ1X_KANJI)
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
-table01.tbl: table-cmap.tbl table-kanji.tbl
+table10.tbl: table-cmap.tbl table-kanji.tbl
 	@echo "merging convertion tables (kanji)..."
-	@$(BINDIR)/merge_table \
-		$+ \
-		> $@ 2> $(addsuffix .log,$(basename $@))
-
-table10.tbl: table01.tbl table-jisx0208.tbl
-	@echo "merging convertion tables (jisx0208)..."
 	@$(BINDIR)/merge_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))

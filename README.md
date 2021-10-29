@@ -389,13 +389,6 @@ C++ で xml や CMap などから CID の対照表を作り、 C++ や sed で�
         - aj16-kanji.txt
             - aj16-kanji.txt のみ
               `download/SourceHanSans` ディレクトリに格納してください。
-* 源ノフォントの JIS X 0208 mapping ファイル
-    + [
-Adobe-Japan1-6 vs Source Han
-](https://ccjktype.fonts.adobe.com/2019/03/aj16-vs-source-han.html)
-      から `JISX0208-SourceHan-Mapping.txt`
-      （本文中最初のパラグライフの最初の文中 maping file と
-      と書いてあるところにリンクがあります）
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniJIS2004-UTF32-H
 * AJ1-7 の GSUB 情報
@@ -655,6 +648,12 @@ JIS90 のグリフも追加されました
 この範囲は元々 Unicode を介した変換でも対応できていましたが、
 ちゃんとした対応表があるならそれを使った方がよいので、
 利用させていただくことにしました。
+
+しかし、源ノ明朝 2.000 （2021 年 10 月 25 日リリース）では
+[
+CID がリナンバリングされたようで、この対応表が役に立たなくなりました。
+](https://twitter.com/trueroad_jp/status/1454092013293367301)
+そのため、原ノ味 202110xx から使用しないようにしました。
 
 #### 縦書き・リガチャなど
 

@@ -1,5 +1,5 @@
 BIN = make_conv_table make_glyphorder make_kanji_table \
-	make_jisx0208_table make_feature_table make_ligature_table \
+	make_feature_table make_ligature_table \
 	merge_table \
 	conv_name conv_cmap conv_CFF \
 	conv_GDEF conv_GPOS conv_GSUB \
@@ -40,8 +40,6 @@ MAKE_CONV_TABLE_OBJS = make_conv_table_main.o \
 MAKE_GLYPHORDER_OBJS = make_glyphorder_main.o conv_table.o
 MAKE_KANJI_TABLE_OBJS = make_kanji_table_main.o \
 	AI0-SourceHan.o aj1x-kanji.o
-MAKE_JISX0208_TABLE_OBJS = make_jisx0208_table_main.o \
-	jisx0208_mapping.o
 MAKE_FEATURE_TABLE_OBJS = make_feature_table_main.o \
 	 conv_table.o gsub_single.o aj1x-gsub.o
 MAKE_LIGATURE_TABLE_OBJS = make_ligature_table_main.o \
@@ -82,7 +80,7 @@ MODIFY_TABLE_VKANA_GPOS_OBJS = modify_table_vkana_gpos_main.o \
 	conv_table.o aj1x-gsub.o
 
 OBJS = $(MAKE_CONV_TABLE_OBJS) $(MAKE_GLYPHORDER_OBJS) \
-	$(MAKE_KANJI_TABLE_OBJS) $(MAKE_JISX0208_TABLE_OBJS) \
+	$(MAKE_KANJI_TABLE_OBJS) \
 	$(MAKE_FEATURE_TABLE_OBJS) \
 	$(MERGE_TABLE_OBJS) $(MAKE_LIGATURE_TABLE_OBJS) \
 	$(CONV_NAME_OBJS) $(CONV_CMAP_OBJS) $(CONV_CFF_OBJS) \
@@ -142,9 +140,6 @@ make_glyphorder: $(MAKE_GLYPHORDER_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_kanji_table: $(MAKE_KANJI_TABLE_OBJS)
-	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
-
-make_jisx0208_table: $(MAKE_JISX0208_TABLE_OBJS)
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 make_feature_table: $(MAKE_FEATURE_TABLE_OBJS)

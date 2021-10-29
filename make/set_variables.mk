@@ -51,7 +51,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/aj17-gsub-jp04.fea
 FONT_NAME_SED = $(BASEDIR)/font_name.sed
 SCRIPT_MAKE_ADJUST=$(SCRIPTDIR)/make_adjust.py
-JISX0208_MAPPING=$(DOWNLOADDIR)/JISX0208-SourceHan-Mapping.txt
 endif
 
 # CN
@@ -214,7 +213,6 @@ debug:
 	@echo "COPY_AND_ROTATE_TABLE  $(COPY_AND_ROTATE_TABLE)"
 	@echo "SHIFT_LIST             $(SHIFT_LIST)"
 	@echo "SCRIPT_MAKE_ADJUST     $(SCRIPT_MAKE_ADJUST)"
-	@echo "JISX0208_MAPPING       $(JISX0208_MAPPING)"
 	@echo ""
 	@echo "CMAP_FILE              $(CMAP_FILE)"
 	@echo "SRC_FONTBASE           $(SRC_FONTBASE)"

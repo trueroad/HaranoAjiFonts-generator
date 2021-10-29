@@ -122,11 +122,6 @@ Make `download` directory and put the following files in it.
         - aj16-kanji.txt
             - Only aj16-kanji.txt,
               put it into `download/SourceHanSans` directory.
-* Source Han's JIS X 0208 mapping file
-    + [
-Adobe-Japan1-6 vs Source Han
-](https://ccjktype.fonts.adobe.com/2019/03/aj16-vs-source-han.html)
-        - JISX0208-SourceHan-Mapping.txt
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniJIS2004-UTF32-H
 * AJ1-7 GSUB
