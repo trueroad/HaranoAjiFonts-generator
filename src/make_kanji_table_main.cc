@@ -5,7 +5,7 @@
 // make_kanji_table_main.cc:
 //   make kanji conversion table from SourceHan AI0 CID to AJ1 CID
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (make kanji conversion table from SourceHan AI0 CID to AJ1 CID)"
     << std::endl
-    << "# Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2021 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
@@ -140,6 +140,27 @@ int main (int argc, char *argv[])
         std::cout << m.first << std::endl;
       else
         std::cout << m.first << "\t" << m.second << std::endl;
+    }
+
+  std::map<int, std::string> miss;
+  for (const auto &m: ak.get_map ())
+    {
+      const auto name = m.first;
+      const auto cid = m.second;
+
+      if (ash.get_rev ().find (name) == ash.get_rev ().end ())
+        miss[cid] = name;
+    }
+  if (miss.size ())
+    {
+      std::cerr << "missing glyphs..." << std::endl;
+      for (const auto &m: miss)
+        {
+          const auto cid = m.first;
+          const auto name = m.second;
+
+          std::cerr << cid << "\t" << name << std::endl;
+        }
     }
 
   return 0;

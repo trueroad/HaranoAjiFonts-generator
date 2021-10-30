@@ -5,7 +5,7 @@
 // AI0-SourceHan.hh:
 //   read AI0-SourceHan{Sans|Serif} file and create map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@ public:
   const std::map<int, std::string> &get_map (void) const noexcept
   {
     return map_;
+  }
+  const std::map<std::string, int> &get_rev (void) const noexcept
+  {
+    return dup_;
   }
 
 private:
