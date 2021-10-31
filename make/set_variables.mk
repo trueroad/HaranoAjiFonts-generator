@@ -29,6 +29,7 @@ SRC_LANG = JP
 ifeq ($(FONT_TYPE),Sans)
 AI0_SOURCEHAN = $(DOWNLOADDIR)/AI0-SourceHanSans
 AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSans/aj16-kanji.txt
+AJ1X_KANJI_PATCH = $(COMMONDATADIR)/aj1x-kanji_sans.patch
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_sans.tbl
 VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_sans.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_sans.tbl
@@ -40,6 +41,7 @@ endif
 ifeq ($(FONT_TYPE),Serif)
 AI0_SOURCEHAN = $(DOWNLOADDIR)/AI0-SourceHanSerif
 AJ1X_KANJI = $(DOWNLOADDIR)/SourceHanSerif/aj16-kanji.txt
+AJ1X_KANJI_PATCH = $(COMMONDATADIR)/aj1x-kanji_serif.patch
 PALT_TO_PWID_FIXED = $(COMMONDATADIR)/palt_to_pwid_fixed_serif.tbl
 VPAL_TO_PWIDVERT_FIXED = $(COMMONDATADIR)/vpal_to_pwidvert_fixed_serif.tbl
 COPY_AND_ROTATE_TABLE = $(COMMONDATADIR)/copy_and_rotate_serif.tbl
@@ -205,6 +207,7 @@ debug:
 	@echo ""
 	@echo "AI0_SOURCEHAN          $(AI0_SOURCEHAN)"
 	@echo "AJ1X_KANJI             $(AJ1X_KANJI)"
+	@echo "AJ1X_KANJI_PATCH       $(AJ1X_KANJI_PATCH)"
 	@echo "PALT_TO_PWID_FIXED     $(PALT_TO_PWID_FIXED)"
 	@echo "VPAL_TO_PWIDVERT_FIXED $(VPAL_TO_PWIDVERT_FIXED)"
 	@echo ""

@@ -25,9 +25,22 @@ table-cmap.tbl: $(TTXDIR)/$(SRC_FONTBASE)._c_m_a_p.ttx $(CMAP_FILE)
 
 # JP specific conversion table
 ifeq ($(FONT_LANG),JP)
-table-kanji.tbl: $(AI0_SOURCEHAN) $(AJ1X_KANJI)
+aj1x-kanji.txt: $(AJ1X_KANJI)
+ifneq ($(wildcard $(AJ1X_KANJI_PATCH)),)
 	@echo \
-	"making conversion table (from AI0-SourceHan and aj16-kanji.txt)..."
+	"patching aj1x-kanji.txt..."
+	cp $< $@
+	patch --batch -p1 < $(AJ1X_KANJI_PATCH) \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+	@echo \
+	"skipping aj1x-kanji.txt patch..."
+	ln -s $< $@
+endif
+
+table-kanji.tbl: $(AI0_SOURCEHAN) aj1x-kanji.txt
+	@echo \
+	"making conversion table (from AI0-SourceHan and aj1x-kanji.txt)..."
 	@$(BINDIR)/make_kanji_table \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
