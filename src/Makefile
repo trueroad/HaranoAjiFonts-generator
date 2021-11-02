@@ -62,7 +62,8 @@ PALT_TO_PWID_OBJS = palt_to_pwid_main.o gpos_single.o \
 	conv_table.o  aj1x-gsub.o
 VPAL_TO_PWIDVERT_OBJS = vpal_to_pwidvert_main.o gpos_single.o \
 	conv_table.o aj1x-gsub.o
-ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o
+ADD_CMAP_OBJS = add_cmap_main.o conv_table.o cmapfile.o \
+	copy_and_rotate_table.o
 TTX_FORMATTER_OBJS = ttx_formatter_main.o
 MAKE_KANA_PWID_TABLE_OBJS = make_kana_pwid_table_main.o \
 	conv_table.o aj1x-gsub.o

@@ -5,7 +5,7 @@
 // add_cmap_main.cc:
 //   Add CIDs to cmap
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -46,6 +46,7 @@
 #include <pugixml.hpp>
 
 #include "conv_table.hh"
+#include "copy_and_rotate_table.hh"
 #include "cmapfile.hh"
 #include "version.hh"
 
@@ -169,30 +170,11 @@ namespace
 
   std::set<int> load_cr_cids (const std::string &filename)
   {
-    std::set<int> retval;
+    copy_and_rotate_table crt;
+    crt.load (filename);
 
-    std::ifstream ifs;
-    ifs.open (filename);
-    if (!ifs)
-      {
-        std::cerr << "error: " << __func__ << ": open failed."
-                  << std::endl;
-        return retval;
-      }
-
-    std::string line;
-    while (std::getline (ifs, line))
-      {
-        std::stringstream ss (line);
-
-        std::string token;
-        if (! std::getline (ss, token, '\t'))
-          continue;
-        if (! std::getline (ss, token, '\t'))
-          continue;
-
-        retval.insert (std::stoi (token.substr (3)));
-      }
+    auto cid_outs = crt.get_cid_outs ();
+    std::set<int> retval (cid_outs.begin (), cid_outs.end ());
 
     return retval;
   }
@@ -205,7 +187,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(Add CIDs to cmap)"
     << std::endl
-    << "Copyright (C) 2020 Masamichi Hosoda"
+    << "Copyright (C) 2020, 2021 Masamichi Hosoda"
     << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator"
     << std::endl
