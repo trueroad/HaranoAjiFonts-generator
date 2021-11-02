@@ -34,7 +34,6 @@
 //
 
 #include <exception>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -45,8 +44,7 @@
 
 #include <pugixml.hpp>
 
-#include "conv_table.hh"
-#include "copy_and_rotate_table.hh"
+#include "available_cids.hh"
 #include "cmapfile.hh"
 #include "version.hh"
 
@@ -167,17 +165,6 @@ namespace
 
     return map;
   }
-
-  std::set<int> load_cr_cids (const std::string &filename)
-  {
-    copy_and_rotate_table crt;
-    crt.load (filename);
-
-    auto cid_outs = crt.get_cid_outs ();
-    std::set<int> retval (cid_outs.begin (), cid_outs.end ());
-
-    return retval;
-  }
 };
 
 int main (int argc, char *argv[])
@@ -235,32 +222,8 @@ int main (int argc, char *argv[])
     << std::endl
     << std::endl;
 
-  conv_table ct;
-  try
-    {
-      ct.load (table_filename);
-    }
-  catch (std::exception &e)
-    {
-      std::cerr << "error: conv_table::load (): std::exception: "
-                << e.what () << std::endl;
-      return 1;
-    }
-
-  std::set<int> exists;
-  try
-    {
-      exists = load_cr_cids (cr_filename);
-    }
-  catch (std::exception &e)
-    {
-      std::cerr << "error: load_cr_cids (): std::exception: "
-                << e.what () << std::endl;
-      return 1;
-    }
-
-  std::copy (ct.get_cid_outs ().begin (), ct.get_cid_outs ().end (),
-             std::inserter (exists, exists.end ()));
+  std::set<int> exists = get_available_cids (table_filename,
+                                             cr_filename);
 
   cmapfile cmf;
   try
