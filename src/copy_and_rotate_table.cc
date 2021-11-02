@@ -5,7 +5,7 @@
 // copy_and_rotate_table.cc:
 //   Copy and rotate table
 //
-// Copyright (C) 2019, 2020 Masamichi Hosoda.
+// Copyright (C) 2019-2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ copy_and_rotate_table::copy_and_rotate_table ():
 
 void copy_and_rotate_table::load (const std::string &filename)
 {
-  map_.clear ();
+  //map_.clear ();
 
   std::ifstream ifs;
   ifs.open (filename);
@@ -85,6 +85,7 @@ namespace
 
 bool copy_and_rotate_table::set_map (int cid_in, int cid_out, int rotate)
 {
+  /*
   if (map_.find (cid_in) != map_.end ())
     {
       std::cerr
@@ -99,6 +100,7 @@ bool copy_and_rotate_table::set_map (int cid_in, int cid_out, int rotate)
     }
   else
     map_[cid_in] = std::make_pair (cid_out, rotate);
+  */
 
   if (cid_out >= 0)
     cid_outs_.push_back (cid_out);

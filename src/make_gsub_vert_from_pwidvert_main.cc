@@ -5,7 +5,7 @@
 // make_gsub_vert_from_pwidvert_main.cc:
 //   Make GSUB vert table from pwidvert copying table
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (Make GSUB vert table from pwidvert copying table)"
     << std::endl
-    << "# Copyright (C) 2020 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2020, 2021 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
@@ -103,9 +103,8 @@ int main (int argc, char *argv[])
       return 1;
     }
 
-  for (const auto &cr_entry: cr.get_map ())
+  for (const auto cid_out: cr.get_cid_outs ())
     {
-      auto cid_out = (cr_entry.second).first;
       if (ag.get_rev ().find (cid_out) !=
           ag.get_rev ().end ())
         {

@@ -5,7 +5,7 @@
 // copy_and_rotate_table.hh:
 //   Copy and rotate table
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -50,10 +50,12 @@ public:
 
   void load (const std::string &filename);
 
+  /*
   const std::map<int, std::pair<int, int>> &get_map (void) const noexcept
   {
     return map_;
   }
+  */
   const std::vector<int> &get_cid_outs (void) const noexcept
   {
     return cid_outs_;
@@ -64,7 +66,7 @@ private:
 
   bool set_map (int cid_in, int cid_out, int rotate);
 
-  std::map<int, std::pair<int, int>> map_;
+  //std::map<int, std::pair<int, int>> map_;
   std::vector<int> cid_outs_;
 };
 
