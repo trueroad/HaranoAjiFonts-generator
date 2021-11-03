@@ -127,6 +127,47 @@ namespace
 
     auto map_tags = doc.select_nodes (ss.str ().c_str ());
 
+    if (map_tags.empty ())
+      {
+        auto parent = doc.select_node ("ttFont/cmap/cmap_format_14").node ();
+        auto node = parent.append_child ("map");
+        {
+          std::stringstream ss;
+          ss << "0x" << std::hex << as.base;
+          node.append_attribute ("uv") = ss.str ().c_str ();
+        }
+        {
+          std::stringstream ss;
+          ss << "0x" << std::hex << as.vs;
+          node.append_attribute ("uvs") = ss.str ().c_str ();
+        }
+        std::cerr << "Add: U+"
+                  << std::hex << std::setw (4) << std::setfill ('0')
+                  << as.base
+                  << " U+"
+                  << std::hex << std::setw (4) << std::setfill ('0')
+                  << as.vs
+                  << std::dec;
+        if (bdefault)
+          {
+            std::cerr << ", default (CID+"
+                      << as.cid
+                      << ")"
+                      << std::endl;
+          }
+        else
+          {
+            std::stringstream ss;
+            ss << "aji" << as.cid;
+            node.append_attribute ("name") = ss.str ().c_str ();
+
+            std::cerr << ", CID+"
+                      << as.cid
+                      << std::endl;
+          }
+        return;
+      }
+
     for (auto &map: map_tags)
       {
         auto node = map.node ();
