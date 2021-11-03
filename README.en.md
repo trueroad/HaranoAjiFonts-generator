@@ -129,6 +129,11 @@ Make `download` directory and put the following files in it.
 The Adobe-Japan1-7 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-Japan1)
         - aj17-gsub-jp04.fea
+* AJ1-7 Variation Selector
+    + [
+The Adobe-Japan1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-Japan1)
+        - Adobe-Japan1_sequences.txt
 
 Note:
 `aj16-kanji.txt` has the same file name in Serif and Sans,
@@ -168,6 +173,11 @@ Place all other files in the same directory.
 The Adobe-GB1-7 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
         - ag15-gsub.fea
+* AG1-5 Variation Selector
+    + [
+The Adobe-GB1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-GB1)
+        - Adobe-GB1_sequences.txt
 
 #### (Experimental) Generate fonts (CN)
 
@@ -199,6 +209,11 @@ The Adobe-GB1-7 Character Collection
 The Adobe-CNS1-7 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-CNS1)
         - ac17-gsub.fea
+* AC1-7 Variation Selector
+    + [
+The Adobe-CNS1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-CNS1)
+        - Adobe-CNS1_sequences.txt
 
 #### (Experimental) Generate fonts (TW)
 
@@ -230,6 +245,11 @@ The Adobe-CNS1-7 Character Collection
 The Adobe-KR-9 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-KR)
         - akr9-gsub.fea
+* AKR-9 Variation Selector
+    + [
+The Adobe-KR-9 Character Collection
+](https://github.com/adobe-type-tools/Adobe-KR)
+        - Adobe-KR_sequences.txt
 
 #### (Experimental) Generate fonts (KR)
 

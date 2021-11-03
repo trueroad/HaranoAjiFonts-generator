@@ -397,6 +397,11 @@ The Adobe-Japan1-7 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-Japan1)
       から `aj17-gsub-jp04.fea`
       （GSUB ディレクトリにあります）
+* AJ1-7 の Variation Selector 情報
+    + [
+The Adobe-Japan1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-Japan1)
+      から `Adobe-Japan1_sequences.txt`
 
 注意：
 `aj16-kanji.txt` は明朝とゴシックでファイル名が同じですが中身は異なります。
@@ -436,6 +441,11 @@ The Adobe-GB1-5 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
       から `ag15-gsub.fea`
       （GSUB ディレクトリにあります）
+* AG1-5 の Variation Selector 情報
+    + [
+The Adobe-GB1-5 Character Collection
+](https://github.com/adobe-type-tools/Adobe-GB1)
+      から `Adobe-GB1_sequences.txt`
 
 #### （実験的）生成 (CN)
 
@@ -468,6 +478,11 @@ The Adobe-CNS1-7 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-CNS1)
       から `ac17-gsub.fea`
       （GSUB ディレクトリにあります）
+* AC1-7 の Variation Selector 情報
+    + [
+The Adobe-CNS1-7 Character Collection
+](https://github.com/adobe-type-tools/Adobe-CNS1)
+      から `Adobe-CNS1_sequences.txt`
 
 #### （実験的）生成 (TW)
 
@@ -500,6 +515,11 @@ The Adobe-KR-9 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-KR)
       から `akr9-gsub.fea`
       （GSUB ディレクトリにあります）
+* AKR-9 の Variation Selector 情報
+    + [
+The Adobe-KR-9 Character Collection
+](https://github.com/adobe-type-tools/Adobe-KR)
+      から `Adobe-KR_sequences.txt`
 
 #### （実験的）生成 (KR)
 
