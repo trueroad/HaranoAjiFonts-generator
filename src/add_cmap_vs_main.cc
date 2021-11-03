@@ -46,12 +46,45 @@
 #include "available_cids.hh"
 #include "version.hh"
 
+namespace
+{
+  int aji_string_to_int (const std::string &name);
+}
+
 class aj1_sequence
 {
 public:
   int base;
   int vs;
   int cid;
+};
+
+class default_cid_cache
+{
+public:
+  default_cid_cache (pugi::xml_document &doc)
+  {
+    auto tags = doc.select_nodes ("ttFont/cmap/cmap_format_12/map");
+
+    for (auto &tag: tags)
+      {
+        auto node = tag.node ();
+
+        const auto cid = aji_string_to_int (node.attribute ("name").value ());
+        if (cid >= 0)
+          map_[node.attribute ("code").as_int ()] = cid;
+      }
+  }
+
+  int find (int uni) const
+  {
+    if (map_.find (uni) != map_.cend ())
+      return map_.at(uni);
+    return -1;
+  }
+
+private:
+  std::map<int, int> map_;
 };
 
 namespace
@@ -64,25 +97,10 @@ namespace
     return std::stoi (name.substr (3));
   }
 
-  int find_default_cid (int uni, pugi::xml_document &doc)
-  {
-    std::stringstream ss;
-    ss << "ttFont/cmap/cmap_format_12/map[@code='0x"
-       << std::hex
-       << uni
-       << "']";
-
-    auto map_tags = doc.select_nodes (ss.str ().c_str ());
-
-    for (auto &map: map_tags)
-      return aji_string_to_int (map.node ().attribute ("name").value ());
-
-    return -1;
-  }
-
   void check_and_add (const aj1_sequence &as,
                       const std::set<int> &exists,
-                      pugi::xml_document &doc)
+                      pugi::xml_document &doc,
+                      const default_cid_cache &dcc)
   {
     if (exists.find (as.cid) == exists.end ())
       {
@@ -99,7 +117,7 @@ namespace
         return;
       }
 
-    const auto default_cid = find_default_cid (as.base, doc);
+    const auto default_cid = dcc.find (as.base);
     if (default_cid < 0)
       {
         std::cerr << "warning: cannot find default CID: U+"
@@ -353,6 +371,8 @@ int main (int argc, char *argv[])
       return 1;
     }
 
+  auto dcc = default_cid_cache (doc);
+
   for (const auto &as: seqs)
     {
       /*
@@ -367,7 +387,7 @@ int main (int argc, char *argv[])
                 << std::endl;
       */
 
-      check_and_add (as, exists, doc);
+      check_and_add (as, exists, doc, dcc);
     }
 
   doc.save_file (cmap_out_filename.c_str (), "  ",
