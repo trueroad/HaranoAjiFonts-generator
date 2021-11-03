@@ -51,6 +51,7 @@ endif
 
 # JP Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/aj17-gsub-jp04.fea
+SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-Japan1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name.sed
 SCRIPT_MAKE_ADJUST=$(SCRIPTDIR)/make_adjust.py
 endif
@@ -84,6 +85,7 @@ endif
 
 # CN Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ag15-gsub.fea
+SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-GB1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_cn.sed
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
@@ -117,6 +119,7 @@ endif
 
 # TW Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ac17-gsub.fea
+SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-CNS1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_tw.sed
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
@@ -150,6 +153,7 @@ endif
 
 # KR Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/akr9-gsub.fea
+SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-KR_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_kr.sed
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
@@ -183,6 +187,7 @@ endif
 
 # K1 Common
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ak12-gsub.txt
+SEQUENCES_FILE =
 FONT_NAME_SED = $(BASEDIR)/font_name_k1.sed
 SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 endif
@@ -212,6 +217,7 @@ debug:
 	@echo "VPAL_TO_PWIDVERT_FIXED $(VPAL_TO_PWIDVERT_FIXED)"
 	@echo ""
 	@echo "FEATURE_GSUB_FEA       $(FEATURE_GSUB_FEA)"
+	@echo "SEQUENCES_FILE         $(SEQUENCES_FILE)"
 	@echo "FONT_NAME_SED          $(FONT_NAME_SED)"
 	@echo "COPY_AND_ROTATE_TABLE  $(COPY_AND_ROTATE_TABLE)"
 	@echo "SHIFT_LIST             $(SHIFT_LIST)"

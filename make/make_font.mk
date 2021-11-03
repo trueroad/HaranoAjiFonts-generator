@@ -488,6 +488,18 @@ cmap02.ttx: table.tbl copy_and_rotate_do.tbl ${CMAP_FILE} cmap01.ttx
 	@$(BINDIR)/add_cmap $+ $@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
+# Add Variation Selector to cmap table
+ifneq ($(FONT_LANG),K1)
+cmap03.ttx: table.tbl copy_and_rotate_do.tbl ${SEQUENCES_FILE} cmap02.ttx
+	@echo "adding Variation Selectors to cmap..."
+	@$(BINDIR)/add_cmap_vs $+ $@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+cmap03.ttx: cmap02.ttx
+	@echo "skipping adding Variation Selectors to cmap..."
+	@ln -s $< $@
+endif
+
 # Truncate cmap table
 ifeq ($(FONT_LANG),KR)
 TRUNCATE_CMAP_FLAG = 1
@@ -499,13 +511,13 @@ endif
 endif
 ifdef TRUNCATE_CMAP_FLAG
 # cmap table format 4 subtable size exceeds the limit.
-cmap.ttx: cmap02.ttx
+cmap.ttx: cmap03.ttx
 	@echo "truncating cmap format 4..."
 	@$(SCRIPTDIR)/truncate_cmap_format4.py \
 		$< $@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-cmap.ttx: cmap02.ttx
+cmap.ttx: cmap03.ttx
 	@echo "skipping truncating cmap format 4..."
 	@ln -s $< $@
 endif
