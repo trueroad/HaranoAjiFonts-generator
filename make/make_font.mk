@@ -505,9 +505,7 @@ ifeq ($(FONT_LANG),KR)
 TRUNCATE_CMAP_FLAG = 1
 endif
 ifeq ($(FONT_LANG),TW)
-ifeq ($(FONT_TYPE),Sans)
 TRUNCATE_CMAP_FLAG = 1
-endif
 endif
 ifdef TRUNCATE_CMAP_FLAG
 # cmap table format 4 subtable size exceeds the limit.
