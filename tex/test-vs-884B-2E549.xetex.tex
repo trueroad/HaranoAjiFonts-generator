@@ -1,0 +1,114 @@
+% -*- coding: utf-8 mode:tex -*-
+
+%\special{dvipdfmx:config z 0}
+%\special{dvipdfmx:config V 4}
+\nopagenumbers
+
+% 源ノ明朝 2.000 でマッピングに誤りがある問題
+% https://github.com/adobe-fonts/source-han-serif/issues/126
+%
+
+\def\testa{%
+\fonta\char"884B
+\fontb\char"884B
+\fontc\char"884B
+\fontd\char"884B
+\fonte\char"884B
+\fontf\char"884B
+\fontg\char"884B
+\f : U+884B\par
+↑↓同グリフ（百と百の間に縦棒あり、下が皿）\par
+\fonta\char"884B \char"E0100
+\fontb\char"884B \char"E0100
+\fontc\char"884B \char"E0100
+\fontd\char"884B \char"E0100
+\fonte\char"884B \char"E0100
+\fontf\char"884B \char"E0100
+\fontg\char"884B \char"E0100
+\f : U+884B U+E0100\par
+↑↓異グリフ\par
+\fonta\char"884B \char"E0101
+\fontb\char"884B \char"E0101
+\fontc\char"884B \char"E0101
+\fontd\char"884B \char"E0101
+\fonte\char"884B \char"E0101
+\fontf\char"884B \char"E0101
+\fontg\char"884B \char"E0101
+\f : U+884B U+E0101\par
+↑（百と百の間に縦棒なし、下が血）\par}
+
+\font\fonta="[HaranoAjiMincho-ExtraLight.otf]" at 40pt
+\font\fontb="[HaranoAjiMincho-Light.otf]" at 40pt
+\font\fontc="[HaranoAjiMincho-Regular.otf]" at 40pt
+\font\fontd="[HaranoAjiMincho-Medium.otf]" at 40pt
+\font\fonte="[HaranoAjiMincho-SemiBold.otf]" at 40pt
+\font\fontf="[HaranoAjiMincho-Bold.otf]" at 40pt
+\font\fontg="[HaranoAjiMincho-Heavy.otf]" at 40pt
+\font\f="[HaranoAjiMincho-Regular.otf]" at 10pt
+
+\f
+源ノ明朝 2.000 でマッピングに誤りがある問題\par
+https://github.com/adobe-fonts/source-han-serif/issues/126\par
+の対策確認用。\par
+
+\vfill
+
+\f 原ノ味明朝\par
+\testa
+
+\vfill
+
+\font\fonta="[HaranoAjiGothic-ExtraLight.otf]" at 40pt
+\font\fontb="[HaranoAjiGothic-Light.otf]" at 40pt
+\font\fontc="[HaranoAjiGothic-Normal.otf]" at 40pt
+\font\fontd="[HaranoAjiGothic-Regular.otf]" at 40pt
+\font\fonte="[HaranoAjiGothic-Medium.otf]" at 40pt
+\font\fontf="[HaranoAjiGothic-Bold.otf]" at 40pt
+\font\fontg="[HaranoAjiGothic-Heavy.otf]" at 40pt
+\font\f="[HaranoAjiGothic-Regular.otf]" at 10pt
+\f 原ノ味ゴシック\par
+\testa
+
+\def\testb{%
+\fonta\char"2E569
+\fontb\char"2E569
+\fontc\char"2E569
+\fontd\char"2E569
+\fonte\char"2E569
+\fontf\char"2E569
+\fontg\char"2E569
+\f : U+2E569\par
+↑↓同グリフ\par
+\fonta\char"2E569 \char"E0100
+\fontb\char"2E569 \char"E0100
+\fontc\char"2E569 \char"E0100
+\fontd\char"2E569 \char"E0100
+\fonte\char"2E569 \char"E0100
+\fontf\char"2E569 \char"E0100
+\fontg\char"2E569 \char"E0100
+\f : U+2E569 U+E0100\par
+↑↓下は未定義（同グリフになるはず）\par
+\fonta\char"2E569 \char"E0101
+\fontb\char"2E569 \char"E0101
+\fontc\char"2E569 \char"E0101
+\fontd\char"2E569 \char"E0101
+\fonte\char"2E569 \char"E0101
+\fontf\char"2E569 \char"E0101
+\fontg\char"2E569 \char"E0101
+\f : U+2E569 U+E0101\par
+↑未定義\par}
+
+\vfill
+
+\font\fonta="[HaranoAjiMincho-ExtraLight.otf]" at 40pt
+\font\fontb="[HaranoAjiMincho-Light.otf]" at 40pt
+\font\fontc="[HaranoAjiMincho-Regular.otf]" at 40pt
+\font\fontd="[HaranoAjiMincho-Medium.otf]" at 40pt
+\font\fonte="[HaranoAjiMincho-SemiBold.otf]" at 40pt
+\font\fontf="[HaranoAjiMincho-Bold.otf]" at 40pt
+\font\fontg="[HaranoAjiMincho-Heavy.otf]" at 40pt
+\font\f="[HaranoAjiMincho-Regular.otf]" at 10pt
+\f 原ノ味明朝\par
+\testb
+
+\bye
