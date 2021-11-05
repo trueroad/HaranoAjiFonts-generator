@@ -152,5 +152,14 @@ $(XELATEX_PDFS): %.pdf: %.tex
 $(LATEXMK_LUALATEX_PDFS): %.pdf: %.tex
 	$(LATEXMK_LUALATEX) $<
 
+
+test-missing-kanji-cids.platex-otf.dvi: \
+	missing-kanji-cids-mincho.txt \
+	missing-kanji-cids-gothic.txt
+
+missing-kanji-cids-mincho.txt missing-kanji-cids-gothic.txt:
+	../script/make_missing_kanji_cids_tex.sh
+
 clean:
-	-$(RM) *~ *.aux *.log *.out *.ltjruby *.fdb_latexmk *.fls
+	-$(RM) *~ *.aux *.log *.out *.ltjruby *.fdb_latexmk *.fls \
+		missing-kanji-cids-mincho.txt missing-kanji-cids-gothic.txt

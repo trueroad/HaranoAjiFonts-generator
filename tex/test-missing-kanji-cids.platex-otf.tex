@@ -1,0 +1,51 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20211103 グリフ名相違の修正確認
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+
+\title{原ノ味フォント20211103グリフ名相違の修正確認 \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  このファイルは原ノ味フォントのグリフが正しく生成されているか、
+  他のフォントと比較して確認するためのものである。
+  そのために、同じDVIから、原ノ味フォント埋め込みPDFと
+  フォント非埋め込みPDFの双方を生成している。
+  小塚フォントを持つAcrobat Readerでフォント非埋め込みPDFを開くと、
+  小塚フォントを使った表示を見ることができる。
+  同じAcrobat Readerで原ノ味フォント埋め込みPDFを開くと、
+  原ノ味フォントを使った表示を見ることができる。
+  これにより双方の表示を比較し、
+  デザインの差を除いて同じような表示になれば、
+  原ノ味フォントのグリフが正しいと考えることができる。
+
+  源ノ明朝2.000ではaj16-kanji.txtに記載されているグリフ名が古いまま更新されず
+  AI0-SourceHanSerifのグリフ名と食い違っているものがある。
+  また、源ノ角ゴシック2.004でも同様にaj16-kanji.txtのグリフ名が更新されず
+  AI0-SourceHanSansのグリフ名と食い違っているものがある。
+  原ノ味フォント20211103では食い違いの影響を抑えるため修正を試みており、
+  このファイルはその修正が正しいか確認するためのものである。
+  なお、原ノ味フォント20211103では
+  CID+13729, CID+14019は修正できず欠落したままになっており、
+  これらについてはダミーグリフになっている。
+}
+
+\clearpage
+
+\input{missing-kanji-cids-mincho.txt}
+
+\clearpage
+
+\gtfamily
+\input{missing-kanji-cids-gothic.txt}
+
+\end{document}

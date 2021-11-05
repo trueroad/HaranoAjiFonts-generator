@@ -6,3 +6,5 @@
 *.ltjruby
 *.fdb_latexmk
 *.fls
+missing-kanji-cids-mincho.txt
+missing-kanji-cids-gothic.txt
