@@ -56,7 +56,8 @@ CONV_GPOS_OBJS = conv_GPOS_main.o conv_table.o
 CONV_GSUB_OBJS = conv_GSUB_main.o conv_table.o
 CONV_VORG_OBJS = conv_VORG_main.o conv_table.o
 CONV_MTX_OBJS = conv_mtx_main.o walker.o walker_conv.o conv_table.o
-CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o
+CHECK_TABLE_CMAP_OBJS = check_table_CMap_main.o conv_table.o cmapfile.o \
+	copy_and_rotate_table.o available_cids.o
 FIX_HMTX_OBJS = fix_hmtx_main.o conv_table.o
 PALT_TO_PWID_OBJS = palt_to_pwid_main.o gpos_single.o \
 	conv_table.o  aj1x-gsub.o

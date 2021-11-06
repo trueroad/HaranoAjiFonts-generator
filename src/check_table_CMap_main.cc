@@ -5,7 +5,7 @@
 // check_table_CMap_main.cc:
 //   check pre defined CID coverage in conversion table by CMap file
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2021 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 #include <iostream>
 #include <vector>
 
-#include "conv_table.hh"
+#include "available_cids.hh"
 #include "cmapfile.hh"
 #include "version.hh"
 
@@ -48,47 +48,46 @@ int main (int argc, char *argv[])
     << std::endl
     << "(check pre defined CID coverage in conversion table by CMap file)"
     << std::endl
-    << "Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "Copyright (C) 2019, 2021 Masamichi Hosoda" << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 
-  if (argc != 3)
+  if (argc != 4)
     {
       std::cerr
-        << "usage: check_table_CMap TABLE.TBL CMAP_FILE"
+        << "usage: check_table_CMap TABLE.TBL CR.TBL CMAP_FILE"
         << std::endl
         << std::endl
         << "     TABLE.TBL:" << std::endl
         << "         conversion table." << std::endl
+        << "     CR.TBL:" << std::endl
+        << "         copy and rotate table." << std::endl
         << "     CMAP_FILE:" << std::endl
         << "         The CMap file for CID coverage check." << std::endl
         << "         e.g. H, V, 2004-H, or 2004-V etc." << std::endl;
       return 1;
     }
 
+  const std::string table_filename = argv[1];
+  const std::string cr_filename = argv[2];
+  const std::string cmap_filename = argv[3];
+
   std::cerr
     << "inputs:" << std::endl
-    << "    conversion table file: \"" << argv[1] << "\""
+    << "    conversion table file: \"" << table_filename << "\""
     << std::endl
-    << "    CMap file            : \"" << argv[2] << "\""
+    << "    copy and rotate table: \"" << cr_filename << "\""
+    << std::endl
+    << "    CMap file            : \"" << cmap_filename << "\""
     << std::endl << std::endl;
 
-  conv_table ct;
-  try
-    {
-      ct.load (argv[1]);
-    }
-  catch (std::exception &e)
-    {
-      std::cerr << "error: conv_table::load (): std::exception: "
-                << e.what () << std::endl;
-      return 1;
-    }
+  const auto exists = get_available_cids (table_filename,
+                                          cr_filename);
 
   cmapfile cmf;
   try
     {
-      cmf.load (argv[2]);
+      cmf.load (cmap_filename);
     }
   catch (std::exception &e)
     {
@@ -100,8 +99,8 @@ int main (int argc, char *argv[])
   std::map<int, int> miss;
   for (const auto &c: cmf.get_map ())
     {
-      if (std::find (ct.get_cid_outs ().begin (), ct.get_cid_outs ().end (),
-                     c.second) == ct.get_cid_outs ().end())
+      const auto cid = c.second;
+      if (exists.find (cid) == exists.cend ())
         miss.emplace (c.first, c.second);
     }
 
