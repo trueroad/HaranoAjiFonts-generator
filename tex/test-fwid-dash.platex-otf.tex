@@ -1,0 +1,44 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント全角ダッシュ
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\title{原ノ味フォント全角ダッシュ \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{70pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+\newcommand{\testAll}{\test{―}\par
+  {\fontsize{70pt}{10pt}\selectfont%
+    ――}\par
+  {\fontsize{70pt}{10pt}\selectfont%
+    ―――}}
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily
+{\Large 明朝}
+
+\testAll
+
+\clearpage
+
+\gtfamily
+{\Large ゴシック}
+
+\testAll
+
+\end{document}

@@ -1,0 +1,90 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント全角ダッシュ
+% 縦書き CTAN haranoaji-extra パッケージ収録分
+
+\documentclass[dvipdfmx,tate]{jlreq}
+\usepackage[deluxe]{otf}
+\usepackage{lmodern}
+\usepackage[noalphabet,otf]{pxchfon}
+\usepackage{xcolor}
+
+% haranoaji-extra パッケージ収録の 7 フォントを、
+% 故意にプリセットとは異なるウェイト・ファミリーに割り振る
+\setminchofont{HaranoAjiMincho-Medium.otf}
+\setlightminchofont{HaranoAjiMincho-ExtraLight.otf}
+\setboldminchofont{HaranoAjiMincho-Heavy.otf}
+\setmediumgothicfont{HaranoAjiGothic-ExtraLight.otf}
+\setboldgothicfont{HaranoAjiGothic-Light.otf}
+\setxboldgothicfont{HaranoAjiGothic-Normal.otf}
+\setmarugothicfont{HaranoAjiMincho-SemiBold.otf}
+
+\title{原ノ味フォント全角ダッシュ \\
+--- 縦書き CTAN haranoaji-extra パッケージ収録分 ---}
+\author{細田 真道}
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{70pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+\newcommand{\testAll}{\test{―}\par
+  {\fontsize{70pt}{10pt}\selectfont%
+    ――}\par
+  {\fontsize{70pt}{10pt}\selectfont%
+    ―――}}
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+\parindent=0pt
+\fboxsep=0pt
+
+\mcfamily\ltseries
+{\Large 原ノ味明朝\textmd{ExtraLight}}
+
+\testAll
+
+\clearpage
+
+\mcfamily\mdseries
+{\Large 原ノ味明朝\textmd{Medium}}
+
+\testAll
+
+\clearpage
+
+\mgfamily % 丸ゴシックの代替を明朝SemiBoldにしたのでそれを利用
+{\Large 原ノ味明朝\textmd{SemiBold}}
+
+\testAll
+
+\clearpage
+
+\mcfamily\bfseries
+{\Large 原ノ味明朝\textmd{Heavy}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\mdseries
+{\Large 原ノ味角ゴシック\textmd{ExtraLight}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\bfseries
+{\Large 原ノ味角ゴシック\textmd{Light}}
+
+\testAll
+
+\clearpage
+
+\gtfamily\ebseries
+{\Large 原ノ味角ゴシック\textmd{Normal}}
+
+\testAll
+
+\end{document}
