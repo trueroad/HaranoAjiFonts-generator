@@ -7,7 +7,7 @@
 # missing_kanji_to_tex.py:
 #   Missing Kanji CIDs log file to tex file.
 #
-# Copyright (C) 2021 Masamichi Hosoda.
+# Copyright (C) 2021, 2022 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,8 @@ def print_list(cidlist: List[int]) -> None:
         if (i % 10) == 0:
             print_list_line(line)
             line = []
-    print_list_line(line)
+    if len(line) > 0:
+        print_list_line(line)
 
 
 def load_table(file: str) -> List[int]:
@@ -82,6 +83,10 @@ def main() -> None:
 
     table: str = sys.argv[1]
     cidlist: List[int] = load_table(table)
+
+    if len(cidlist) == 0:
+        print('None')
+        return
 
     cidlist.sort()
 

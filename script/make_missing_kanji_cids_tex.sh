@@ -11,14 +11,6 @@ ${BINDIR}/make_kanji_table \
     ${DOWNLOADDIR}/SourceHanSerif/aj16-kanji.txt \
     > /dev/null 2> ${TEXDIR}/table-kanji.mincho.log
 
-# https://github.com/adobe-fonts/source-han-serif/pull/123
-echo -e "4378\tdummy" >> ${TEXDIR}/table-kanji.mincho.log
-echo -e "5224\tdummy" >> ${TEXDIR}/table-kanji.mincho.log
-
-# https://github.com/adobe-fonts/source-han-serif/issues/125
-echo -e "13729\tdummy" >> ${TEXDIR}/table-kanji.mincho.log
-echo -e "14019\tdummy" >> ${TEXDIR}/table-kanji.mincho.log
-
 ${SCRIPTDIR}/missing_kanji_to_tex.py \
             ${TEXDIR}/table-kanji.mincho.log \
             > ${TEXDIR}/missing-kanji-cids-mincho.txt

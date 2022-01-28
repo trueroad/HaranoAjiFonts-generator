@@ -29,23 +29,47 @@
   原ノ味フォントのグリフが正しいと考えることができる。
 
   源ノ明朝2.000ではaj16-kanji.txtに記載されているグリフ名が古いまま更新されず
-  AI0-SourceHanSerifのグリフ名と食い違っているものがある。
+  AI0-SourceHanSerifのグリフ名と食い違っているものがあった
+  （源ノ明朝2.001で修正され食い違いは解消された）。
   また、源ノ角ゴシック2.004でも同様にaj16-kanji.txtのグリフ名が更新されず
   AI0-SourceHanSansのグリフ名と食い違っているものがある。
-  原ノ味フォント20211103では食い違いの影響を抑えるため修正を試みており、
+  原ノ味フォント20211103では源ノ明朝2.000の食い違いの影響を抑えるため
+  独自に修正を試みており、
   このファイルはその修正が正しいか確認するためのものである。
-  なお、原ノ味フォント20211103では
-  CID+13729, CID+14019は修正できず欠落したままになっており、
-  これらについてはダミーグリフになっている。
+  なお、原ノ味フォント202201xxで食い違いが修正された
+  源ノ明朝2.001ベースとなったため独自の修正は不要となった。
 }
 
 \clearpage
+
+\section{aj16-kanji.txtグリフ名がAI0-SourceHanSerifに存在しないCID}
 
 \input{missing-kanji-cids-mincho.txt}
 
 \clearpage
 
+\section{aj16-kanji.txtグリフ名がAI0-SourceHanSansに存在しないCID}
+
 \gtfamily
 \input{missing-kanji-cids-gothic.txt}
+
+\clearpage
+
+\section{原ノ味明朝20211103との比較用}
+
+\normalsize\mcfamily
+次ページ以降は、
+原ノ味明朝20211103当時の本ファイルとの比較用である。
+つまりベースとしていた源ノ明朝2.000において
+aj16-kanji.txtグリフ名がAI0-SourceHanSerifに存在しなかったCIDと、
+当時の源ノ明朝JPにグリフが存在しなかったため
+原ノ味明朝20211103から欠けてしまっていたCID+13729, CID+14019を示している。
+原ノ味明朝20211103ではCID+13729, CID+14019はダミーグリフになっていたが、
+原ノ味明朝202201xxではグリフが復活している。
+
+\clearpage
+
+\mcfamily
+\input{missing-kanji-cids-mincho-20211103.txt}
 
 \end{document}
