@@ -6,7 +6,7 @@
 # make_shift.py:
 #   create shift parameters from letter face
 #
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2022 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,16 @@ def calc_shift (name, width, ascender, descender, \
                 face_width, face_height, lsb, tsb):
     if name == "aji08269" or \
        name == "aji08273" or \
-       name == "aji08283":
+       name == "aji08283" or \
+       name == "aji08271" or \
+       name == "aji08272":
         # CID+707 -> CID+8269 (GSUB vert/vrt2, `°` U+00B0 'DEGREE SIGN')
         # CID+708 -> CID+8273 (GSUB vert/vrt2, `′` U+2032 'PRIME')
         # CID+709 -> CID+8283 (GSUB vert/vrt2, `″` U+2033 'DOUBLE PRIME')
+        # CID+8271 (GSUB vert/vrt2,
+        #   `゜` U+309C 'KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK')
+        # CID+8272 (GSUB vert/vrt2,
+        #   `゛` U+309B 'KATAKANA-HIRAGANA VOICED SOUND MARK')
         # Top left to bottom right
         new_lsb = width - (face_width + lsb)
         new_tsb = ascender - (descender + (face_height + tsb))
