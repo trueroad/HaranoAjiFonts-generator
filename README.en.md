@@ -528,7 +528,7 @@ GSUB feature](https://github.com/adobe-type-tools/Adobe-Japan1/pull/4)
 
 ## LICENSE
 
-Copyright (C) 2019-2021 Masamichi Hosoda
+Copyright (C) 2019-2022 Masamichi Hosoda
 
 The license of the generator is BSD 2-Clause. See [LICENSE](./LICENSE).
 The license of the generated fonts is SIL Open Font License 1.1.

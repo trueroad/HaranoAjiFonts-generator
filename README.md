@@ -1631,7 +1631,7 @@ CID](https://twitter.com/trueroad_jp/status/1304001557822730241)
 
 ## ライセンス
 
-Copyright (C) 2019-2021 Masamichi Hosoda
+Copyright (C) 2019-2022 Masamichi Hosoda
 
 生成プログラムのライセンスは BSD 2-Clause です。
 [LICENSE](./LICENSE)をご覧ください。
