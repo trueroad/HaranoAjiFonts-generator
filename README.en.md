@@ -289,6 +289,21 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20220130
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220130)
+(JP, CN, TW, KR, K1) test release
+    + Based on SourceHanSerif 2.001 (JP, CN, TW, KR, K1)
+        + JP: CID+13729 and CID+14019 are now contained again.
+    + Update
+        + SourceHanSerif 2.001
+        + ttx 4.29.0
+        + Python 3.9.10
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 17559
+          (conversion 16867 + glyph processing 691 + .notdef 1)
+        - HaranoAjiGothic: 17559
+          (conversion 16866 + glyph processing 692 + .notdef 1)
+* [
 20211103
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20211103)
 (JP, CN, TW, KR, K1) test release
