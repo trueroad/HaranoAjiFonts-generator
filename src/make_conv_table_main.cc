@@ -5,7 +5,7 @@
 // make_conv_table_main.cc:
 //   make conversion table from original font CID to pre-defined CID
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (make conversion table from original font CID to pre-defined CID)"
     << std::endl
-    << "# Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2022 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
@@ -78,18 +78,6 @@ int main (int argc, char *argv[])
     << std::endl
     << "#" << std::endl;
 
-  fontcmap_reverse fcr;
-  try
-    {
-      fcr.load_ttx (argv[1]);
-    }
-  catch (std::exception &e)
-    {
-      std::cerr << "error: fontcmap_reverse: std::exception: " << e.what ()
-                << std::endl;
-      return 1;
-    }
-
   cmapfile cmf;
   try
     {
@@ -98,6 +86,18 @@ int main (int argc, char *argv[])
   catch (std::exception &e)
     {
       std::cerr << "error: cmapfile: std::exception: " << e.what ()
+                << std::endl;
+      return 1;
+    }
+
+  fontcmap_reverse fcr;
+  try
+    {
+      fcr.load_ttx (argv[1], cmf);
+    }
+  catch (std::exception &e)
+    {
+      std::cerr << "error: fontcmap_reverse: std::exception: " << e.what ()
                 << std::endl;
       return 1;
     }
@@ -116,7 +116,7 @@ int main (int argc, char *argv[])
           if (dup.find (cid_out) != dup.end ())
             {
               auto bf_uni = fcr.get_map ().at (dup[cid_out]);
-              auto prefer = prefer_unicode (bf_uni, uni);
+              auto prefer = prefer_unicode (bf_uni, uni, cmf);
               std::cout << "#duplicate: cid " << dup[cid_out]
                         << " (U+"
                         << std::setw (4) << std::setfill ('0')

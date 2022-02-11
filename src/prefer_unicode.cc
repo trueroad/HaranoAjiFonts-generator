@@ -5,7 +5,7 @@
 // prefer_unicode.cc:
 //   determine Unicode to prefer
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 // SUCH DAMAGE.
 //
 
+#include "cmapfile.hh"
 #include "prefer_unicode.hh"
 
 namespace
@@ -48,10 +49,18 @@ namespace
   }
 }
 
-int prefer_unicode (int u1, int u2)
+int prefer_unicode (int u1, int u2, const cmapfile &cmf)
 {
   if (u1 == u2)
     return u1;
+
+  bool bc1 = cmf.get_map ().find (u1) != cmf.get_map ().end ();
+  bool bc2 = cmf.get_map ().find (u2) != cmf.get_map ().end ();
+
+  if (bc1 && !bc2)
+    return u1;
+  if (bc2 && !bc1)
+    return u2;
 
   bool b1 = is_prefer (u1);
   bool b2 = is_prefer (u2);

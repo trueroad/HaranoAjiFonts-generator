@@ -5,7 +5,7 @@
 // fontcmap_reverse.hh:
 //   read cmap table of the original font file and create an reverse map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,12 @@
 #include <set>
 #include <string>
 
+class cmapfile;
+
 class fontcmap_reverse
 {
 public:
-  void load_ttx (const std::string &filename,
+  void load_ttx (const std::string &filename, const cmapfile &cmf,
                  int format = 12, int platform_id = 0,
                  int plat_enc_id = 4, int lang = 0);
   const std::map<int, int> &get_map (void) const noexcept

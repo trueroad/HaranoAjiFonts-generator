@@ -5,7 +5,7 @@
 // fontcmap_reverse.cc:
 //   read cmap table of the original font file and create an reverse map
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -47,8 +47,9 @@
 #include "prefer_unicode.hh"
 
 void fontcmap_reverse::load_ttx (const std::string &filename,
-                             int format, int platform_id,
-                             int plat_enc_id, int lang)
+                                 const cmapfile &cmf,
+                                 int format, int platform_id,
+                                 int plat_enc_id, int lang)
 {
   map_.clear ();
   dup_.clear ();
@@ -100,7 +101,7 @@ void fontcmap_reverse::load_ttx (const std::string &filename,
                   auto cid = std::stoi (name+3, nullptr, 10);
                   if (map_.find (cid) != map_.end ())
                     {
-                      auto prefer_code = prefer_unicode (map_[cid], code);
+                      auto prefer_code = prefer_unicode (map_[cid], code, cmf);
                       std::cout
                         << "#duplicate in font cmap: cid "
                         << cid

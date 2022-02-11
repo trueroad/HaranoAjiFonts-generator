@@ -5,7 +5,7 @@
 // prefer_unicode.hh:
 //   determine Unicode to prefer
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,8 @@
 #ifndef INCLUDE_GUARD_PREFER_UNICODE_HH
 #define INCLUDE_GUARD_PREFER_UNICODE_HH
 
-int prefer_unicode (int u1, int u2);
+class cmapfile;
+
+int prefer_unicode (int u1, int u2, const cmapfile &cmf);
 
 #endif // INCLUDE_GUARD_PREFER_UNICODE_HH
