@@ -620,6 +620,8 @@ Unicode → AI0 CID
 dvipdfmx の ToUnicode CMap 生成を参考に、
 部首などのブロックの優先度を下げるようにしています。
 この方法にはブロックごとの優先度を調整するなど改良の余地があるかもしれません。
+原ノ味フォント 20220211 版から CMap file に存在する
+Unicode コードポイントを優先するようにしています。
 
 CMap file は逆変換不要ですが、
 やはり複数の Unicode が同一の CID にマップされているものがあります。
@@ -1107,6 +1109,23 @@ vrt2 が vert と同じ内容になるようにしました。
 
 ## 履歴
 
+* [
+20220211
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220211)
+(CN, TW, KR, K1)
+    + 変換テーブル作成を改良 (CN, TW, KR, K1)
+        - [
+源ノの cmap テーブルで複数の Unicode コードポイントから同一の AI0 CID
+へマッピングされている際に CMap に存在しない方を優先して
+グリフが欠けることがある
+](https://github.com/trueroad/HaranoAjiFontsK1/issues/1)
+          という事象を解決するため、
+          CMap に存在する方を優先するよう変更しました。
+        - JP は本変更を行っても収録 CID 等が変わらなかったので
+          今回はリリースしません。
+        - CN, TW, KR, K1 はこれにより収録 CID が増えました。
+    + バージョンアップ
+        + ttx 4.29.1
 * [
 20220130
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220130)

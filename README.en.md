@@ -289,9 +289,16 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20220211
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220211)
+(CN, TW, KR, K1)
+    + Improve making conversion table (CN, TW, KR, K1)
+    + Update
+        + ttx 4.29.1
+* [
 20220130
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220130)
-(JP, CN, TW, KR, K1) test release
+(JP, CN, TW, KR, K1)
     + Based on SourceHanSerif 2.001 (JP, CN, TW, KR, K1)
         + JP: CID+13729 and CID+14019 are now contained again.
     + Update
