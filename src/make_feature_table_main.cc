@@ -5,7 +5,7 @@
 // make_feature_table_main.cc:
 //   make featured glyph conversion table from GSUB substitution
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (make featured glyph conversion table from GSUB substitution)"
     << std::endl
-    << "# Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2022 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
@@ -136,10 +136,10 @@ int main (int argc, char *argv[])
 
   std::map<int, int> map;
   std::map<int, int> dup;
-  for (const auto &m: gs.get_rev ())
+  for (const auto &m: gs.get_map ())
     {
-      auto cid_in_v = m.first;
-      auto cid_in_h = m.second;
+      auto cid_in_v = m.second;
+      auto cid_in_h = m.first;
       if (ct.get_map ().find (cid_in_h) == ct.get_map ().end () ||
           ct.get_map ().at (cid_in_h) < 0)
         {
