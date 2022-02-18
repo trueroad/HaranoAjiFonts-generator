@@ -552,28 +552,13 @@ GSUB02.ttx: palt_to_pwid_copy.tbl GSUB01.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Add GSUB pwidvert substitution
-GSUB03.ttx: feature_vert_from_pwidvert.tbl GSUB02.ttx
+GSUB10.ttx: feature_vert_from_pwidvert.tbl GSUB02.ttx
 	@echo "adding GSUB pwidvert substitution..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		vert \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
-
-# Add GSUB vert/vert2 substitution
-ifeq ($(FONT_LANG),JP)
-GSUB10.ttx: GSUB03.ttx
-	@echo "adding GSUB vert/vrt2 substitution..."
-	@$(SCRIPTDIR)/add_gsub_v.py \
-		$< \
-		$@ \
-		> $(addsuffix .log,$(basename $@)) 2>&1
-else
-GSUB10.ttx: GSUB03.ttx
-	@echo \
-	"skipping language-specific GSUB vert/vrt2 substitution adding..."
-	@ln -s $< $@
-endif
 
 # Integrate GSUB vert lookup tables
 GSUB11.ttx: GSUB10.ttx
@@ -585,7 +570,7 @@ GSUB11.ttx: GSUB10.ttx
 
 # Remove VKana from GSUB vert
 ifeq ($(FONT_LANG),JP)
-GSUB20.ttx: feature_vkna.tbl GSUB11.ttx
+GSUB12.ttx: feature_vkna.tbl GSUB11.ttx
 	@echo "removing VKana from GSUB vert..."
 	@$(SCRIPTDIR)/remove_gsub_single.py \
 		vert \
@@ -593,11 +578,29 @@ GSUB20.ttx: feature_vkna.tbl GSUB11.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB20.ttx: GSUB11.ttx
+GSUB12.ttx: GSUB11.ttx
 	@echo \
 	"skipping language-specific GSUB vert substitution removing..."
 	@ln -s $< $@
 endif
+
+# Add GSUB vert substitution
+feature_vert.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making GSUB vert table..."
+	@$(BINDIR)/make_gsub_single_table \
+		vert \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+GSUB20.ttx: feature_vert.tbl GSUB12.ttx
+	@echo "adding GSUB vert substitution..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		vert \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Add GSUB substitutes
 ifeq ($(FONT_LANG),JP)

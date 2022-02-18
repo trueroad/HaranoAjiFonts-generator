@@ -67,7 +67,7 @@ def add_single_table (root, index, table):
             else:
                 print(f'Warning: overwriting {name_in} -> {name_out} '
                       f'(exists {old_name_out})')
-                elem.attfib['out'] = name_out
+                elem.attrib['out'] = name_out
 
 def load_table (file):
     table = []
