@@ -7,7 +7,7 @@
 # add_gsub_single.py:
 #   Add GSUB single substitution.
 #
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2022 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -54,9 +54,20 @@ def add_single_table (root, index, table):
     ss = root.find ("./GSUB/LookupList/Lookup[@index='" + str (index) \
                     + "']/SingleSubst")
     for name_in, name_out in table:
-        new_elem = ET.SubElement (ss, "Substitution")
-        new_elem.attrib["in"] = name_in
-        new_elem.attrib["out"] = name_out
+        elem = ss.find(f"Substitution[@in='{name_in}']")
+        if elem is None:
+            print(f'Adding: {name_in} -> {name_out}')
+            new_elem = ET.SubElement (ss, "Substitution")
+            new_elem.attrib["in"] = name_in
+            new_elem.attrib["out"] = name_out
+        else:
+            old_name_out = elem.attrib['out']
+            if old_name_out == name_out:
+                print(f'Already exists: {name_in} -> {name_out}')
+            else:
+                print(f'Warning: overwriting {name_in} -> {name_out} '
+                      f'(exists {old_name_out})')
+                elem.attfib['out'] = name_out
 
 def load_table (file):
     table = []
