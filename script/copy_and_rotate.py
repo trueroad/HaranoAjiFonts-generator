@@ -7,7 +7,7 @@
 #   copy and rotate the CFF glyph.
 #
 # Copyright (C) 2020 Yukimasa Morimi.
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2022 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -92,10 +92,20 @@ re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
 def copy_and_rotate_CharString(cs, fd, angle):
     if angle == 0:
         return cs
-    elif angle != 90:
-        print ("angle {} is not supported.".format(angle));
-        return cs
+    elif angle == 90:
+        return copy_and_rotate_CharString90(cs, fd)
+    elif angle == 180 or angle == -180:
+        return copy_and_rotate_CharString90(
+            copy_and_rotate_CharString90(cs, fd), fd)
+    elif angle == 270 or angle == -90:
+        return copy_and_rotate_CharString90(
+            copy_and_rotate_CharString90(
+                copy_and_rotate_CharString90(cs, fd), fd), fd)
 
+    print ("angle {} is not supported.".format(angle));
+    return cs
+
+def copy_and_rotate_CharString90(cs, fd):
     # x_{rotated} =  y_{original} - decender
     # y_{rotated} = -x_{original} + acender
     wd = 1000 # acender - decender
