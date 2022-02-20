@@ -5,7 +5,7 @@
 // make_kana_pwidvert_table_main.cc:
 //   Make AJ1 Kana pwid vert table
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -152,7 +152,7 @@ int main (int argc, char *argv[])
         continue;
       auto cid_out = ag_vert.get_map ().at (cid_pwid);
 
-      if (is_aj1x_kana_propotional_v (cid_out) &&
+      if (is_aj1x_kana_propotional_with_similar_v (cid_out) &&
           std::find (ct.get_cid_outs ().begin (),
                      ct.get_cid_outs ().end (),
                      vkna.second) != ct.get_cid_outs ().end ())
@@ -185,7 +185,7 @@ int main (int argc, char *argv[])
         continue;
       auto cid_out = ag_vert.get_map ().at (cid_pwid);
 
-      if (is_aj1x_kana_propotional_v (cid_out) &&
+      if (is_aj1x_kana_propotional_with_similar_v (cid_out) &&
           std::find (ct.get_cid_outs ().begin (),
                      ct.get_cid_outs ().end (),
                      vert.second) != ct.get_cid_outs ().end ())
@@ -205,7 +205,7 @@ int main (int argc, char *argv[])
 
   for (const auto &vert: ag_vert.get_map ())
     {
-      if (is_aj1x_kana_propotional_v (vert.second) &&
+      if (is_aj1x_kana_propotional_with_similar_v (vert.second) &&
           ag_pwid.get_rev ().find (vert.first) !=
           ag_pwid.get_rev ().end ())
         {

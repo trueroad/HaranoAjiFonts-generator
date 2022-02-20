@@ -5,7 +5,7 @@
 // make_kana_pwid_table_main.cc:
 //   Make AJ1 Kana pwid table
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -114,7 +114,7 @@ int main (int argc, char *argv[])
   for (const auto &p: ag.get_map ())
     {
       if (cw.get_width (p.first) == 1000 &&
-          is_aj1x_kana_propotional_h (p.second) &&
+          is_aj1x_kana_propotional_with_similar_h (p.second) &&
           std::find (ct.get_cid_outs ().begin (),
                      ct.get_cid_outs ().end (),
                      p.first) != ct.get_cid_outs ().end ())

@@ -5,7 +5,7 @@
 // aj1x-kana.hh:
 //   AJ1 Kana type identification
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2022 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -109,6 +109,15 @@ is_aj1x_kana_propotional_h (int cid)
 }
 
 inline bool
+is_aj1x_kana_propotional_with_similar_h (int cid)
+{
+  if (cid == 15453 || cid == 15454)
+    return true;
+
+  return is_aj1x_kana_propotional_h (cid);
+}
+
+inline bool
 is_aj1x_kana_propotional_v (int cid)
 {
   if (15976 <= cid && cid <= 15979)
@@ -117,6 +126,15 @@ is_aj1x_kana_propotional_v (int cid)
     return true;
 
   return false;
+}
+
+inline bool
+is_aj1x_kana_propotional_with_similar_v (int cid)
+{
+  if (cid == 15980 || cid == 15981)
+    return true;
+
+  return is_aj1x_kana_propotional_v (cid);
 }
 
 #endif // INCLUDE_GUARD_AJ1X_KANA_HH
