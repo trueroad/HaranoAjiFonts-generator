@@ -153,6 +153,43 @@ $(LATEXMK_LUALATEX_PDFS): %.pdf: %.tex
 	$(LATEXMK_LUALATEX) $<
 
 
+test-cid13463.platex-otf.dvi: test-cid13463.sty
+test-cid13463.platex-nomap.dvi: test-cid13463.sty
+test-cid13463-extra.platex-nomap.dvi: test-cid13463.sty
+
+test-gsub-ligature.platex-otf.dvi: test-gsub-ligature.sty
+test-gsub-ligature.platex-nomap.dvi: test-gsub-ligature.sty
+test-gsub-ligature-extra.platex-nomap.dvi: test-gsub-ligature.sty
+
+test-kana-fwid.platex-otf.dvi: test-kana-fwid.sty
+test-kana-fwid.platex-nomap.dvi: test-kana-fwid.sty
+test-kana-fwid-extra.platex-nomap.dvi: test-kana-fwid.sty
+
+test-kana-hkna.platex-otf.dvi: test-kana-hkna.sty
+test-kana-hkna.platex-nomap.dvi: test-kana-hkna.sty
+test-kana-hkan-extra.platex-nomap.dvi: test-kana-hkna.sty
+
+test-kana-vkna.platex-otf.dvi: test-kana-vkna.sty
+test-kana-vkna.platex-nomap.dvi: test-kana-vkna.sty
+test-kana-vkan-extra.platex-nomap.dvi: test-kana-vkna.sty
+
+test-kana.platex-otf.dvi: test-kana.sty
+test-kana.platex-nomap.dvi: test-kana.sty
+test-kana-extra.platex-nomap.dvi: test-kana.sty
+
+test-rotate-copy.platex-otf.dvi: test-rotate-copy.sty
+test-rotate-copy.platex-nomap.dvi: test-rotate-copy.sty
+test-rotate-copy-extra.platex-nomap.dvi: test-rotate-copy.sty
+
+test-rotate-shift.platex-otf.dvi: test-rotate-shift.sty
+test-rotate-shift.platex-nomap.dvi: test-rotate-shift.sty
+test-rotate-shift-extra.platex-nomap.dvi: test-rotate-shift.sty
+
+test-width.platex-otf.dvi: test-width.sty
+test-width.platex-nomap.dvi: test-width.sty
+test-width-extra.platex-nomap.dvi: test-width.sty
+
+
 test-missing-kanji-cids.platex-otf.dvi: \
 	missing-kanji-cids-mincho.txt \
 	missing-kanji-cids-gothic.txt
