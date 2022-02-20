@@ -1,0 +1,39 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 202202xx 回転・コピーグリフ
+% テスト用マクロ
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{90pt}{10pt}\selectfont%
+    \colorbox{gray1}{#1}\textmd{~}}}
+
+\newcommand{\testAll}{%
+  \textmd{CID+12176}→\textmd{CID+12175, CID+12177, CID+12178}\par
+  \textmd{U+2702 `BLACK SCISSORS' --- 180, 270 (-90), 90}度回転
+
+  \test{\CID{12176}}→
+  \test{\CID{12175}}%
+  \test{\CID{12177}}%
+  \test{\CID{12178}}%
+
+  \vspace{1zh}
+
+  \textmd{CID+7608, (CID+7609)}→\textmd{CID+12169, (CID+12170)}\par
+  \textmd{U+301D `REVERSED DOUBLE PRIME QUOTATION MARK' --- }無回転
+
+  \test{\CID{7608}}%
+  \textmd{(}\test{\CID{7609}}\textmd{)}→
+  \test{\CID{12169}}
+  \textmd{(}\test{\CID{12170}}\textmd{)}
+
+  \vspace{1zh}
+
+  \textmd{CID+12173, CID+12174}→\textmd{CID+12171, CID+12172}\par
+  \textmd{U+2018 `LEFT SINGLE QUOTATION MARK',
+    U+2019 `RIGHT SINGLE QUOTATION MARK' --- 270 (-90)}度回転
+
+  \test{\CID{12173}}%
+  \test{\CID{12174}}→
+  \test{\CID{12171}}%
+  \test{\CID{12172}}%
+}
