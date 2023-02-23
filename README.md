@@ -1134,6 +1134,22 @@ AJ17 などの GSUB を読み込んで反映するよう汎用化して多言語
 ## 履歴
 
 * [
+20230223
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230223)
+(JP, KR)
+    + CMap を更新 (JP, KR)
+        - [
+AJ1-7 に U+31350 が追加された
+](https://github.com/trueroad/HaranoAjiFonts/issues/9)
+          ので、これを反映しました。
+        - AKR も更新されているので反映しました。
+        - 収録 CID には変更ありません。
+    + バージョンアップ
+        + UniJIS2004-UTF32-H 1.022
+        + Adobe-Japan1_sequences.txt 2022-09-14
+        + UniAKR-UTF32-H 1.003
+        + ttx 4.38.0
+* [
 20220220
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20220220)
 (JP, CN, TW, KR, K1)
@@ -1782,7 +1798,7 @@ CID](https://twitter.com/trueroad_jp/status/1304001557822730241)
 
 ## ライセンス
 
-Copyright (C) 2019-2022 Masamichi Hosoda
+Copyright (C) 2019-2023 Masamichi Hosoda
 
 生成プログラムのライセンスは BSD 2-Clause です。
 [LICENSE](./LICENSE)をご覧ください。
