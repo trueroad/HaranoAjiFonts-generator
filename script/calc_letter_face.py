@@ -45,6 +45,7 @@ SUCH DAMAGE.
 #     https://wwwimages2.adobe.com/content/dam/acom/en/devnet/font/pdfs/5177.Type2.pdf
 #
 
+import argparse
 import copy
 import math
 import re
@@ -970,12 +971,15 @@ def load_calcTable(file: str) -> list[str]:
 
 def main() -> None:
     """Do main."""
-    if len(sys.argv) <= 2:
-        print("Usage: calc_letter_face.py calc.tbl CFF.ttx > letter_face.tbl")
-        exit(1)
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+        usage='%(prog)s [options] calc.tbl CFF.ttx > letter_face.tbl')
+    parser.add_argument('calc.tbl', help='Input table filename')
+    parser.add_argument('CFF.ttx', help='Input CFF filename')
+    args: argparse.Namespace = parser.parse_args()
+    vargs: dict[str, str] = vars(args)
 
-    calc_filename: str = sys.argv[1]
-    source_filename: str = sys.argv[2]
+    calc_filename: str = vargs['calc.tbl']
+    source_filename: str = vargs['CFF.ttx']
 
     table: list[str] = load_calcTable(calc_filename)
 
