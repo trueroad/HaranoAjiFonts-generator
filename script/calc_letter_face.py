@@ -56,9 +56,6 @@ import xml.etree.ElementTree as ET
 debug_mode: bool = False
 tkinter: Any
 
-if debug_mode:
-    import tkinter
-
 FDArray: list[dict[str, Union[str, list[str]]]] = []
 GlobalSubrs: list[str] = []
 
@@ -998,6 +995,8 @@ def main() -> None:
         if name in table and cs.text is not None:
             fd: int = int(cs.attrib["fdSelectIndex"])
             if debug_mode:
+                global tkinter
+                import tkinter
                 window: tkinter.Tk = tkinter.Tk()
                 global canvas
                 canvas = tkinter.Canvas(window, width=700, height=700)
