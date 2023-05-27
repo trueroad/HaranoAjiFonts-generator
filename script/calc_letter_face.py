@@ -973,11 +973,17 @@ def main() -> None:
         usage='%(prog)s [options] calc.tbl CFF.ttx > letter_face.tbl')
     parser.add_argument('calc.tbl', help='Input table filename')
     parser.add_argument('CFF.ttx', help='Input CFF filename')
+    parser.add_argument('--debug',
+                        help='Debug mode that shows glyph by tkinter',
+                        action='store_true')
     args: argparse.Namespace = parser.parse_args()
-    vargs: dict[str, str] = vars(args)
+    vargs: dict[str, Union[str, bool]] = vars(args)
 
-    calc_filename: str = vargs['calc.tbl']
-    source_filename: str = vargs['CFF.ttx']
+    calc_filename: str = cast(str, vargs['calc.tbl'])
+    source_filename: str = cast(str, vargs['CFF.ttx'])
+
+    global debug_mode
+    debug_mode = cast(bool, vargs['debug'])
 
     table: list[str] = load_calcTable(calc_filename)
 
