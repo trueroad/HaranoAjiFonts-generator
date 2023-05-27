@@ -899,35 +899,42 @@ def load_calcTable(file):
 
 ########################################################################
 
-if len(sys.argv) <= 2:
-    print("Usage: calc_letter_face.py calc.tbl CFF.ttx > letter_face.tbl")
-    exit(1)
 
-calc_filename = sys.argv[1]
-source_filename = sys.argv[2]
+def main() -> None:
+    """Do main."""
+    if len(sys.argv) <= 2:
+        print("Usage: calc_letter_face.py calc.tbl CFF.ttx > letter_face.tbl")
+        exit(1)
 
-table = load_calcTable(calc_filename)
+    calc_filename = sys.argv[1]
+    source_filename = sys.argv[2]
 
-tree = ET.parse(source_filename)
-root = tree.getroot()
+    table = load_calcTable(calc_filename)
 
-load_FDArray(root)
-load_GlobalSubrs(root)
+    tree = ET.parse(source_filename)
+    root = tree.getroot()
 
-print("# name x_min y_min x_max y_max")
+    load_FDArray(root)
+    load_GlobalSubrs(root)
 
-for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
-    name = cs.attrib["name"]
-    if name in table:
-        fd = int(cs.attrib["fdSelectIndex"])
-        if debug_mode:
-            window = tkinter.Tk()
-            canvas = tkinter.Canvas(window, width=700, height=700)
-            canvas.pack()
-            draw_box()
-        x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
-        print("{}\t{}\t{}\t{}\t{}". \
-              format(name, x_min, y_min, x_max, y_max))
-        if debug_mode:
-            draw_letter_face(x_min, y_min, x_max, y_max)
-            window.mainloop()
+    print("# name x_min y_min x_max y_max")
+
+    for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
+        name = cs.attrib["name"]
+        if name in table:
+            fd = int(cs.attrib["fdSelectIndex"])
+            if debug_mode:
+                window = tkinter.Tk()
+                canvas = tkinter.Canvas(window, width=700, height=700)
+                canvas.pack()
+                draw_box()
+            x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
+            print("{}\t{}\t{}\t{}\t{}". \
+                  format(name, x_min, y_min, x_max, y_max))
+            if debug_mode:
+                draw_letter_face(x_min, y_min, x_max, y_max)
+                window.mainloop()
+
+
+if __name__ == '__main__':
+    main()
