@@ -38,7 +38,7 @@ SUCH DAMAGE.
 """
 
 #
-# Refarence
+# Reference
 #   * Adobe Technical Note #5176: "The Compact Font Format Specification"
 #     https://wwwimages2.adobe.com/content/dam/acom/en/devnet/font/pdfs/5176.CFF.pdf
 #   * Adobe Technical Note #5177: "The Type 2 Charstring Format"
