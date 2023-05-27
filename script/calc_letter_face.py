@@ -58,12 +58,14 @@ if debug_mode:
 FDArray: list[dict[str, Union[str, list[str]]]] = []
 GlobalSubrs: list[str] = []
 
+
 # load GlobalSubrs
 def load_GlobalSubrs(root: ET.Element) -> None:
     cs: ET.Element
     for cs in root.findall("./CFF/GlobalSubrs/CharString"):
         if cs.text is not None:
             GlobalSubrs.append(cs.text)
+
 
 # load FDArray
 def load_FDArray(root: ET.Element) -> None:
@@ -81,6 +83,7 @@ def load_FDArray(root: ET.Element) -> None:
         FontDict["Subrs"] = Subrs
         FDArray.append(FontDict)
 
+
 def get_GlobalSubr(index: int) -> str:
     if len(GlobalSubrs) < 1240:
         return GlobalSubrs[index + 107]
@@ -88,6 +91,7 @@ def get_GlobalSubr(index: int) -> str:
         return GlobalSubrs[index + 1131]
     else:
         return GlobalSubrs[index + 32768]
+
 
 def get_LocalSubr(fd: int, index: int) -> str:
     Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
@@ -97,6 +101,7 @@ def get_LocalSubr(fd: int, index: int) -> str:
         return Subrs[index + 1131]
     else:
         return Subrs[index + 32768]
+
 
 # for debug
 canvas: tkinter.Canvas
@@ -112,9 +117,11 @@ DEBUG_YS: Final[float] = -0.5
 DEBUG_XA: Final[float] = 100.0
 DEBUG_YA: Final[float] = 540.0
 
+
 def debug_print(msg: str) -> None:
     if debug_mode:
         print("# " + msg)
+
 
 def draw_box() -> None:
     if not debug_mode:
@@ -129,6 +136,7 @@ def draw_box() -> None:
                        1000 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
                        fill='white')
 
+
 def draw_letter_face(x_min: float, y_min: float,
                      x_max: float, y_max: float) -> None:
     if not debug_mode:
@@ -139,6 +147,7 @@ def draw_letter_face(x_min: float, y_min: float,
                             x_max * DEBUG_XS + DEBUG_XA,
                             y_max * DEBUG_YS + DEBUG_YA,
                             outline='green', dash=(2, 2))
+
 
 def draw_bezier(x0: float, y0: float,
                 x1: float, y1: float,
@@ -170,8 +179,8 @@ def draw_bezier(x0: float, y0: float,
                        x2 * DEBUG_XS + DEBUG_XA + DEBUG_R,
                        y2 * DEBUG_YS + DEBUG_YA + DEBUG_R)
 
-    debug_before_x=x0
-    debug_before_y=y0
+    debug_before_x = x0
+    debug_before_y = y0
 
     i: int
     for i in range(1, 99):
@@ -183,10 +192,11 @@ def draw_bezier(x0: float, y0: float,
                            debug_before_y * DEBUG_YS + DEBUG_YA,
                            x * DEBUG_XS + DEBUG_XA,
                            y * DEBUG_YS + DEBUG_YA)
-        debug_before_x=x
-        debug_before_y=y
+        debug_before_x = x
+        debug_before_y = y
 
     point_path(x3, y3)
+
 
 def point_end() -> None:
     if not debug_mode:
@@ -212,6 +222,7 @@ def point_end() -> None:
     debug_first = False
     debug_first_x = 0.0
     debug_first_y = 0.0
+
 
 def point_path(x: float, y: float) -> None:
     if not debug_mode:
@@ -244,6 +255,7 @@ def point_path(x: float, y: float) -> None:
 
     debug_print("path ({}, {})".format(x, y))
 
+
 def point_move(x: float, y: float) -> None:
     if not debug_mode:
         return
@@ -259,8 +271,10 @@ def point_move(x: float, y: float) -> None:
     debug_first_x = x
     debug_first_y = y
 
+
 re_isInt: re.Pattern[str] = re.compile(r"^-?\d+$")
 re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
+
 
 def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
     stack: list[float] = []
@@ -296,18 +310,18 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             dy1: float = 0.0
             if op == "rmoveto":
                 if is_first and len(stack) > 2:
-                    _ = stack.pop(0) # w
+                    _ = stack.pop(0)  # w
                     is_first = False
                 dx1 = stack[0]
                 dy1 = stack[1]
             elif op == "hmoveto":
                 if is_first and len(stack) > 1:
-                    _ = stack.pop(0) # w
+                    _ = stack.pop(0)  # w
                     is_first = False
                 dx1 = stack[0]
             elif op == "vmoveto":
                 if is_first and len(stack) > 1:
-                    _ = stack.pop(0) # w
+                    _ = stack.pop(0)  # w
                     is_first = False
                 dy1 = stack[0]
             x_abs += dx1
@@ -328,8 +342,8 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
         elif op == "rlineto":
             # |- {dxa dya}+ rlineto (5) |-
             for _ in range(len(stack)//2):
-                x_abs += stack.pop(0) # dxa
-                y_abs += stack.pop(0) # dya
+                x_abs += stack.pop(0)  # dxa
+                y_abs += stack.pop(0)  # dya
                 point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
@@ -341,26 +355,26 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             # |- {dxa dyb}+ hlineto (6) |-
             debug_print(op)
             if len(stack) % 2 == 1:
-                x_abs += stack.pop(0) # dx1
+                x_abs += stack.pop(0)  # dx1
                 point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
                 for _ in range(len(stack)//2):
-                    y_abs += stack.pop(0) # dya
+                    y_abs += stack.pop(0)  # dya
                     point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
-                    x_abs += stack.pop(0) # dxb
+                    x_abs += stack.pop(0)  # dxb
                     point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
             else:
                 for _ in range(len(stack)//2):
-                    x_abs += stack.pop(0) # dxa
+                    x_abs += stack.pop(0)  # dxa
                     point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
-                    y_abs += stack.pop(0) # dyb
+                    y_abs += stack.pop(0)  # dyb
                     point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
@@ -370,26 +384,26 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             # |- {dya dxb}+ vlineto (7) |-
             debug_print(op)
             if len(stack) % 2 == 1:
-                y_abs += stack.pop(0) # dy1
+                y_abs += stack.pop(0)  # dy1
                 point_path(x_abs, y_abs)
                 y_min = min(y_abs, y_min)
                 y_max = max(y_abs, y_max)
                 for _ in range(len(stack)//2):
-                    x_abs += stack.pop(0) # dxa
+                    x_abs += stack.pop(0)  # dxa
                     point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
-                    y_abs += stack.pop(0) # dyb
+                    y_abs += stack.pop(0)  # dyb
                     point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
             else:
                 for _ in range(len(stack)//2):
-                    y_abs += stack.pop(0) # dya
+                    y_abs += stack.pop(0)  # dya
                     point_path(x_abs, y_abs)
                     y_min = min(y_abs, y_min)
                     y_max = max(y_abs, y_max)
-                    x_abs += stack.pop(0) # dxb
+                    x_abs += stack.pop(0)  # dxb
                     point_path(x_abs, y_abs)
                     x_min = min(x_abs, x_min)
                     x_max = max(x_abs, x_max)
@@ -400,16 +414,16 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             for _ in range(len(stack)//6):
                 x0 = x_abs
                 y0 = y_abs
-                x_abs += stack.pop(0) # dxa
-                y_abs += stack.pop(0) # dya
+                x_abs += stack.pop(0)  # dxa
+                y_abs += stack.pop(0)  # dya
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dxb
-                y_abs += stack.pop(0) # dyb
+                x_abs += stack.pop(0)  # dxb
+                y_abs += stack.pop(0)  # dyb
                 x2 = x_abs
                 y2 = y_abs
-                x_abs += stack.pop(0) # dxc
-                y_abs += stack.pop(0) # dyc
+                x_abs += stack.pop(0)  # dxc
+                y_abs += stack.pop(0)  # dyc
                 x3 = x_abs
                 y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -425,16 +439,16 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             x0 = x_abs
             y0 = y_abs
             if len(stack) % 4 >= 1:
-                y_abs += stack.pop(0) # dy1
+                y_abs += stack.pop(0)  # dy1
             for _ in range(len(stack)//4):
-                x_abs += stack.pop(0) # dxa
+                x_abs += stack.pop(0)  # dxa
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dxb
-                y_abs += stack.pop(0) # dyb
+                x_abs += stack.pop(0)  # dxb
+                y_abs += stack.pop(0)  # dyb
                 x2 = x_abs
                 y2 = y_abs
-                x_abs += stack.pop(0) # dxc
+                x_abs += stack.pop(0)  # dxc
                 x3 = x_abs
                 y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -447,20 +461,21 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                 y0 = y_abs
             stack.clear()
         elif op == "hvcurveto":
-            # |- dx1 dx2 dy2 dy3 {dya dxb dyb dxc dxd dxe dye dyf}* dxf? hvcurveto (31) |-
+            # |- dx1 dx2 dy2 dy3 {dya dxb dyb dxc dxd dxe dye dyf}* dxf?
+            #     hvcurveto (31) |-
             # |- {dxa dxb dyb dyc dyd dxe dye dxf}+ dyf? hvcurveto (31) |-
             debug_print("op {}, stacks {}".format(op, len(stack)))
             if len(stack) % 8 >= 4:
                 x0 = x_abs
                 y0 = y_abs
-                x_abs += stack.pop(0) # dx1
+                x_abs += stack.pop(0)  # dx1
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dx2
-                y_abs += stack.pop(0) # dy2
+                x_abs += stack.pop(0)  # dx2
+                y_abs += stack.pop(0)  # dy2
                 x2 = x_abs
                 y2 = y_abs
-                y_abs += stack.pop(0) # dy3
+                y_abs += stack.pop(0)  # dy3
                 x3 = x_abs
                 y3 = y_abs
                 for _ in range(len(stack)//8):
@@ -472,14 +487,14 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    y_abs += stack.pop(0) # dya
+                    y_abs += stack.pop(0)  # dya
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxb
-                    y_abs += stack.pop(0) # dyb
+                    x_abs += stack.pop(0)  # dxb
+                    y_abs += stack.pop(0)  # dyb
                     x2 = x_abs
                     y2 = y_abs
-                    x_abs += stack.pop(0) # dxc
+                    x_abs += stack.pop(0)  # dxc
                     x3 = x_abs
                     y3 = y_abs
                     x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -490,18 +505,18 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    x_abs += stack.pop(0) # dxd
+                    x_abs += stack.pop(0)  # dxd
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxe
-                    y_abs += stack.pop(0) # dye
+                    x_abs += stack.pop(0)  # dxe
+                    y_abs += stack.pop(0)  # dye
                     x2 = x_abs
                     y2 = y_abs
-                    y_abs += stack.pop(0) # dyf
+                    y_abs += stack.pop(0)  # dyf
                     x3 = x_abs
                     y3 = y_abs
                 if len(stack) > 0:
-                    x_abs += stack.pop(0) # dxf
+                    x_abs += stack.pop(0)  # dxf
                     x3 = x_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
                     calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3)
@@ -521,14 +536,14 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                         y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    x_abs += stack.pop(0) # dxa
+                    x_abs += stack.pop(0)  # dxa
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxb
-                    y_abs += stack.pop(0) # dyb
+                    x_abs += stack.pop(0)  # dxb
+                    y_abs += stack.pop(0)  # dyb
                     x2 = x_abs
                     y2 = y_abs
-                    y_abs += stack.pop(0) # dyc
+                    y_abs += stack.pop(0)  # dyc
                     x3 = x_abs
                     y3 = y_abs
                     x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -539,19 +554,19 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    y_abs += stack.pop(0) # dyd
+                    y_abs += stack.pop(0)  # dyd
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxe
-                    y_abs += stack.pop(0) # dye
+                    x_abs += stack.pop(0)  # dxe
+                    y_abs += stack.pop(0)  # dye
                     x2 = x_abs
                     y2 = y_abs
-                    x_abs += stack.pop(0) # dxf
+                    x_abs += stack.pop(0)  # dxf
                     x3 = x_abs
                     y3 = y_abs
                     b_before = True
                 if len(stack) > 0:
-                    y_abs += stack.pop(0) # dyf
+                    y_abs += stack.pop(0)  # dyf
                     y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
                     calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3)
@@ -566,16 +581,16 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             for _ in range((len(stack)-2)//6):
                 x0 = x_abs
                 y0 = y_abs
-                x_abs += stack.pop(0) # dxa
-                y_abs += stack.pop(0) # dya
+                x_abs += stack.pop(0)  # dxa
+                y_abs += stack.pop(0)  # dya
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dxb
-                y_abs += stack.pop(0) # dyb
+                x_abs += stack.pop(0)  # dxb
+                y_abs += stack.pop(0)  # dyb
                 x2 = x_abs
                 y2 = y_abs
-                x_abs += stack.pop(0) # dxc
-                y_abs += stack.pop(0) # dyc
+                x_abs += stack.pop(0)  # dxc
+                y_abs += stack.pop(0)  # dyc
                 x3 = x_abs
                 y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -584,8 +599,8 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                 x_max = max(x_c_max, x_max)
                 y_min = min(y_c_min, y_min)
                 y_max = max(y_c_max, y_max)
-            x_abs += stack.pop(0) # dxd
-            y_abs += stack.pop(0) # dyd
+            x_abs += stack.pop(0)  # dxd
+            y_abs += stack.pop(0)  # dyd
             point_path(x_abs, y_abs)
             x_min = min(x_abs, x_min)
             x_max = max(x_abs, x_max)
@@ -596,8 +611,8 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             # |- {dxa dya}+ dxb dyb dxc dyc dxd dyd rlinecurve (25) |-
             debug_print(op)
             for _ in range((len(stack)-6)//2):
-                x_abs += stack.pop(0) # dxa
-                y_abs += stack.pop(0) # dya
+                x_abs += stack.pop(0)  # dxa
+                y_abs += stack.pop(0)  # dya
                 point_path(x_abs, y_abs)
                 x_min = min(x_abs, x_min)
                 x_max = max(x_abs, x_max)
@@ -605,16 +620,16 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                 y_max = max(y_abs, y_max)
             x0 = x_abs
             y0 = y_abs
-            x_abs += stack.pop(0) # dxb
-            y_abs += stack.pop(0) # dyb
+            x_abs += stack.pop(0)  # dxb
+            y_abs += stack.pop(0)  # dyb
             x1 = x_abs
             y1 = y_abs
-            x_abs += stack.pop(0) # dxc
-            y_abs += stack.pop(0) # dyc
+            x_abs += stack.pop(0)  # dxc
+            y_abs += stack.pop(0)  # dyc
             x2 = x_abs
             y2 = y_abs
-            x_abs += stack.pop(0) # dxd
-            y_abs += stack.pop(0) # dyd
+            x_abs += stack.pop(0)  # dxd
+            y_abs += stack.pop(0)  # dyd
             x3 = x_abs
             y3 = y_abs
             x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -625,20 +640,21 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             y_max = max(y_c_max, y_max)
             stack.clear()
         elif op == "vhcurveto":
-            # |- dy1 dx2 dy2 dx3 {dxa dxb dyb dyc dyd dxe dye dxf}* dyf? vhcurveto (30) |-
+            # |- dy1 dx2 dy2 dx3 {dxa dxb dyb dyc dyd dxe dye dxf}* dyf?
+            #     vhcurveto (30) |-
             # |- {dya dxb dyb dxc dxd dxe dye dyf}* dxf? vhcurveto (30) |-
             debug_print(op)
             if len(stack) % 8 >= 4:
                 x0 = x_abs
                 y0 = y_abs
-                y_abs += stack.pop(0) # dy1
+                y_abs += stack.pop(0)  # dy1
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dx2
-                y_abs += stack.pop(0) # dy2
+                x_abs += stack.pop(0)  # dx2
+                y_abs += stack.pop(0)  # dy2
                 x2 = x_abs
                 y2 = y_abs
-                x_abs += stack.pop(0) # dx3
+                x_abs += stack.pop(0)  # dx3
                 x3 = x_abs
                 y3 = y_abs
                 for _ in range(len(stack)//8):
@@ -650,14 +666,14 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    x_abs += stack.pop(0) # dxa
+                    x_abs += stack.pop(0)  # dxa
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxb
-                    y_abs += stack.pop(0) # dyb
+                    x_abs += stack.pop(0)  # dxb
+                    y_abs += stack.pop(0)  # dyb
                     x2 = x_abs
                     y2 = y_abs
-                    y_abs += stack.pop(0) # dyc
+                    y_abs += stack.pop(0)  # dyc
                     x3 = x_abs
                     y3 = y_abs
                     x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -668,18 +684,18 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    y_abs += stack.pop(0) # dyd
+                    y_abs += stack.pop(0)  # dyd
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxe
-                    y_abs += stack.pop(0) # dye
+                    x_abs += stack.pop(0)  # dxe
+                    y_abs += stack.pop(0)  # dye
                     x2 = x_abs
                     y2 = y_abs
-                    x_abs += stack.pop(0) # dxf
+                    x_abs += stack.pop(0)  # dxf
                     x3 = x_abs
                     y3 = y_abs
                 if len(stack) > 0:
-                    y_abs += stack.pop(0) # dyf
+                    y_abs += stack.pop(0)  # dyf
                     y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
                     calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3)
@@ -699,14 +715,14 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                         y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    y_abs += stack.pop(0) # dya
+                    y_abs += stack.pop(0)  # dya
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxb
-                    y_abs += stack.pop(0) # dyb
+                    x_abs += stack.pop(0)  # dxb
+                    y_abs += stack.pop(0)  # dyb
                     x2 = x_abs
                     y2 = y_abs
-                    x_abs += stack.pop(0) # dxc
+                    x_abs += stack.pop(0)  # dxc
                     x3 = x_abs
                     y3 = y_abs
                     x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -717,19 +733,19 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                     y_max = max(y_c_max, y_max)
                     x0 = x_abs
                     y0 = y_abs
-                    x_abs += stack.pop(0) # dxd
+                    x_abs += stack.pop(0)  # dxd
                     x1 = x_abs
                     y1 = y_abs
-                    x_abs += stack.pop(0) # dxe
-                    y_abs += stack.pop(0) # dye
+                    x_abs += stack.pop(0)  # dxe
+                    y_abs += stack.pop(0)  # dye
                     x2 = x_abs
                     y2 = y_abs
-                    y_abs += stack.pop(0) # dyf
+                    y_abs += stack.pop(0)  # dyf
                     x3 = x_abs
                     y3 = y_abs
                     b_before = True
                 if len(stack) > 0:
-                    x_abs += stack.pop(0) # dxf
+                    x_abs += stack.pop(0)  # dxf
                     x3 = x_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
                     calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3)
@@ -744,16 +760,16 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             x0 = x_abs
             y0 = y_abs
             if len(stack) % 4 >= 1:
-                x_abs += stack.pop(0) # dx1
+                x_abs += stack.pop(0)  # dx1
             for _ in range(len(stack)//4):
-                y_abs += stack.pop(0) # dya
+                y_abs += stack.pop(0)  # dya
                 x1 = x_abs
                 y1 = y_abs
-                x_abs += stack.pop(0) # dxb
-                y_abs += stack.pop(0) # dyb
+                x_abs += stack.pop(0)  # dxb
+                y_abs += stack.pop(0)  # dyb
                 x2 = x_abs
                 y2 = y_abs
-                y_abs += stack.pop(0) # dyc
+                y_abs += stack.pop(0)  # dyc
                 x3 = x_abs
                 y3 = y_abs
                 x_c_min, y_c_min, x_c_max, y_c_max = \
@@ -766,11 +782,11 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
                 y0 = y_abs
             stack.clear()
         # elif op == "flex":
-        #     # |- flex |- 
-        elif op == "endchar": # endchar (14) |-
+        #     # |- flex |-
+        elif op == "endchar":  # endchar (14) |-
             debug_print(op)
             if is_first and len(stack) > 0:
-                _ = stack.pop(0) # w
+                _ = stack.pop(0)  # w
                 is_first = False
             point_end()
             stack.clear()
@@ -780,26 +796,26 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             # |- y dy {dya dyb}* hstemhm (18) |-
             debug_print(op)
             if is_first and len(stack) % 2 == 1:
-                _ = stack.pop(0) # w
+                _ = stack.pop(0)  # w
                 is_first = False
-            _ = stack.pop(0) # y
-            _ = stack.pop(0) # dy
+            _ = stack.pop(0)  # y
+            _ = stack.pop(0)  # dy
             for _ in range(len(stack)//2):
-                _ = stack.pop(0) # dya
-                _ = stack.pop(0) # dyb
+                _ = stack.pop(0)  # dya
+                _ = stack.pop(0)  # dyb
             stack.clear()
         elif op == "vstem" or op == "vstemhm":
             # |- x dx {dxa dxb}* vstem (3) |-
             # |- x dx {dxa dxb}* vstem (23) |-
             debug_print(op)
             if is_first and len(stack) % 2 == 1:
-                _ = stack.pop(0) # w
+                _ = stack.pop(0)  # w
                 is_first = False
-            _ = stack.pop(0) # x
-            _ = stack.pop(0) # dx
+            _ = stack.pop(0)  # x
+            _ = stack.pop(0)  # dx
             for _ in range(len(stack)//2):
-                _ = stack.pop(0) # dxa
-                _ = stack.pop(0) # dxb
+                _ = stack.pop(0)  # dxa
+                _ = stack.pop(0)  # dxb
             stack.clear()
         elif op == "hintmask" or op == "cntrmask":
             # |- hintmask (19 + mask) |-
@@ -807,7 +823,7 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             debug_print(op)
             if len(stack) > 0:
                 if is_first and len(stack) % 2 == 1:
-                    _ = stack.pop(0) # w
+                    _ = stack.pop(0)  # w
                     is_first = False
                 _ = stack.pop(0)
                 _ = stack.pop(0)
@@ -828,6 +844,7 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             raise Exception("unknown operator {}".format(op))
     return x_min, y_min, x_max, y_max
 
+
 def calc_curvebox(x0: float, y0: float,
                   x1: float, y1: float,
                   x2: float, y2: float,
@@ -836,14 +853,14 @@ def calc_curvebox(x0: float, y0: float,
     x_candidate: list[float] = [float(x0), float(x3)]
     y_candidate: list[float] = [float(y0), float(y3)]
 
-    a = - 3.0*x0 + 9.0*x1 - 9.0*x2 + 3.0*x3
-    b =   6.0*x0 -12.0*x1 + 6.0*x2
-    c = - 3.0*x0 + 3.0*x1
+    a: float = - 3.0 * x0 + 9.0 * x1 - 9.0 * x2 + 3.0 * x3
+    b: float = 6.0 * x0 - 12.0 * x1 + 6.0 * x2
+    c: float = - 3.0 * x0 + 3.0 * x1
     t_candidate: list[float] = solve_equation_real(a, b, c)
 
-    a = - 3.0*y0 + 9.0*y1 - 9.0*y2 + 3.0*y3
-    b =   6.0*y0 -12.0*y1 + 6.0*y2
-    c = - 3.0*y0 + 3.0*y1
+    a = - 3.0 * y0 + 9.0 * y1 - 9.0 * y2 + 3.0 * y3
+    b = 6.0 * y0 - 12.0 * y1 + 6.0 * y2
+    c = - 3.0 * y0 + 3.0 * y1
     t_candidate += solve_equation_real(a, b, c)
 
     debug_print("cacl_curvebox")
@@ -869,11 +886,12 @@ def calc_curvebox(x0: float, y0: float,
     draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3)
     return x_min, y_min, x_max, y_max
 
+
 def solve_equation_real(a: float, b: float, c: float) -> list[float]:
     r: list[float] = []
     debug_print("solve with a={}, b={}, c={}".format(a, b, c))
     if a != 0.0:
-        d=b*b-4.0*a*c
+        d = b * b - 4.0 * a * c
         debug_print("  quadratic equation. D={}".format(d))
         if d < 0.0:
             debug_print("  complex roots. no candidate.")
@@ -894,20 +912,24 @@ def solve_equation_real(a: float, b: float, c: float) -> list[float]:
         debug_print("  root = {}".format(r))
     return r
 
+
 def bezier(t: float,
            x0: float, y0: float,
            x1: float, y1: float,
            x2: float, y2: float,
            x3: float, y3: float) -> tuple[float, float]:
-    x: float =  (-1.0*x0 + 3.0*x1 - 3.0*x2 + 1.0*x3) *t*t*t \
-        +( 3.0*x0 - 6.0*x1 + 3.0*x2) *t*t \
-        +(-3.0*x0 + 3.0*x1) *t \
-        +  1.0*x0
-    y: float =  (-1.0*y0 + 3.0*y1 - 3.0*y2 + 1.0*y3) *t*t*t \
-        +( 3.0*y0 - 6.0*y1 + 3.0*y2) *t*t \
-        +(-3.0*y0 + 3.0*y1) *t \
-        +  1.0*y0
+    x: float = \
+        (-1.0 * x0 + 3.0 * x1 - 3.0 * x2 + 1.0 * x3) * t * t * t \
+        + (3.0 * x0 - 6.0 * x1 + 3.0 * x2) * t * t \
+        + (-3.0 * x0 + 3.0 * x1) * t \
+        + 1.0 * x0
+    y: float = \
+        (-1.0 * y0 + 3.0 * y1 - 3.0 * y2 + 1.0 * y3) * t * t * t \
+        + (3.0 * y0 - 6.0 * y1 + 3.0 * y2) * t * t \
+        + (-3.0 * y0 + 3.0 * y1) * t \
+        + 1.0 * y0
     return x, y
+
 
 def load_calcTable(file: str) -> list[str]:
     table: list[str] = []
@@ -963,7 +985,7 @@ def main() -> None:
             x_max: float
             y_max: float
             x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
-            print("{}\t{}\t{}\t{}\t{}". \
+            print("{}\t{}\t{}\t{}\t{}".
                   format(name, x_min, y_min, x_max, y_max))
             if debug_mode:
                 draw_letter_face(x_min, y_min, x_max, y_max)
