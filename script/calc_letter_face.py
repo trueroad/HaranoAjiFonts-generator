@@ -50,10 +50,11 @@ import copy
 import math
 import re
 import sys
-from typing import cast, Final, TextIO, Union
+from typing import cast, Any, Final, TextIO, Union
 import xml.etree.ElementTree as ET
 
 debug_mode: bool = False
+tkinter: Any
 
 if debug_mode:
     import tkinter
@@ -109,7 +110,7 @@ def get_LocalSubr(fd: int, index: int) -> str:
 
 
 # for debug
-canvas: tkinter.Canvas
+canvas: Any
 debug_before: bool = False
 debug_before_x: float = 0.0
 debug_before_y: float = 0.0
