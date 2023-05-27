@@ -7,7 +7,7 @@
 #   calc letter face of the CFF glyph.
 #
 # Copyright (C) 2020 Yukimasa Morimi.
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2023 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -47,35 +47,41 @@ import copy
 import math
 import re
 import sys
+from typing import cast, Final, TextIO, Union
 import xml.etree.ElementTree as ET
 
-debug_mode = False
+debug_mode: bool = False
 
 if debug_mode:
     import tkinter
 
-FDArray = []
-GlobalSubrs = []
+FDArray: list[dict[str, Union[str, list[str]]]] = []
+GlobalSubrs: list[str] = []
 
 # load GlobalSubrs
-def load_GlobalSubrs(root):
+def load_GlobalSubrs(root: ET.Element) -> None:
+    cs: ET.Element
     for cs in root.findall("./CFF/GlobalSubrs/CharString"):
-        GlobalSubrs.append(cs.text)
+        if cs.text is not None:
+            GlobalSubrs.append(cs.text)
 
 # load FDArray
-def load_FDArray(root):
+def load_FDArray(root: ET.Element) -> None:
+    fd: ET.Element
     for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
-        FontDict = {}
+        FontDict: dict[str, Union[str, list[str]]] = {}
+        cs: ET.Element
         for cs in fd.findall("./Private/*"):
             if "value" in cs.attrib:
                 FontDict[cs.tag] = cs.attrib["value"]
-        Subrs = []
+        Subrs: list[str] = []
         for cs in fd.findall("./Private/Subrs/CharString"):
-            Subrs.append(cs.text)
+            if cs.text is not None:
+                Subrs.append(cs.text)
         FontDict["Subrs"] = Subrs
         FDArray.append(FontDict)
 
-def get_GlobalSubr(index):
+def get_GlobalSubr(index: int) -> str:
     if len(GlobalSubrs) < 1240:
         return GlobalSubrs[index + 107]
     elif len(GlobalSubrs) < 33900:
@@ -83,8 +89,8 @@ def get_GlobalSubr(index):
     else:
         return GlobalSubrs[index + 32768]
 
-def get_LocalSubr(fd, index):
-    Subrs = FDArray[fd]["Subrs"]
+def get_LocalSubr(fd: int, index: int) -> str:
+    Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
     if len(Subrs) < 1240:
         return Subrs[index + 107]
     elif len(Subrs) < 33900:
@@ -93,25 +99,24 @@ def get_LocalSubr(fd, index):
         return Subrs[index + 32768]
 
 # for debug
-window = 0
-canvas = 0
-debug_before = False
-debug_before_x = 0
-debug_before_y = 0
-debug_first = False
-debug_first_x = 0
-debug_first_y = 0
-DEBUG_R = 3
-DEBUG_XS = 0.5
-DEBUG_YS = -0.5
-DEBUG_XA = 100
-DEBUG_YA = 540
+canvas: tkinter.Canvas
+debug_before: bool = False
+debug_before_x: float = 0.0
+debug_before_y: float = 0.0
+debug_first: bool = False
+debug_first_x: float = 0.0
+debug_first_y: float = 0.0
+DEBUG_R: Final[float] = 3.0
+DEBUG_XS: Final[float] = 0.5
+DEBUG_YS: Final[float] = -0.5
+DEBUG_XA: Final[float] = 100.0
+DEBUG_YA: Final[float] = 540.0
 
-def debug_print(msg):
+def debug_print(msg: str) -> None:
     if debug_mode:
         print("# " + msg)
 
-def draw_box():
+def draw_box() -> None:
     if not debug_mode:
         return
 
@@ -124,7 +129,8 @@ def draw_box():
                        1000 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
                        fill='white')
 
-def draw_letter_face(x_min, y_min, x_max, y_max):
+def draw_letter_face(x_min: float, y_min: float,
+                     x_max: float, y_max: float) -> None:
     if not debug_mode:
         return
 
@@ -134,7 +140,10 @@ def draw_letter_face(x_min, y_min, x_max, y_max):
                             y_max * DEBUG_YS + DEBUG_YA,
                             outline='green', dash=(2, 2))
 
-def draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3):
+def draw_bezier(x0: float, y0: float,
+                x1: float, y1: float,
+                x2: float, y2: float,
+                x3: float, y3: float) -> None:
     if not debug_mode:
         return
 
@@ -164,8 +173,11 @@ def draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3):
     debug_before_x=x0
     debug_before_y=y0
 
+    i: int
     for i in range(1, 99):
-        t = i / 100
+        t: float = i / 100
+        x: float
+        y: float
         x, y = bezier(t, x0, y0, x1, y1, x2, y2, x3, y3)
         canvas.create_line(debug_before_x * DEBUG_XS + DEBUG_XA,
                            debug_before_y * DEBUG_YS + DEBUG_YA,
@@ -176,7 +188,7 @@ def draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3):
 
     point_path(x3, y3)
 
-def point_end():
+def point_end() -> None:
     if not debug_mode:
         return
 
@@ -195,13 +207,13 @@ def point_end():
                            debug_first_y * DEBUG_YS + DEBUG_YA)
 
     debug_before = False
-    debug_before_x = 0
-    debug_before_y = 0
+    debug_before_x = 0.0
+    debug_before_y = 0.0
     debug_first = False
-    debug_first_x = 0
-    debug_first_y = 0
+    debug_first_x = 0.0
+    debug_first_y = 0.0
 
-def point_path(x, y):
+def point_path(x: float, y: float) -> None:
     if not debug_mode:
         return
 
@@ -232,7 +244,7 @@ def point_path(x, y):
 
     debug_print("path ({}, {})".format(x, y))
 
-def point_move(x, y):
+def point_move(x: float, y: float) -> None:
     if not debug_mode:
         return
 
@@ -247,25 +259,30 @@ def point_move(x, y):
     debug_first_x = x
     debug_first_y = y
 
-re_isInt = re.compile(r"^-?\d+$")
-re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
+re_isInt: re.Pattern[str] = re.compile(r"^-?\d+$")
+re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
 
-def calc_CharString(cs, fd):
-    stack = []
-    list_stack = []
-    curr_list = cs.split()
-    is_first = True
-    is_first_move = True
+def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
+    stack: list[float] = []
+    list_stack: list[list[str]] = []
+    curr_list: list[str] = cs.split()
+    is_first: bool = True
+    is_first_move: bool = True
+    b_before: bool
 
-    x_abs = 0
-    y_abs = 0
-    x_min = 0
-    y_min = 0
-    x_max = 0
-    y_max = 0
+    x_abs: float = 0.0
+    y_abs: float = 0.0
+    x_min: float = 0.0
+    y_min: float = 0.0
+    x_max: float = 0.0
+    y_max: float = 0.0
+    x_c_min: float
+    y_c_min: float
+    x_c_max: float
+    y_c_max: float
 
     while len(curr_list) > 0:
-        op = curr_list.pop(0)
+        op: str = curr_list.pop(0)
         if re_isInt.match(op) is not None:
             stack.append(int(op))
         elif re_isFloat.match(op) is not None:
@@ -275,8 +292,8 @@ def calc_CharString(cs, fd):
             # |- dx1 hmoveto (22) |-
             # |- dy1 vmoveto (4) |-
             debug_print(op)
-            dx1 = 0
-            dy1 = 0
+            dx1: float = 0.0
+            dy1: float = 0.0
             if op == "rmoveto":
                 if is_first and len(stack) > 2:
                     _ = stack.pop(0) # w
@@ -801,24 +818,28 @@ def calc_CharString(cs, fd):
             stack.clear()
         elif op == "callsubr":
             list_stack.append(curr_list)
-            curr_list = get_LocalSubr(fd, stack.pop()).split()
+            curr_list = get_LocalSubr(fd, int(stack.pop())).split()
         elif op == "callgsubr":
             list_stack.append(curr_list)
-            curr_list = get_GlobalSubr(stack.pop()).split()
+            curr_list = get_GlobalSubr(int(stack.pop())).split()
         elif op == "return":
             curr_list = list_stack.pop()
         else:
             raise Exception("unknown operator {}".format(op))
     return x_min, y_min, x_max, y_max
 
-def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
-    x_candidate = [float(x0), float(x3)]
-    y_candidate = [float(y0), float(y3)]
+def calc_curvebox(x0: float, y0: float,
+                  x1: float, y1: float,
+                  x2: float, y2: float,
+                  x3: float, y3: float
+                  ) -> tuple[float, float, float, float]:
+    x_candidate: list[float] = [float(x0), float(x3)]
+    y_candidate: list[float] = [float(y0), float(y3)]
 
     a = - 3.0*x0 + 9.0*x1 - 9.0*x2 + 3.0*x3
     b =   6.0*x0 -12.0*x1 + 6.0*x2
     c = - 3.0*x0 + 3.0*x1
-    t_candidate = solve_equation_real(a, b, c)
+    t_candidate: list[float] = solve_equation_real(a, b, c)
 
     a = - 3.0*y0 + 9.0*y1 - 9.0*y2 + 3.0*y3
     b =   6.0*y0 -12.0*y1 + 6.0*y2
@@ -829,6 +850,7 @@ def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
     debug_print("  0-candidate ({}, {})".format(x0, y0))
     debug_print("  3-candidate ({}, {})".format(x3, y3))
 
+    t: float
     for t in t_candidate:
         if 0.0 <= t and t <= 1.0:
             x, y = bezier(t, x0, y0, x1, y1, x2, y2, x3, y3)
@@ -847,8 +869,8 @@ def calc_curvebox(x0, y0, x1, y1, x2, y2, x3, y3):
     draw_bezier(x0, y0, x1, y1, x2, y2, x3, y3)
     return x_min, y_min, x_max, y_max
 
-def solve_equation_real(a, b, c):
-    r = []
+def solve_equation_real(a: float, b: float, c: float) -> list[float]:
+    r: list[float] = []
     debug_print("solve with a={}, b={}, c={}".format(a, b, c))
     if a != 0.0:
         d=b*b-4.0*a*c
@@ -872,26 +894,32 @@ def solve_equation_real(a, b, c):
         debug_print("  root = {}".format(r))
     return r
 
-def bezier(t, x0, y0, x1, y1, x2, y2, x3, y3):
-    x =  (-1.0*x0 + 3.0*x1 - 3.0*x2 + 1.0*x3) *t*t*t \
+def bezier(t: float,
+           x0: float, y0: float,
+           x1: float, y1: float,
+           x2: float, y2: float,
+           x3: float, y3: float) -> tuple[float, float]:
+    x: float =  (-1.0*x0 + 3.0*x1 - 3.0*x2 + 1.0*x3) *t*t*t \
         +( 3.0*x0 - 6.0*x1 + 3.0*x2) *t*t \
         +(-3.0*x0 + 3.0*x1) *t \
         +  1.0*x0
-    y =  (-1.0*y0 + 3.0*y1 - 3.0*y2 + 1.0*y3) *t*t*t \
+    y: float =  (-1.0*y0 + 3.0*y1 - 3.0*y2 + 1.0*y3) *t*t*t \
         +( 3.0*y0 - 6.0*y1 + 3.0*y2) *t*t \
         +(-3.0*y0 + 3.0*y1) *t \
         +  1.0*y0
     return x, y
 
-def load_calcTable(file):
-    table = []
+def load_calcTable(file: str) -> list[str]:
+    table: list[str] = []
+    f: TextIO
     with open(file, "r") as f:
+        line: str
         for line in f:
             if line.startswith("#"):
                 continue
-            items = line.split()
-            name0 = items[0]
-            name = items[1]
+            items: list[str] = line.split()
+            name0: str = items[0]
+            name: str = items[1]
             if re_isInt.match(name) is not None:
                 name = name0
             table.append(name)
@@ -906,28 +934,34 @@ def main() -> None:
         print("Usage: calc_letter_face.py calc.tbl CFF.ttx > letter_face.tbl")
         exit(1)
 
-    calc_filename = sys.argv[1]
-    source_filename = sys.argv[2]
+    calc_filename: str = sys.argv[1]
+    source_filename: str = sys.argv[2]
 
-    table = load_calcTable(calc_filename)
+    table: list[str] = load_calcTable(calc_filename)
 
-    tree = ET.parse(source_filename)
-    root = tree.getroot()
+    tree: ET.ElementTree = ET.parse(source_filename)
+    root: ET.Element = tree.getroot()
 
     load_FDArray(root)
     load_GlobalSubrs(root)
 
     print("# name x_min y_min x_max y_max")
 
+    cs: ET.Element
     for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
-        name = cs.attrib["name"]
-        if name in table:
-            fd = int(cs.attrib["fdSelectIndex"])
+        name: str = cs.attrib["name"]
+        if name in table and cs.text is not None:
+            fd: int = int(cs.attrib["fdSelectIndex"])
             if debug_mode:
-                window = tkinter.Tk()
+                window: tkinter.Tk = tkinter.Tk()
+                global canvas
                 canvas = tkinter.Canvas(window, width=700, height=700)
                 canvas.pack()
                 draw_box()
+            x_min: float
+            y_min: float
+            x_max: float
+            y_max: float
             x_min, y_min, x_max, y_max = calc_CharString(cs.text, fd)
             print("{}\t{}\t{}\t{}\t{}". \
                   format(name, x_min, y_min, x_max, y_max))
