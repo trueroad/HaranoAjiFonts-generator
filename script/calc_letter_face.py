@@ -61,16 +61,16 @@ FDArray: list[dict[str, Union[str, list[str]]]] = []
 GlobalSubrs: list[str] = []
 
 
-# load GlobalSubrs
 def load_GlobalSubrs(root: ET.Element) -> None:
+    """Load GlobalSubrs."""
     cs: ET.Element
     for cs in root.findall("./CFF/GlobalSubrs/CharString"):
         if cs.text is not None:
             GlobalSubrs.append(cs.text)
 
 
-# load FDArray
 def load_FDArray(root: ET.Element) -> None:
+    """Load FDArray."""
     fd: ET.Element
     for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
         FontDict: dict[str, Union[str, list[str]]] = {}
@@ -87,6 +87,7 @@ def load_FDArray(root: ET.Element) -> None:
 
 
 def get_GlobalSubr(index: int) -> str:
+    """Get GlobalSubr."""
     if len(GlobalSubrs) < 1240:
         return GlobalSubrs[index + 107]
     elif len(GlobalSubrs) < 33900:
@@ -96,6 +97,7 @@ def get_GlobalSubr(index: int) -> str:
 
 
 def get_LocalSubr(fd: int, index: int) -> str:
+    """Get LocalSubr."""
     Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
     if len(Subrs) < 1240:
         return Subrs[index + 107]
@@ -121,19 +123,23 @@ DEBUG_YA: Final[float] = 540.0
 
 
 def debug_print(msg: str) -> None:
+    """Print debug string."""
     if debug_mode:
         print("# " + msg)
 
 
 def draw_box() -> None:
+    """Draw body box and baseline."""
     if not debug_mode:
         return
 
+    # Body
     canvas.create_rectangle(0 * DEBUG_XS + DEBUG_XA,
                             880 * DEBUG_YS + DEBUG_YA,
                             1000 * DEBUG_XS + DEBUG_XA,
                             -120 * DEBUG_YS + DEBUG_YA,
                             outline='white')
+    # Baseline
     canvas.create_line(0 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
                        1000 * DEBUG_XS + DEBUG_XA, 0 * DEBUG_YS + DEBUG_YA,
                        fill='white')
@@ -141,6 +147,7 @@ def draw_box() -> None:
 
 def draw_letter_face(x_min: float, y_min: float,
                      x_max: float, y_max: float) -> None:
+    """Draw letter face."""
     if not debug_mode:
         return
 
@@ -155,6 +162,7 @@ def draw_bezier(x0: float, y0: float,
                 x1: float, y1: float,
                 x2: float, y2: float,
                 x3: float, y3: float) -> None:
+    """Draw bezier curve."""
     if not debug_mode:
         return
 
@@ -201,6 +209,7 @@ def draw_bezier(x0: float, y0: float,
 
 
 def point_end() -> None:
+    """Point end."""
     if not debug_mode:
         return
 
@@ -227,6 +236,7 @@ def point_end() -> None:
 
 
 def point_path(x: float, y: float) -> None:
+    """Point path."""
     if not debug_mode:
         return
 
@@ -259,6 +269,7 @@ def point_path(x: float, y: float) -> None:
 
 
 def point_move(x: float, y: float) -> None:
+    """Point move."""
     if not debug_mode:
         return
 
@@ -279,6 +290,7 @@ re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
 
 
 def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
+    """Calc CharString."""
     stack: list[float] = []
     list_stack: list[list[str]] = []
     curr_list: list[str] = cs.split()
@@ -852,6 +864,7 @@ def calc_curvebox(x0: float, y0: float,
                   x2: float, y2: float,
                   x3: float, y3: float
                   ) -> tuple[float, float, float, float]:
+    """Calc curvebox."""
     x_candidate: list[float] = [float(x0), float(x3)]
     y_candidate: list[float] = [float(y0), float(y3)]
 
@@ -890,6 +903,7 @@ def calc_curvebox(x0: float, y0: float,
 
 
 def solve_equation_real(a: float, b: float, c: float) -> list[float]:
+    """Solve equation's real root."""
     r: list[float] = []
     debug_print("solve with a={}, b={}, c={}".format(a, b, c))
     if a != 0.0:
@@ -920,6 +934,7 @@ def bezier(t: float,
            x1: float, y1: float,
            x2: float, y2: float,
            x3: float, y3: float) -> tuple[float, float]:
+    """Calc bezier."""
     x: float = \
         (-1.0 * x0 + 3.0 * x1 - 3.0 * x2 + 1.0 * x3) * t * t * t \
         + (3.0 * x0 - 6.0 * x1 + 3.0 * x2) * t * t \
@@ -934,6 +949,7 @@ def bezier(t: float,
 
 
 def load_calcTable(file: str) -> list[str]:
+    """Load calc table."""
     table: list[str] = []
     f: TextIO
     with open(file, "r") as f:
