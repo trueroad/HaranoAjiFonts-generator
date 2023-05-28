@@ -36,14 +36,16 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-from typing import Set, List
+from typing import Set, List, TextIO
 import sys
 
 
 def load_table(file: str) -> Set[int]:
     """Load table for existing AJ1 CID."""
     s: Set[int] = set()
+    f: TextIO
     with open(file, "r") as f:
+        line: str
         for line in f:
             if line.startswith('#'):
                 continue
@@ -60,7 +62,9 @@ def load_table(file: str) -> Set[int]:
 def load_copy_and_rotate_table(file: str) -> Set[int]:
     """Load copy_and_rotate_table for existing AJ1 CID."""
     s: Set[int] = set()
+    f: TextIO
     with open(file, "r") as f:
+        line: str
         for line in f:
             if line.startswith("#"):
                 continue
@@ -90,9 +94,11 @@ def main() -> None:
         load_copy_and_rotate_table(copy_and_rotate)
 
     s_total: Set[int] = s_notdef | s_table | s_copy_and_rotate
+    cid: int
     for cid in sorted(s_total):
         print(cid)
 
+    i: int
     for i in (s_notdef & s_table):
         print(f'Duplicate: notdef & table: {i}',
               file=sys.stderr)
