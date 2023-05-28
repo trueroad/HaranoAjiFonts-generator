@@ -471,8 +471,22 @@ vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
+# Set vmtx height for pre-rotated glyphs
+ifeq ($(FONT_LANG),JP)
+vmtx03.ttx: height_pre_rotated.tbl vmtx02.ttx
+	@echo "setting vmtx height for pre-rotated glyphs..."
+	@$(SCRIPTDIR)/set_vmtx_height.py \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+vmtx03.ttx: vmtx02.ttx
+	@echo "skipping vmtx height for pre-rotated glyphs..."
+	@ln -s $< $@
+endif
+
 # Fix TSB in vmtx table
-vmtx.ttx: letter_face.tbl vmtx02.ttx
+vmtx.ttx: letter_face.tbl vmtx03.ttx
 	@echo "fixing TSB in vmtx table..."
 	@$(SCRIPTDIR)/fix_mtx.py \
 		$+ \
@@ -532,12 +546,26 @@ CFF02.ttx: copy_and_rotate_do.tbl CFF01.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Adjust CFF table
-CFF.ttx: adjust.tbl CFF02.ttx
+CFF03.ttx: adjust.tbl CFF02.ttx
 	@echo "adjusting CFF table..."
 	@$(SCRIPTDIR)/adjust.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
+
+# Pre-rotated glyphs in CFF table
+ifeq ($(FONT_LANG),JP)
+CFF.ttx: pre_rotated.tbl CFF03.ttx
+	@echo "pre-rotated glyphs in CFF table..."
+	@$(SCRIPTDIR)/copy_and_rotate.py \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+CFF.ttx: CFF03.ttx
+	@echo "skipping pre-rotated glyphs in CFF table..."
+	@ln -s $< $@
+endif
 
 
 ### Fix GSUB ###
@@ -871,7 +899,7 @@ adjust.tbl: adjust01.tbl shift.tbl adjust_pwid.tbl adjust_pwidvert.tbl
 	@cat $+ > $@
 
 # Make {h|v}mtx fixing table
-fix_mtx.tbl: adjust.tbl copy_and_rotate_do.tbl
+fix_mtx.tbl: adjust.tbl copy_and_rotate_do.tbl pre_rotated.tbl
 	@echo "making {h|v}mtx fixing table..."
 	@cat $+ > $@
 
@@ -880,6 +908,23 @@ letter_face.tbl: fix_mtx.tbl CFF.ttx
 	@echo \
 	"calculating letter face for fixing {h|v}mtx and GPOS conversion..."
 	@$(SCRIPTDIR)/calc_letter_face.py \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+
+### Pre-rotated ###
+
+# Make pre-rotated table
+pre_rotated.tbl: table.tbl copy_and_rotate_do.tbl
+	@echo "making pre-rotated table..."
+	@$(SCRIPTDIR)/make_pre_rotated_table.py \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+# Make pre-rotated height
+height_pre_rotated.tbl: pre_rotated.tbl hmtx03.ttx
+	@echo "making pre-rotated height..."
+	@$(SCRIPTDIR)/make_pre_rotated_height.py \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
