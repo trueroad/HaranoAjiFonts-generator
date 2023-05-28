@@ -17,13 +17,17 @@ for x in ${BUILDDIR}/HaranoAji*; do
     if [ -e ${AVAILABLE_TXT} ]; then
         AVAILABLE_TXT=/dev/null
     fi
+    PRE_ROTATED=${x}/pre_rotated.tbl
+    if [ ! -e ${PRE_ROTATED} ]; then
+        PRE_ROTATED=/dev/null
+    fi
     if [ -e ${AVAILABLE_LOG} ]; then
         ${SCRIPTDIR}/show_available_cids.py \
-                    ${x}/table.tbl ${x}/copy_and_rotate_do.tbl \
+                    ${x}/table.tbl ${x}/copy_and_rotate_do.tbl ${PRE_ROTATED} \
                     3>&1 1> ${AVAILABLE_TXT} 2>&3
     else
         ${SCRIPTDIR}/show_available_cids.py \
-                    ${x}/table.tbl ${x}/copy_and_rotate_do.tbl \
+                    ${x}/table.tbl ${x}/copy_and_rotate_do.tbl ${PRE_ROTATED} \
                     1> ${AVAILABLE_TXT} 2> ${AVAILABLE_LOG}
         cat ${AVAILABLE_LOG}
     fi

@@ -80,20 +80,23 @@ def load_copy_and_rotate_table(file: str) -> Set[int]:
 
 def main() -> None:
     """Do main."""
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print('Usage: show_available_cids.py'
-              + ' TABLE.TBL COPY_AND_ROTATE_DO.TBL')
+              + ' TABLE.TBL COPY_AND_ROTATE_DO.TBL PRE_ROTATED.TBL')
         sys.exit(1)
 
     table: str = sys.argv[1]
     copy_and_rotate: str = sys.argv[2]
+    pre_rotated: str = sys.argv[3]
 
     s_notdef: Set[int] = {0}
     s_table: Set[int] = load_table(table)
     s_copy_and_rotate: Set[int] = \
         load_copy_and_rotate_table(copy_and_rotate)
+    s_pre_rotated: Set[int] = \
+        load_copy_and_rotate_table(pre_rotated)
 
-    s_total: Set[int] = s_notdef | s_table | s_copy_and_rotate
+    s_total: Set[int] = s_notdef | s_table | s_copy_and_rotate | s_pre_rotated
     cid: int
     for cid in sorted(s_total):
         print(cid)
@@ -105,11 +108,21 @@ def main() -> None:
     for i in (s_notdef & s_copy_and_rotate):
         print(f'Duplicate: notdef & copy_and_rotate: {i}',
               file=sys.stderr)
+    for i in (s_notdef & s_pre_rotated):
+        print(f'Duplicate: notdef & pre_rotated: {i}',
+              file=sys.stderr)
     for i in (s_table & s_copy_and_rotate):
         print(f'Duplicate: table & copy_and_rotate: {i}',
               file=sys.stderr)
+    for i in (s_table & s_pre_rotated):
+        print(f'Duplicate: table & pre_rotated: {i}',
+              file=sys.stderr)
+    for i in (s_copy_and_rotate & s_pre_rotated):
+        print(f'Duplicate: copy_and_rotate & pre_rotated: {i}',
+              file=sys.stderr)
 
     print(f'conversion = {len(s_table)}, copy = {len(s_copy_and_rotate)}, '
+          f'pre-rotated = {len(s_pre_rotated)}, '
           f'.notdef = {len(s_notdef)}: total {len(s_total)}',
           file=sys.stderr)
 
