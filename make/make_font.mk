@@ -762,7 +762,7 @@ GSUB40.ttx: GSUB30.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
-GSUB.ttx: feature_vkna.tbl GSUB40.ttx
+GSUB41.ttx: feature_vkna.tbl GSUB40.ttx
 	@echo "adding GSUB vkna substitutes..."
 	@$(SCRIPTDIR)/add_gsub_single.py \
 		vkna \
@@ -770,11 +770,43 @@ GSUB.ttx: feature_vkna.tbl GSUB40.ttx
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
 else
-GSUB.ttx: GSUB20.ttx
+GSUB41.ttx: GSUB20.ttx
 	@echo \
 	"skipping language-specific GSUB substitution adding..."
 	@ln -s $< $@
 endif
+
+# Pre-rotated GSUB vert/vrt2 substitutes
+ifeq ($(FONT_LANG),JP)
+feature_vrt2.tbl: table.tbl pre_rotated.tbl
+	@echo "making pre-rotated GSUB vrt2 table..."
+	@$(BINDIR)/make_gsub_single_table \
+		vrt2 \
+		$+ \
+		$(FEATURE_GSUB_FEA) \
+		> $@ \
+		2> $(addsuffix .log,$(basename $@))
+
+GSUB50.ttx: GSUB41.ttx
+	@echo "dividing GSUB vert/vrt2 substitutes..."
+	@$(SCRIPTDIR)/divide_gsub_vrt2.py \
+		$< \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+
+GSUB.ttx: feature_vrt2.tbl GSUB50.ttx
+	@echo "adding pre-rotated GSUB vrt2 substitutes..."
+	@$(SCRIPTDIR)/add_gsub_single.py \
+		vrt2 \
+		$+ \
+		$@ \
+		> $(addsuffix .log,$(basename $@)) 2>&1
+else
+GSUB.ttx: GSUB41.ttx
+	@echo "skipping pre-rorated GSUB substitution adding..."
+	@ln -s $< $@
+endif
+
 
 ### palt to pwid ###
 
