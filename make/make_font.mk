@@ -554,18 +554,12 @@ CFF03.ttx: adjust.tbl CFF02.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Pre-rotated glyphs in CFF table
-ifeq ($(FONT_LANG),JP)
 CFF.ttx: pre_rotated.tbl CFF03.ttx
 	@echo "pre-rotated glyphs in CFF table..."
 	@$(SCRIPTDIR)/copy_and_rotate.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
-else
-CFF.ttx: CFF03.ttx
-	@echo "skipping pre-rotated glyphs in CFF table..."
-	@ln -s $< $@
-endif
 
 
 ### Fix GSUB ###
@@ -777,7 +771,6 @@ GSUB41.ttx: GSUB20.ttx
 endif
 
 # Pre-rotated GSUB vert/vrt2 substitutes
-ifeq ($(FONT_LANG),JP)
 feature_vrt2.tbl: table.tbl pre_rotated.tbl
 	@echo "making pre-rotated GSUB vrt2 table..."
 	@$(BINDIR)/make_gsub_single_table \
@@ -801,11 +794,6 @@ GSUB.ttx: feature_vrt2.tbl GSUB50.ttx
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
-else
-GSUB.ttx: GSUB41.ttx
-	@echo "skipping pre-rorated GSUB substitution adding..."
-	@ln -s $< $@
-endif
 
 
 ### palt to pwid ###
