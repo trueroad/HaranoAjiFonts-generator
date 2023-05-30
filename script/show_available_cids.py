@@ -121,9 +121,11 @@ def main() -> None:
         print(f'Duplicate: copy_and_rotate & pre_rotated: {i}',
               file=sys.stderr)
 
-    print(f'conversion = {len(s_table)}, copy = {len(s_copy_and_rotate)}, '
-          f'pre-rotated = {len(s_pre_rotated)}, '
-          f'.notdef = {len(s_notdef)}: total {len(s_total)}',
+    print(f'conversion = {len(s_table)}, '
+          f'copy + pre-rotated = {len(s_copy_and_rotate | s_pre_rotated)}, '
+          f'.notdef = {len(s_notdef)}: total {len(s_total)}\n'
+          f'  (copy = {len(s_copy_and_rotate)}, '
+          f'pre-rotated = {len(s_pre_rotated)})',
           file=sys.stderr)
 
 
