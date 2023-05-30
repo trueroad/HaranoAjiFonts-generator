@@ -950,6 +950,7 @@ letter_face.tbl: fix_mtx.tbl CFF.ttx
 pre_rotated.tbl: table.tbl copy_and_rotate_do.tbl
 	@echo "making pre-rotated table..."
 	@$(SCRIPTDIR)/make_pre_rotated_table.py \
+		$(ROS) \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 

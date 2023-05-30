@@ -41,13 +41,32 @@ from typing import Final, TextIO
 
 
 # From Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-Japan1
-PRE_ROTATED_GLYPHS: Final[list[tuple[list[tuple[int, int]], int]]] = \
+PRE_ROTATED_GLYPHS_AJ1: Final[list[tuple[list[tuple[int, int]], int]]] = \
     [([(1, 325), (390, 390), (501, 503), (599, 628), (630, 632),
        (8718, 8719), (326, 389), (391, 421), (515, 598), (423, 424),
        (504, 514), (422, 422), (425, 500), (629, 629)], 8720),
      ([(9354, 9778), (12063, 12087)], 12870),
      ([(15456, 15461), (15464, 15516), (15725, 15975)], 16469),
      ([(20317, 20426)], 20961)]
+
+# From Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-GB1
+PRE_ROTATED_GLYPHS_AG1: Final[list[tuple[list[tuple[int, int]], int]]] = \
+    [([(1, 95), (7712, 7715), (814, 939), (7716, 7716)], 22127),
+     ([(22353, 22357)], 29059)]
+
+# From Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-CNS1
+PRE_ROTATED_GLYPHS_AC1: Final[list[tuple[list[tuple[int, int]], int]]] = \
+    [([(1, 98), (13648, 13742)], 17408),
+     ([(17601, 17601), (17603, 17603)], 17604)]
+
+# From Pre-Rotated Glyphs in
+# https://github.com/adobe-type-tools/Adobe-KR/blob/master/5093.Adobe-Korea1-2.pdf
+PRE_ROTATED_GLYPHS_AK1: Final[list[tuple[list[tuple[int, int]], int]]] = \
+    [([(1, 100), (8094, 8190)], 18155)]
+
+# No Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-KR
+PRE_ROTATED_GLYPHS_AKR: Final[list[tuple[list[tuple[int, int]], int]]] = \
+    []
 
 
 def load_table(file: str) -> set[int]:
@@ -90,14 +109,15 @@ def load_copy_and_rotate_table(file: str) -> set[int]:
 
 def main() -> None:
     """Do main."""
-    if len(sys.argv) != 3:
-        print("Usage: make_pre_rotated_table.py table.tbl "
+    if len(sys.argv) != 4:
+        print("Usage: make_pre_rotated_table.py ROS table.tbl "
               "copy_and_rotate_do.tbl > pre_rotated.tbl",
               file=sys.stderr)
         sys.exit(1)
 
-    table: str = sys.argv[1]
-    copy_and_rotate: str = sys.argv[2]
+    ros: str = sys.argv[1]
+    table: str = sys.argv[2]
+    copy_and_rotate: str = sys.argv[3]
 
     s_notdef: set[int] = {0}
     s_table: set[int] = load_table(table)
@@ -106,11 +126,27 @@ def main() -> None:
 
     s_total: set[int] = s_notdef | s_table | s_copy_and_rotate
 
+    pre_rotated_glyphs: list[tuple[list[tuple[int, int]], int]]
+    if ros == 'AJ1':
+        pre_rotated_glyphs = PRE_ROTATED_GLYPHS_AJ1
+    elif ros == 'AG1':
+        pre_rotated_glyphs = PRE_ROTATED_GLYPHS_AG1
+    elif ros == 'AC1':
+        pre_rotated_glyphs = PRE_ROTATED_GLYPHS_AC1
+    elif ros == 'AKR':
+        pre_rotated_glyphs = PRE_ROTATED_GLYPHS_AKR
+    elif ros == 'AK1':
+        pre_rotated_glyphs = PRE_ROTATED_GLYPHS_AK1
+    else:
+        print('ROS is not AJ1, AG1, AC1, AKR, or AK1.',
+              file=sys.stderr)
+        sys.exit(1)
+
     print("# name_src name_dst angle")
 
     h_ranges: list[tuple[int, int]]
     pre_rotated_range_first: int
-    for h_ranges, pre_rotated_range_first in PRE_ROTATED_GLYPHS:
+    for h_ranges, pre_rotated_range_first in pre_rotated_glyphs:
         pre_rotated: int = pre_rotated_range_first
         h_range_first: int
         h_range_last: int
