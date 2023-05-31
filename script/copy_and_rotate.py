@@ -55,16 +55,16 @@ FDArray: list[dict[str, Union[str, list[str]]]] = []
 GlobalSubrs: list[str] = []
 
 
-# load GlobalSubrs
 def load_GlobalSubrs(root: ET.Element) -> None:
+    """Load GlobalSubrs."""
     cs: ET.Element
     for cs in root.findall("./CFF/GlobalSubrs/CharString"):
         if cs.text is not None:
             GlobalSubrs.append(cs.text)
 
 
-# load FDArray
 def load_FDArray(root: ET.Element) -> None:
+    """Load FDArray."""
     fd: ET.Element
     for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
         FontDict: dict[str, Union[str, list[str]]] = {}
@@ -81,6 +81,7 @@ def load_FDArray(root: ET.Element) -> None:
 
 
 def get_GlobalSubr(index: int) -> str:
+    """Get GlobalSubr."""
     if len(GlobalSubrs) < 1240:
         return GlobalSubrs[index + 107]
     elif len(GlobalSubrs) < 33900:
@@ -90,6 +91,7 @@ def get_GlobalSubr(index: int) -> str:
 
 
 def get_LocalSubr(fd: int, index: int) -> str:
+    """Get LocalSubr."""
     Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
     if len(Subrs) < 1240:
         return Subrs[index + 107]
@@ -104,6 +106,7 @@ re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
 
 
 def copy_and_rotate_CharString(cs: str, fd: int, angle: int) -> str:
+    """Copy and rotate CharString."""
     if angle == 0:
         return cs
     elif angle == 90:
@@ -121,6 +124,7 @@ def copy_and_rotate_CharString(cs: str, fd: int, angle: int) -> str:
 
 
 def copy_and_rotate_CharString90(cs: str, fd: int) -> str:
+    """Copy and rotate CharString angle 90."""
     # x_{rotated} =  y_{original} - decender
     # y_{rotated} = -x_{original} + acender
     wd: int = 1000  # acender - decender
@@ -573,6 +577,7 @@ def copy_and_rotate_CharString90(cs: str, fd: int) -> str:
 
 
 def load_copy_and_rotateTable(file: str) -> dict[str, tuple[str, int]]:
+    """Load copy_and_rotate table."""
     table: dict[str, tuple[str, int]] = {}
     f: TextIO
     with open(file, "r") as f:
@@ -591,6 +596,7 @@ def load_copy_and_rotateTable(file: str) -> dict[str, tuple[str, int]]:
 
 
 def main() -> None:
+    """Do main."""
     if len(sys.argv) <= 3:
         print("Usage: copy_and_rotate.py copy_and_rotate.tbl "
               "source.C_F_F_.ttx output.C_F_F_.ttx")
