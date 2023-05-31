@@ -600,7 +600,7 @@ def main() -> None:
     if len(sys.argv) <= 3:
         print("Usage: copy_and_rotate.py copy_and_rotate.tbl "
               "source.C_F_F_.ttx output.C_F_F_.ttx")
-        exit(1)
+        sys.exit(1)
 
     copy_and_rotate_filename: str = sys.argv[1]
     source_filename: str = sys.argv[2]
@@ -615,9 +615,11 @@ def main() -> None:
     load_FDArray(root)
     load_GlobalSubrs(root)
 
+    CFF_name_list: list[str] = []
     cs_dst: ET.Element
     for cs_dst in root.findall("./CFF/CFFFont/CharStrings/CharString"):
         name_dst: str = cs_dst.attrib["name"]
+        CFF_name_list.append(name_dst)
         if name_dst in table:
             name_src: str
             angle: int
@@ -634,6 +636,11 @@ def main() -> None:
             if cs_src.text is None:
                 continue
             cs_dst.text = copy_and_rotate_CharString(cs_src.text, fd, angle)
+
+    for name_dst in table:
+        if name_dst not in CFF_name_list:
+            print(f"Error: table's name_dst {name_dst} is missing in CFF")
+            sys.exit(1)
 
     tree.write(output_filename)
 
