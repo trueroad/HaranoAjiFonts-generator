@@ -578,42 +578,48 @@ def load_copy_and_rotateTable(file: str) -> dict[str, tuple[str, int]]:
 
 ########################################################################
 
-if len(sys.argv) <= 3:
-    print("Usage: copy_and_rotate.py copy_and_rotate.tbl "\
-          "source.C_F_F_.ttx output.C_F_F_.ttx")
-    exit(1)
 
-copy_and_rotate_filename: str = sys.argv[1]
-source_filename: str = sys.argv[2]
-output_filename: str = sys.argv[3]
+def main() -> None:
+    if len(sys.argv) <= 3:
+        print("Usage: copy_and_rotate.py copy_and_rotate.tbl "\
+              "source.C_F_F_.ttx output.C_F_F_.ttx")
+        exit(1)
 
-table: dict[str, tuple[str, int]] = \
-    load_copy_and_rotateTable(copy_and_rotate_filename)
+    copy_and_rotate_filename: str = sys.argv[1]
+    source_filename: str = sys.argv[2]
+    output_filename: str = sys.argv[3]
 
-tree: ET.ElementTree = ET.parse(source_filename)
-root: ET.Element = tree.getroot()
+    table: dict[str, tuple[str, int]] = \
+        load_copy_and_rotateTable(copy_and_rotate_filename)
 
-load_FDArray(root)
-load_GlobalSubrs(root)
+    tree: ET.ElementTree = ET.parse(source_filename)
+    root: ET.Element = tree.getroot()
 
-cs_dst: ET.Element
-for cs_dst in root.findall("./CFF/CFFFont/CharStrings/CharString"):
-    name_dst: str = cs_dst.attrib["name"]
-    if name_dst in table:
-        name_src: str
-        angle: int
-        name_src, angle = table[name_dst]
-        print("copy and rotate {} to {} angle {}".\
-              format(name_src, name_dst, angle))
-        cs_src: Optional[ET.Element] = \
-            root.find("./CFF/CFFFont/CharStrings/CharString"\
-                      "[@name='{}']".format(name_src))
-        if cs_src is None:
-            continue
-        cs_dst.attrib["fdSelectIndex"] = cs_src.attrib["fdSelectIndex"]
-        fd: int = int(cs_dst.attrib["fdSelectIndex"])
-        if cs_src.text is None:
-            continue
-        cs_dst.text = copy_and_rotate_CharString(cs_src.text, fd, angle)
+    load_FDArray(root)
+    load_GlobalSubrs(root)
 
-tree.write(output_filename)
+    cs_dst: ET.Element
+    for cs_dst in root.findall("./CFF/CFFFont/CharStrings/CharString"):
+        name_dst: str = cs_dst.attrib["name"]
+        if name_dst in table:
+            name_src: str
+            angle: int
+            name_src, angle = table[name_dst]
+            print("copy and rotate {} to {} angle {}".\
+                  format(name_src, name_dst, angle))
+            cs_src: Optional[ET.Element] = \
+                root.find("./CFF/CFFFont/CharStrings/CharString"\
+                          "[@name='{}']".format(name_src))
+            if cs_src is None:
+                continue
+            cs_dst.attrib["fdSelectIndex"] = cs_src.attrib["fdSelectIndex"]
+            fd: int = int(cs_dst.attrib["fdSelectIndex"])
+            if cs_src.text is None:
+                continue
+            cs_dst.text = copy_and_rotate_CharString(cs_src.text, fd, angle)
+
+    tree.write(output_filename)
+
+
+if __name__ == '__main__':
+    main()
