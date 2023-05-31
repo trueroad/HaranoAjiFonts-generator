@@ -46,30 +46,36 @@
 import copy
 import re
 import sys
+from typing import cast, Optional, TextIO, Union
 import xml.etree.ElementTree as ET
 
-FDArray = []
-GlobalSubrs = []
+FDArray: list[dict[str, Union[str, list[str]]]] = []
+GlobalSubrs: list[str] = []
 
 # load GlobalSubrs
-def load_GlobalSubrs(root):
+def load_GlobalSubrs(root: ET.Element) -> None:
+    cs: ET.Element
     for cs in root.findall("./CFF/GlobalSubrs/CharString"):
-        GlobalSubrs.append(cs.text)
+        if cs.text is not None:
+            GlobalSubrs.append(cs.text)
 
 # load FDArray
-def load_FDArray(root):
+def load_FDArray(root: ET.Element) -> None:
+    fd: ET.Element
     for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
-        FontDict = {}
+        FontDict: dict[str, Union[str, list[str]]] = {}
+        cs: ET.Element
         for cs in fd.findall("./Private/*"):
             if "value" in cs.attrib:
                 FontDict[cs.tag] = cs.attrib["value"]
-        Subrs = []
+        Subrs: list[str] = []
         for cs in fd.findall("./Private/Subrs/CharString"):
-            Subrs.append(cs.text)
+            if cs.text is not None:
+                Subrs.append(cs.text)
         FontDict["Subrs"] = Subrs
         FDArray.append(FontDict)
 
-def get_GlobalSubr(index):
+def get_GlobalSubr(index: int) -> str:
     if len(GlobalSubrs) < 1240:
         return GlobalSubrs[index + 107]
     elif len(GlobalSubrs) < 33900:
@@ -77,8 +83,8 @@ def get_GlobalSubr(index):
     else:
         return GlobalSubrs[index + 32768]
 
-def get_LocalSubr(fd, index):
-    Subrs = FDArray[fd]["Subrs"]
+def get_LocalSubr(fd: int, index: int) -> str:
+    Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
     if len(Subrs) < 1240:
         return Subrs[index + 107]
     elif len(Subrs) < 33900:
@@ -86,10 +92,10 @@ def get_LocalSubr(fd, index):
     else:
         return Subrs[index + 32768]
 
-re_isInt = re.compile(r"^-?\d+$")
-re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
+re_isInt: re.Pattern[str] = re.compile(r"^-?\d+$")
+re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
 
-def copy_and_rotate_CharString(cs, fd, angle):
+def copy_and_rotate_CharString(cs: str, fd: int, angle: int) -> str:
     if angle == 0:
         return cs
     elif angle == 90:
@@ -105,34 +111,34 @@ def copy_and_rotate_CharString(cs, fd, angle):
     print ("angle {} is not supported.".format(angle));
     return cs
 
-def copy_and_rotate_CharString90(cs, fd):
+def copy_and_rotate_CharString90(cs: str, fd: int) -> str:
     # x_{rotated} =  y_{original} - decender
     # y_{rotated} = -x_{original} + acender
-    wd = 1000 # acender - decender
-    dx = 120  # -decender
-    dy = 880  # acender
-    sx = 1    # x_{rotated} = y_{original} * sx + dx
-    sy = -1   # y_{rotated} = x_{original} * sy + dy
+    wd: int = 1000 # acender - decender
+    dx: int = 120  # -decender
+    dy: int = 880  # acender
+    sx: float = 1    # x_{rotated} = y_{original} * sx + dx
+    sy: float = -1   # y_{rotated} = x_{original} * sy + dy
 
-    defaultWidthX = int(FDArray[fd]["defaultWidthX"])
-    nominalWidthX = int(FDArray[fd]["nominalWidthX"])
+    defaultWidthX: int = int(cast(str, FDArray[fd]["defaultWidthX"]))
+    nominalWidthX: int = int(cast(str, FDArray[fd]["nominalWidthX"]))
 
-    stack = []
-    result_list = []
-    list_stack = []
-    curr_list = cs.split()
-    is_first = True
-    is_first_move = True
+    stack: list[float] = []
+    result_list: list[str] = []
+    list_stack: list[list[str]] = []
+    curr_list: list[str] = cs.split()
+    is_first: bool = True
+    is_first_move: bool = True
 
-    hstems = 0
-    vstems = 0
-    vstem_list = []
+    hstems: int = 0
+    vstems: int = 0
+    vstem_list: list[str] = []
 
     if wd != defaultWidthX:
         result_list.append(str(wd - nominalWidthX))
 
     while len(curr_list) > 0:
-        op = curr_list.pop(0)
+        op: str = curr_list.pop(0)
         if re_isInt.match(op) is not None:
             stack.append(int(op))
         elif re_isFloat.match(op) is not None:
@@ -141,8 +147,8 @@ def copy_and_rotate_CharString90(cs, fd):
             # |- dx1 dy1 rmoveto (21) |-
             # |- dx1 hmoveto (22) |-
             # |- dy1 vmoveto (4) |-
-            dx1 = 0
-            dy1 = 0
+            dx1: float = 0
+            dy1: float = 0
             if op == "rmoveto":
                 if is_first and len(stack) > 2:
                     _ = stack.pop(0) # w
@@ -180,8 +186,8 @@ def copy_and_rotate_CharString90(cs, fd):
         elif op == "rlineto":
             # |- {dxa dya}+ rlineto (5) |-
             for _ in range(len(stack)//2):
-                x = stack.pop(0) # dxa
-                y = stack.pop(0) # dya
+                x: float = stack.pop(0) # dxa
+                y: float = stack.pop(0) # dya
                 x, y = y, x
                 result_list.append(str(x * sx)) # dxa
                 result_list.append(str(y * sy)) # dya
@@ -454,8 +460,8 @@ def copy_and_rotate_CharString90(cs, fd):
                 _ = stack.pop(0) # w
                 is_first = False
             hstems = len(stack)//2
-            rev_y = []
-            y_before = stack.pop(0) * sy + dy # y <- x
+            rev_y: list[float] = []
+            y_before: float = stack.pop(0) * sy + dy # y <- x
             rev_y.append(y_before)
             y = stack.pop(0) # dx
             y *= sy # dy <- dx
@@ -473,9 +479,9 @@ def copy_and_rotate_CharString90(cs, fd):
                 y_before += y
             y_before = 0
             for _ in range(len(rev_y)//2):
-                y1 = rev_y.pop()
-                y2 = rev_y.pop()
-                y_diff = y2 - y1
+                y1: float = rev_y.pop()
+                y2: float = rev_y.pop()
+                y_diff: float = y2 - y1
                 if y_diff < 0:
                     y1, y2 = y2, y1
                     y2 -= y_diff * 2
@@ -533,21 +539,21 @@ def copy_and_rotate_CharString90(cs, fd):
                 result_list.extend (vstem_list)
                 vstem_list.clear()
             result_list.append(op)
-            mask = curr_list.pop(0)
+            mask: str = curr_list.pop(0)
             print("debug: vstems {}, hstems {}".format(vstems, hstems))
-            vmask = mask[0:vstems]
-            hmask = mask[vstems:vstems+hstems]
-            remain = mask[vstems+hstems:]
+            vmask: str = mask[0:vstems]
+            hmask: str = mask[vstems:vstems+hstems]
+            remain: str = mask[vstems+hstems:]
             print("debug: mask {},{},{} -> {},{},{}".\
                   format(vmask, hmask, remain, hmask, vmask, remain))
             result_list.append(hmask + vmask + remain)
             stack.clear()
         elif op == "callsubr":
             list_stack.append(curr_list)
-            curr_list = get_LocalSubr(fd, stack.pop()).split()
+            curr_list = get_LocalSubr(fd, int(stack.pop())).split()
         elif op == "callgsubr":
             list_stack.append(curr_list)
-            curr_list = get_GlobalSubr(stack.pop()).split()
+            curr_list = get_GlobalSubr(int(stack.pop())).split()
         elif op == "return":
             curr_list = list_stack.pop()
         else:
@@ -555,16 +561,18 @@ def copy_and_rotate_CharString90(cs, fd):
     return " ".join(result_list)
 
 
-def load_copy_and_rotateTable(file):
-    table = {}
+def load_copy_and_rotateTable(file: str) -> dict[str, tuple[str, int]]:
+    table: dict[str, tuple[str, int]] = {}
+    f: TextIO
     with open(file, "r") as f:
+        line: str
         for line in f:
             if line.startswith("#"):
                 continue
-            items = line.split()
-            name_src = items[0]
-            name_dst = items[1]
-            angle = int(items[2])
+            items: list[str] = line.split()
+            name_src: str = items[0]
+            name_dst: str = items[1]
+            angle: int = int(items[2])
             table[name_dst] = (name_src, angle)
     return table
 
@@ -575,28 +583,37 @@ if len(sys.argv) <= 3:
           "source.C_F_F_.ttx output.C_F_F_.ttx")
     exit(1)
 
-copy_and_rotate_filename = sys.argv[1]
-source_filename = sys.argv[2]
-output_filename = sys.argv[3]
+copy_and_rotate_filename: str = sys.argv[1]
+source_filename: str = sys.argv[2]
+output_filename: str = sys.argv[3]
 
-table = load_copy_and_rotateTable(copy_and_rotate_filename)
+table: dict[str, tuple[str, int]] = \
+    load_copy_and_rotateTable(copy_and_rotate_filename)
 
-tree = ET.parse(source_filename)
-root = tree.getroot()
+tree: ET.ElementTree = ET.parse(source_filename)
+root: ET.Element = tree.getroot()
 
 load_FDArray(root)
 load_GlobalSubrs(root)
 
+cs_dst: ET.Element
 for cs_dst in root.findall("./CFF/CFFFont/CharStrings/CharString"):
-    name_dst = cs_dst.attrib["name"]
+    name_dst: str = cs_dst.attrib["name"]
     if name_dst in table:
+        name_src: str
+        angle: int
         name_src, angle = table[name_dst]
         print("copy and rotate {} to {} angle {}".\
               format(name_src, name_dst, angle))
-        cs_src = root.find("./CFF/CFFFont/CharStrings/CharString"\
-                           "[@name='{}']".format(name_src))
+        cs_src: Optional[ET.Element] = \
+            root.find("./CFF/CFFFont/CharStrings/CharString"\
+                      "[@name='{}']".format(name_src))
+        if cs_src is None:
+            continue
         cs_dst.attrib["fdSelectIndex"] = cs_src.attrib["fdSelectIndex"]
-        fd = int(cs_dst.attrib["fdSelectIndex"])
+        fd: int = int(cs_dst.attrib["fdSelectIndex"])
+        if cs_src.text is None:
+            continue
         cs_dst.text = copy_and_rotate_CharString(cs_src.text, fd, angle)
 
 tree.write(output_filename)
