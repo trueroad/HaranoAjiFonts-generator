@@ -5,7 +5,7 @@
 // make_glyphorder_main.cc:
 //   make glyphorder.ttx
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(make glyphorder.ttx)"
     << std::endl
-    << "Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "Copyright (C) 2019, 2023 Masamichi Hosoda" << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << std::endl;
 
@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
   GlyphOrder.append_child ("GlyphID").append_attribute ("name")
     = ".notdef";
 
-  for (int i = 1; i <= ct.get_cid_outs ().back (); ++i)
+  for (int i = 1; i <= ct.get_cid_max (); ++i)
     {
       std::stringstream ss;
       ss << "aji" << std::setw (5) << std::setfill ('0') << i;
