@@ -5,7 +5,7 @@
 // merge_table_main.cc:
 //   merge conversion tables
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (merge conversion tables)"
     << std::endl
-    << "# Copyright (C) 2019 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2023 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
@@ -162,12 +162,36 @@ int main (int argc, char *argv[])
         map[cid_in] = -1;
     }
 
+  int cid_max = -1;
   for (const auto &m: map)
     {
       if (m.second < 0)
         std::cout << m.first << std::endl;
       else
-        std::cout << m.first << "\t" << m.second << std::endl;
+        {
+          std::cout << m.first << "\t" << m.second << std::endl;
+          if (cid_max < m.second)
+            {
+              cid_max = m.second;
+            }
+        }
+    }
+
+  auto ct1_cid_max = ct1.get_cid_max ();
+  auto ct2_cid_max = ct2.get_cid_max ();
+  if (ct2_cid_max < ct1_cid_max)
+    {
+      if (cid_max < ct1_cid_max)
+        {
+          std::cout << "max\t" << ct1.get_cid_max () << std::endl;
+        }
+    }
+  else
+    {
+      if (cid_max < ct2_cid_max)
+        {
+          std::cout << "max\t" << ct2.get_cid_max () << std::endl;
+        }
     }
 
   return 0;
