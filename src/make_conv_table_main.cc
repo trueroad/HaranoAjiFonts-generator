@@ -5,7 +5,7 @@
 // make_conv_table_main.cc:
 //   make conversion table from original font CID to pre-defined CID
 //
-// Copyright (C) 2019, 2022 Masamichi Hosoda.
+// Copyright (C) 2019, 2022, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <string>
 #include <utility>
 
 #include "cmapfile.hh"
@@ -51,14 +52,15 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (make conversion table from original font CID to pre-defined CID)"
     << std::endl
-    << "# Copyright (C) 2019, 2022 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2022, 2023 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
-  if (argc != 3)
+  if (argc != 4)
     {
       std::cout
-        << "# usage: make_conv_table FONT._c_m_a_p.ttx CMAP_FILE > TABLE.TBL"
+        << "# usage: make_conv_table FONT._c_m_a_p.ttx CMAP_FILE CID_MAX \\"
+        << "#     > TABLE.TBL"
         << std::endl
         << "#" << std::endl
         << "#     FONT._c_m_a_p.ttx:" << std::endl
@@ -66,7 +68,10 @@ int main (int argc, char *argv[])
         << "#         from the original font file." << std::endl
         << "#     CMAP_FILE:" << std::endl
         << "#         The CMap file of the pre-defined CID." << std::endl
-        << "#         e.g. UniJIS2004-UTF32-H etc." << std::endl;
+        << "#         e.g. UniJIS2004-UTF32-H etc." << std::endl
+        << "#     CID_MAX:" << std::endl
+        << "#         Maximum CID number." << std::endl
+        << "#         e.g. 23059 for AJ1-7." << std::endl;
       return 1;
     }
 
@@ -75,6 +80,8 @@ int main (int argc, char *argv[])
     << "#     original font cmap ttx file: \"" << argv[1] << "\""
     << std::endl
     << "#     pre-defined CID's CMap file: \"" << argv[2] << "\""
+    << std::endl
+    << "#     Maximum CID number         : " << argv[3]
     << std::endl
     << "#" << std::endl;
 
@@ -155,12 +162,25 @@ int main (int argc, char *argv[])
         map[cid_in] = -1;
     }
 
+  int cid_max = -1;
   for (const auto &m: map)
     {
       if (m.second < 0)
         std::cout << m.first << std::endl;
       else
-        std::cout << m.first << "\t" << m.second << std::endl;
+        {
+          std::cout << m.first << "\t" << m.second << std::endl;
+          if (cid_max < m.second)
+            {
+              cid_max = m.second;
+            }
+        }
+    }
+
+  auto cid_max_arg {std::stoi (argv[3])};
+  if (cid_max < cid_max_arg)
+    {
+      std::cout << "max\t" << cid_max_arg << std::endl;
     }
 
   return 0;

@@ -21,6 +21,7 @@ table-cmap.tbl: $(TTXDIR)/$(SRC_FONTBASE)._c_m_a_p.ttx $(CMAP_FILE)
 	@echo "making conversion table (from cmap and CMap)..."
 	@$(BINDIR)/make_conv_table \
 		$+ \
+		$(CID_MAX) \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
 # JP specific conversion table
