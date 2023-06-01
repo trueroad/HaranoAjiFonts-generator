@@ -5,7 +5,7 @@
 // conv_table.hh:
 //   conversion table from CID to CID
 //
-// Copyright (C) 2019 Masamichi Hosoda.
+// Copyright (C) 2019, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -61,16 +61,22 @@ public:
   {
     return cid_miss_;
   }
+  int get_cid_max (void) const noexcept
+  {
+    return cid_max_;
+  }
 
 private:
   bool map_line (const std::smatch &);
   bool remove_line (const std::smatch &);
+  bool max_line (const std::smatch &);
 
   bool set_map (int cid_in, int cid_out);
 
   std::map<int, int> map_;
   std::vector<int> cid_outs_;
   std::vector<int> cid_miss_;
+  int cid_max_ = -1;
 };
 
 #endif // INCLUDE_GUARD_CONV_TABLE_HH

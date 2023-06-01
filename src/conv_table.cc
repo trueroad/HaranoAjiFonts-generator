@@ -5,7 +5,7 @@
 // conv_table.cc:
 //   conversion table from CID to CID
 //
-// Copyright (C) 2019, 2020 Masamichi Hosoda.
+// Copyright (C) 2019, 2020, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -53,6 +53,8 @@ conv_table::conv_table ():
       &conv_table::map_line},
     { std::regex (R"((\d+)\r?)"),
       &conv_table::remove_line},
+    { std::regex (R"(max\s+(\d+)\r?)"),
+      &conv_table::max_line},
   })
 {
 }
@@ -99,6 +101,26 @@ void conv_table::load (const std::string &filename)
             }
         }
       before = i;
+    }
+  if (before < cid_max_)
+    {
+      if ( cid_max_ == (before + 1) )
+        {
+          std::cerr << "miss pre-defined cid: cid " << cid_max_
+                    << std::endl;
+          cid_miss_.push_back (cid_max_);
+        }
+      else
+        {
+          std::cerr << "miss pre-defined cid: cid " << (before + 1)
+                    << " - cid " << cid_max_ << std::endl;
+          for (int j = before + 1; j <= cid_max_; ++j)
+            cid_miss_.push_back (j);
+        }
+    }
+  else
+    {
+      cid_max_ = before;
     }
 }
 
@@ -178,4 +200,13 @@ bool conv_table::remove_line (const std::smatch &sm)
   auto cid {std::stoi (sm[1].str ())};
 
   return set_map (cid, -1);
+}
+
+bool conv_table::max_line (const std::smatch &sm)
+{
+  auto cid {std::stoi (sm[1].str ())};
+
+  cid_max_ = cid;
+
+  return true;
 }
