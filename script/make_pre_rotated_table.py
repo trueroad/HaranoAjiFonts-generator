@@ -39,6 +39,8 @@ SUCH DAMAGE.
 import sys
 from typing import Final, TextIO
 
+import load_table
+
 
 # From Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-Japan1
 PRE_ROTATED_GLYPHS_AJ1: Final[list[tuple[list[tuple[int, int]], int]]] = \
@@ -67,25 +69,6 @@ PRE_ROTATED_GLYPHS_AK1: Final[list[tuple[list[tuple[int, int]], int]]] = \
 # No Pre-Rotated Glyphs in https://github.com/adobe-type-tools/Adobe-KR
 PRE_ROTATED_GLYPHS_AKR: Final[list[tuple[list[tuple[int, int]], int]]] = \
     []
-
-
-def load_table(file: str) -> set[int]:
-    """Load table for existing AJ1 CID."""
-    s: set[int] = set()
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith('#'):
-                continue
-            items: list[str] = line.split()
-            if len(items) > 1:
-                cid: int = int(items[1])
-                if cid in s:
-                    print(f'Duplicate: table: {cid}',
-                          file=sys.stderr)
-                s.add(cid)
-    return s
 
 
 def load_copy_and_rotate_table(file: str) -> set[int]:
@@ -120,7 +103,7 @@ def main() -> None:
     copy_and_rotate: str = sys.argv[3]
 
     s_notdef: set[int] = {0}
-    s_table: set[int] = load_table(table)
+    s_table: set[int] = load_table.load_pre_defined_cid_set(table)
     s_copy_and_rotate: set[int] = \
         load_copy_and_rotate_table(copy_and_rotate)
 
