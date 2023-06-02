@@ -53,9 +53,9 @@ def load_letterface_table (file):
 
 def main ():
     if len (sys.argv) != 3:
-        print ("Usage: add_gsub_v.py INPUT_TABLE.TBL LETTER_FACE.TBL > "
-               "OUTPUT_TABLE.TBL")
-        exit (1)
+        print ("Usage: make_table_for_GPOS.py (in)table.tbl "
+               "(in)leter_face.tbl > (out)table_for_GPOS.tbl")
+        sys.exit (1)
 
     conversion_table_filename = sys.argv[1]
     letterface_table_filename = sys.argv[2]
