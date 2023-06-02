@@ -60,6 +60,25 @@ def load_as_dict(filename: Union[str, bytes, os.PathLike[Any]]
     return table
 
 
+def load_as_list(filename: Union[str, bytes, os.PathLike[Any]]
+                 ) -> list[tuple[int, int]]:
+    """Load table.tbl as list."""
+    table: list[tuple[int, int]] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        line: str
+        for line in f:
+            if line.startswith('#'):
+                continue
+            if line.startswith('max'):
+                continue
+            items: list[str] = line.split()
+            if len(items) == 2 and \
+               items[0].isdecimal() and items[1].isdecimal():
+                table.append((int(items[0]), int(items[1])))
+    return table
+
+
 def load_as_list_with_noconv(filename: Union[str, bytes, os.PathLike[Any]]
                              ) -> list[tuple[int, int]]:
     """Load table.tbl as list with no-conversion AI0 CID."""
