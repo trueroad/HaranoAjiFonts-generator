@@ -91,8 +91,10 @@ def insert_lookup(root: ET.Element, insert_index: int) -> int:
             l.set('index', str(renum_index + 1))
 
             lli: ET.Element
-            for lli in root.findall('./GSUB/FeatureList/FeatureRecord'
-                                    '/Feature/LookupListIndex'
+            # In KR/K1, `LookupIndex`s requiring renumbering exist outside of
+            # `./GSUB/FeatureList/FeatureRecord/Feature`, such as
+            # `./GSUB/LookupList/Lookup/ChainContextSubst/SubstLookupRecord`.
+            for lli in root.findall('./GSUB//LookupListIndex'
                                     f"[@value='{renum_index}']"):
                 lli.set('value', str(renum_index + 1))
 
