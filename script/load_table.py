@@ -100,6 +100,21 @@ def load_as_list_with_noconv(filename: Union[str, bytes, os.PathLike[Any]]
     return table
 
 
+def load_pre_defined_cid_set(filename: Union[str, bytes, os.PathLike[Any]]
+                             ) -> set[int]:
+    """Load table.tbl for pre-defined CID."""
+    s: set[int] = set()
+    table: list[tuple[int, int]] = load_as_list(filename)
+
+    cid: int
+    for _, cid in table:
+        if cid in s:
+            print(f'Duplicate: table: {cid}', file=sys.stderr)
+        s.add(cid)
+
+    return s
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
@@ -108,13 +123,19 @@ def main() -> None:
 
     table_filename: str = sys.argv[1]
     d: dict[int, int] = load_as_dict(table_filename)
+    lc: list[tuple[int, int]] = load_as_list(table_filename)
     lnc: list[tuple[int, int]] = load_as_list_with_noconv(table_filename)
+    spd: set[int] = load_pre_defined_cid_set(table_filename)
 
     import pprint
     print('dict')
     pprint.pprint(d)
+    print('\nlist')
+    pprint.pprint(lc)
     print('\nlist with noconv')
     pprint.pprint(lnc)
+    print('\npre-defined CID set')
+    pprint.pprint(spd)
 
 
 if __name__ == '__main__':
