@@ -60,6 +60,27 @@ def load_as_dict(filename: Union[str, bytes, os.PathLike[Any]]
     return table
 
 
+def load_as_list_with_noconv(filename: Union[str, bytes, os.PathLike[Any]]
+                             ) -> list[tuple[int, int]]:
+    """Load table.tbl as list with no-conversion AI0 CID."""
+    table: list[tuple[int, int]] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        line: str
+        for line in f:
+            if line.startswith('#'):
+                continue
+            if line.startswith('max'):
+                continue
+            items: list[str] = line.split()
+            if len(items) == 2 and \
+               items[0].isdecimal() and items[1].isdecimal():
+                table.append((int(items[0]), int(items[1])))
+            if len(items) == 1 and items[0].isdecimal():
+                table.append((int(items[0]), -1))
+    return table
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
@@ -68,9 +89,13 @@ def main() -> None:
 
     table_filename: str = sys.argv[1]
     d: dict[int, int] = load_as_dict(table_filename)
+    lnc: list[tuple[int, int]] = load_as_list_with_noconv(table_filename)
 
     import pprint
+    print('dict')
     pprint.pprint(d)
+    print('\nlist with noconv')
+    pprint.pprint(lnc)
 
 
 if __name__ == '__main__':
