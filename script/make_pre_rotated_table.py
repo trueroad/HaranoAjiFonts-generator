@@ -127,6 +127,7 @@ def main() -> None:
 
     print("# name_src name_dst angle")
 
+    pre_rotated_max: int = -1
     h_ranges: list[tuple[int, int]]
     pre_rotated_range_first: int
     for h_ranges, pre_rotated_range_first in pre_rotated_glyphs:
@@ -138,7 +139,16 @@ def main() -> None:
             for horizontal in range(h_range_first, h_range_last + 1):
                 if horizontal in s_total and pre_rotated not in s_total:
                     print(f'aji{horizontal:05}\taji{pre_rotated:05}\t90')
+                    if pre_rotated_max < pre_rotated:
+                        pre_rotated_max = pre_rotated
                 pre_rotated += 1
+
+    cid_max: int = load_table.load_pre_defined_cid_max(table)
+    s_total_max: int = max(s_total)
+    if s_total_max != cid_max and pre_rotated_max != cid_max:
+        print(f'Error: cid_max ({cid_max}) != s_total_max ({s_total_max}) '
+              f'and cid_max != pre_rotated_max {pre_rotated_max}')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
