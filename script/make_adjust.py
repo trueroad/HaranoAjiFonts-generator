@@ -44,8 +44,8 @@ import xml.etree.ElementTree as ET
 import load_table
 
 
-def adjust_type(cid: int) -> str:
-    """Get adjust type from CID."""
+def adjust_type_aj1(cid: int) -> str:
+    """Get adjust type from AJ1 CID."""
     if 1011 <= cid and cid <= 1058:  # Greek
         return 'c'
     if cid == 16222:  # ς AJ1 CID+16222 U+03C2 GREEK SMALL LETTER FINAL SIGMA
@@ -92,9 +92,15 @@ def adjust_type(cid: int) -> str:
     return ''
 
 
-def adjust(cid: int, name: str, source_width: int, output_width: int) -> None:
+def adjust(ros: str, cid: int, name: str,
+           source_width: int, output_width: int) -> None:
     """Output adjust parameter."""
-    t: str = adjust_type(cid)
+    t: str
+    if ros == 'AJ1':
+        t = adjust_type_aj1(cid)
+    else:
+        t = 'c'
+
     dx: int
     if t == "l":
         print("{}\t{}\t{}\t{}\t{}\t{}".format(name, output_width, 0, 0, 1, 1))
@@ -125,14 +131,15 @@ def load_hmtx(root: ET.Element) -> dict[str, int]:
 
 def main() -> None:
     """Do main."""
-    if len(sys.argv) <= 3:
-        print("Usage: make_adjust.py table.tbl Source._h_m_t_x.ttx hmtx.ttx"
-              " > adjust.tbl")
+    if len(sys.argv) <= 4:
+        print("Usage: make_adjust.py ROS table.tbl "
+              "Source._h_m_t_x.ttx hmtx.ttx > adjust.tbl")
         sys.exit(1)
 
-    table_filename: str = sys.argv[1]
-    source_filename: str = sys.argv[2]
-    output_filename: str = sys.argv[3]
+    ros: str = sys.argv[1]
+    table_filename: str = sys.argv[2]
+    source_filename: str = sys.argv[3]
+    output_filename: str = sys.argv[4]
 
     table: dict[int, int] = load_table.load_as_dict(table_filename)
 
@@ -157,7 +164,7 @@ def main() -> None:
                 if output_name in output_hmtx:
                     output_width: int = output_hmtx[output_name]
                     if source_width != output_width:
-                        adjust(output_cid, output_name,
+                        adjust(ros, output_cid, output_name,
                                source_width, output_width)
 
 

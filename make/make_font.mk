@@ -910,7 +910,8 @@ shift.tbl: letter_face01.tbl
 adjust01.tbl: table.tbl $(TTXDIR)/$(SRC_FONTBASE)._h_m_t_x.ttx \
 		hmtx03.ttx
 	@echo "making adjust table..."
-	@$(SCRIPT_MAKE_ADJUST) \
+	@$(SCRIPTDIR)/make_adjust.py \
+		$(ROS) \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 

@@ -53,7 +53,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/aj17-gsub-jp04.fea
 SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-Japan1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name.sed
-SCRIPT_MAKE_ADJUST=$(SCRIPTDIR)/make_adjust.py
 CID_MAX = 23059
 endif
 
@@ -88,7 +87,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ag15-gsub.fea
 SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-GB1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_cn.sed
-SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 CID_MAX = 29063
 endif
 
@@ -123,7 +121,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ac17-gsub.fea
 SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-CNS1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_tw.sed
-SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 CID_MAX = 19178
 endif
 
@@ -158,7 +155,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/akr9-gsub.fea
 SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-KR_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_kr.sed
-SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 CID_MAX = 22896
 endif
 
@@ -193,7 +189,6 @@ endif
 FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ak12-gsub.txt
 SEQUENCES_FILE =
 FONT_NAME_SED = $(BASEDIR)/font_name_k1.sed
-SCRIPT_MAKE_ADJUST = $(SCRIPTDIR)/make_adjust_center.py
 CID_MAX = 18351
 endif
 
@@ -226,7 +221,6 @@ debug:
 	@echo "FONT_NAME_SED          $(FONT_NAME_SED)"
 	@echo "COPY_AND_ROTATE_TABLE  $(COPY_AND_ROTATE_TABLE)"
 	@echo "SHIFT_LIST             $(SHIFT_LIST)"
-	@echo "SCRIPT_MAKE_ADJUST     $(SCRIPT_MAKE_ADJUST)"
 	@echo ""
 	@echo "CMAP_FILE              $(CMAP_FILE)"
 	@echo "SRC_FONTBASE           $(SRC_FONTBASE)"
