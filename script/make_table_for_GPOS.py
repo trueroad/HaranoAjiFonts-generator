@@ -35,34 +35,41 @@
 # SUCH DAMAGE.
 #
 
+import os
 import sys
+from typing import Any, TextIO, Union
 
 import load_table
 
-def load_letterface_table (file):
-    table = set ()
-    with open (file, "r") as f:
+def load_letterface_table (filename: Union[str, bytes, os.PathLike[Any]]
+                           ) -> set[int]:
+    table: set[int] = set ()
+    f: TextIO
+    with open (filename, "r") as f:
+        line: str
         for line in f:
             if line.startswith ('#'):
                 continue
-            items = line.split ()
-            name = items[0]
-            cid = int (name[3:])
-            table.add (cid)
+            items: list[str] = line.split ()
+            name: str = items[0]
+            cid_str = name[3:]
+            if cid_str.isdecimal():
+                table.add (int(cid_str))
     return table
 
-def main ():
+def main () -> None:
     if len (sys.argv) != 3:
         print ("Usage: make_table_for_GPOS.py (in)table.tbl "
                "(in)leter_face.tbl > (out)table_for_GPOS.tbl")
         sys.exit (1)
 
-    conversion_table_filename = sys.argv[1]
-    letterface_table_filename = sys.argv[2]
+    conversion_table_filename: str = sys.argv[1]
+    letterface_table_filename: str = sys.argv[2]
 
-    conversion_table = \
+    conversion_table: list[tuple[int, int]] = \
         load_table.load_as_list_with_noconv(conversion_table_filename)
-    letterface_table = load_letterface_table (letterface_table_filename)
+    letterface_table: set[int] = \
+        load_letterface_table (letterface_table_filename)
 
     cid_in: int
     cid_out: int
@@ -74,7 +81,7 @@ def main ():
             else:
                 print ("{}\t{}".format (cid_in, cid_out))
         else:
-            print ("{}".format (int (items[0])))
+            print ("{}".format (cid_in))
 
 if __name__ == "__main__":
     main ()
