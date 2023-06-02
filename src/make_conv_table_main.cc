@@ -182,6 +182,16 @@ int main (int argc, char *argv[])
     {
       std::cout << "max\t" << cid_max_arg << std::endl;
     }
+  else if (cid_max > cid_max_arg)
+    {
+      std::cerr << "Error: CID_MAX specified on the command line ("
+                << cid_max_arg
+                << ") is less than the maximum CID of the created table ("
+                << cid_max
+                << ")."
+                << std::endl;
+      return 1;
+    }
 
   return 0;
 }
