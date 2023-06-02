@@ -37,6 +37,8 @@
 import sys
 import xml.etree.ElementTree as ET
 
+import load_table
+
 def adjust_type(cid):
     if 1011 <= cid and cid <= 1058: # Greek
         return 'c'
@@ -93,17 +95,6 @@ def adjust(cid, name, source_width, output_width):
     else:
         print("# {}".format(name))
 
-def load_table(file):
-    table = {}
-    with open(file, "r") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            cid = line.split()
-            if len(cid) == 2:
-                table[int(cid[0])] = int(cid[1])
-    return table
-
 def load_hmtx(root):
     hmtx = {}
     for mtx in root.findall("./hmtx/mtx"):
@@ -124,7 +115,7 @@ def main():
     source_filename = sys.argv[2]
     output_filename = sys.argv[3]
 
-    table = load_table(table_filename)
+    table = load_table.load_as_dict(table_filename)
 
     source_tree = ET.parse(source_filename)
     source_root = source_tree.getroot()
