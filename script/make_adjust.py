@@ -114,33 +114,40 @@ def load_hmtx(root):
 
 ########################################################################
 
-if len(sys.argv) <= 3:
-    print("Usage: make_adjust.py table.tbl Source._h_m_t_x.ttx hmtx.ttx > adjust.tbl")
-    exit(1)
+def main():
+    if len(sys.argv) <= 3:
+        print("Usage: make_adjust.py table.tbl Source._h_m_t_x.ttx hmtx.ttx"
+              " > adjust.tbl")
+        sys.exit(1)
 
-table_filename = sys.argv[1]
-source_filename = sys.argv[2]
-output_filename = sys.argv[3]
+    table_filename = sys.argv[1]
+    source_filename = sys.argv[2]
+    output_filename = sys.argv[3]
 
-table = load_table(table_filename)
+    table = load_table(table_filename)
 
-source_tree = ET.parse(source_filename)
-source_root = source_tree.getroot()
-source_hmtx = load_hmtx(source_root)
+    source_tree = ET.parse(source_filename)
+    source_root = source_tree.getroot()
+    source_hmtx = load_hmtx(source_root)
 
-output_tree = ET.parse(output_filename)
-output_root = output_tree.getroot()
-output_hmtx = load_hmtx(output_root)
+    output_tree = ET.parse(output_filename)
+    output_root = output_tree.getroot()
+    output_hmtx = load_hmtx(output_root)
 
-print("# name width x-trans y-trans x-scale y-scale")
+    print("# name width x-trans y-trans x-scale y-scale")
 
-for source_name, source_width in source_hmtx.items():
-    if source_name.startswith("cid"):
-        source_cid = int(source_name[3:])
-        if source_cid in table:
-            output_cid = table[source_cid]
-            output_name = "aji{:05}".format(output_cid)
-            if output_name in output_hmtx:
-                output_width = output_hmtx[output_name]
-                if source_width != output_width:
-                    adjust(output_cid, output_name, source_width, output_width)
+    for source_name, source_width in source_hmtx.items():
+        if source_name.startswith("cid"):
+            source_cid = int(source_name[3:])
+            if source_cid in table:
+                output_cid = table[source_cid]
+                output_name = "aji{:05}".format(output_cid)
+                if output_name in output_hmtx:
+                    output_width = output_hmtx[output_name]
+                    if source_width != output_width:
+                        adjust(output_cid, output_name,
+                               source_width, output_width)
+
+
+if __name__ == '__main__':
+    main()
