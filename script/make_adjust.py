@@ -35,11 +35,12 @@
 #
 
 import sys
+from typing import Optional
 import xml.etree.ElementTree as ET
 
 import load_table
 
-def adjust_type(cid):
+def adjust_type(cid: int) -> str:
     if 1011 <= cid and cid <= 1058: # Greek
         return 'c'
     if cid == 16222: # ς AJ1 CID+16222 U+03C2 GREEK SMALL LETTER FINAL SIGMA
@@ -82,8 +83,9 @@ def adjust_type(cid):
         return '' # calc by make_shift.py
     return ''
 
-def adjust(cid, name, source_width, output_width):
-    t = adjust_type(cid)
+def adjust(cid: int, name: str, source_width: int, output_width: int) -> None:
+    t: str = adjust_type(cid)
+    dx: int
     if t == "l":
         print("{}\t{}\t{}\t{}\t{}\t{}".format(name, output_width, 0, 0, 1, 1))
     elif t == "c":
@@ -95,46 +97,51 @@ def adjust(cid, name, source_width, output_width):
     else:
         print("# {}".format(name))
 
-def load_hmtx(root):
-    hmtx = {}
+def load_hmtx(root: ET.Element) -> dict[str, int]:
+    hmtx: dict[str, int] = {}
+    mtx: ET.Element
     for mtx in root.findall("./hmtx/mtx"):
-        name = mtx.attrib["name"]
-        width = int(mtx.attrib["width"])
-        hmtx[name] = width
+        name: Optional[str] = mtx.attrib["name"]
+        width_str: Optional[str] = mtx.attrib["width"]
+        if name is not None and width_str is not None and \
+           width_str.isdecimal():
+            hmtx[name] = int(width_str)
     return hmtx
 
 ########################################################################
 
-def main():
+def main() -> None:
     if len(sys.argv) <= 3:
         print("Usage: make_adjust.py table.tbl Source._h_m_t_x.ttx hmtx.ttx"
               " > adjust.tbl")
         sys.exit(1)
 
-    table_filename = sys.argv[1]
-    source_filename = sys.argv[2]
-    output_filename = sys.argv[3]
+    table_filename: str = sys.argv[1]
+    source_filename: str = sys.argv[2]
+    output_filename: str = sys.argv[3]
 
-    table = load_table.load_as_dict(table_filename)
+    table: dict[int, int] = load_table.load_as_dict(table_filename)
 
-    source_tree = ET.parse(source_filename)
-    source_root = source_tree.getroot()
+    source_tree: ET.ElementTree = ET.parse(source_filename)
+    source_root: ET.Element = source_tree.getroot()
     source_hmtx = load_hmtx(source_root)
 
-    output_tree = ET.parse(output_filename)
-    output_root = output_tree.getroot()
+    output_tree: ET.ElementTree = ET.parse(output_filename)
+    output_root: ET.Element = output_tree.getroot()
     output_hmtx = load_hmtx(output_root)
 
     print("# name width x-trans y-trans x-scale y-scale")
 
+    source_name: str
+    source_width: int
     for source_name, source_width in source_hmtx.items():
         if source_name.startswith("cid"):
-            source_cid = int(source_name[3:])
+            source_cid: int = int(source_name[3:])
             if source_cid in table:
-                output_cid = table[source_cid]
-                output_name = "aji{:05}".format(output_cid)
+                output_cid: int = table[source_cid]
+                output_name: str = "aji{:05}".format(output_cid)
                 if output_name in output_hmtx:
-                    output_width = output_hmtx[output_name]
+                    output_width: int = output_hmtx[output_name]
                     if source_width != output_width:
                         adjust(output_cid, output_name,
                                source_width, output_width)
