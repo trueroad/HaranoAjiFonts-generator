@@ -115,6 +115,25 @@ def load_pre_defined_cid_set(filename: Union[str, bytes, os.PathLike[Any]]
     return s
 
 
+def load_pre_defined_cid_max(filename: Union[str, bytes, os.PathLike[Any]]
+                             ) -> int:
+    """Load table.tbl for pre-defined CID max."""
+    cid_max: int = -1
+    f: TextIO
+    with open(filename, 'r') as f:
+        line: str
+        for line in f:
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if len(items) == 2 and items[1].isdecimal():
+                cid: int = int(items[1])
+                if cid > cid_max:
+                    cid_max = cid
+
+    return cid_max
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
