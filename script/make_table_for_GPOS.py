@@ -37,6 +37,8 @@
 
 import sys
 
+import load_table
+
 def load_letterface_table (file):
     table = set ()
     with open (file, "r") as f:
@@ -58,25 +60,21 @@ def main ():
     conversion_table_filename = sys.argv[1]
     letterface_table_filename = sys.argv[2]
 
+    conversion_table = \
+        load_table.load_as_list_with_noconv(conversion_table_filename)
     letterface_table = load_letterface_table (letterface_table_filename)
 
-    with open (conversion_table_filename, "r") as f:
-        for line in f:
-            if line.startswith ('#'):
-                continue
-            items = line.split ()
-            if len (items) == 2:
-                cid_in = int (items[0])
-                cid_out = int (items[1])
-                if cid_out in letterface_table:
-                    print ("# {}\t{}".format (cid_in, cid_out))
-                    print ("{}".format (cid_in))
-                else:
-                    print ("{}\t{}".format (cid_in, cid_out))
-            elif len (items) == 1:
-                print ("{}".format (int (items[0])))
+    cid_in: int
+    cid_out: int
+    for cid_in, cid_out in conversion_table:
+        if cid_out >= 0:
+            if cid_out in letterface_table:
+                print ("# {}\t{}".format (cid_in, cid_out))
+                print ("{}".format (cid_in))
             else:
-                print ("# error")
+                print ("{}\t{}".format (cid_in, cid_out))
+        else:
+            print ("{}".format (int (items[0])))
 
 if __name__ == "__main__":
     main ()
