@@ -41,27 +41,29 @@ from typing import Any, TextIO, Union
 
 import load_table
 
-def load_letterface_table (filename: Union[str, bytes, os.PathLike[Any]]
-                           ) -> set[int]:
-    table: set[int] = set ()
+
+def load_letterface_table(filename: Union[str, bytes, os.PathLike[Any]]
+                          ) -> set[int]:
+    table: set[int] = set()
     f: TextIO
-    with open (filename, "r") as f:
+    with open(filename, "r") as f:
         line: str
         for line in f:
-            if line.startswith ('#'):
+            if line.startswith('#'):
                 continue
-            items: list[str] = line.split ()
+            items: list[str] = line.split()
             name: str = items[0]
             cid_str = name[3:]
             if cid_str.isdecimal():
-                table.add (int(cid_str))
+                table.add(int(cid_str))
     return table
 
-def main () -> None:
-    if len (sys.argv) != 3:
-        print ("Usage: make_table_for_GPOS.py (in)table.tbl "
-               "(in)leter_face.tbl > (out)table_for_GPOS.tbl")
-        sys.exit (1)
+
+def main() -> None:
+    if len(sys.argv) != 3:
+        print("Usage: make_table_for_GPOS.py (in)table.tbl "
+              "(in)leter_face.tbl > (out)table_for_GPOS.tbl")
+        sys.exit(1)
 
     conversion_table_filename: str = sys.argv[1]
     letterface_table_filename: str = sys.argv[2]
@@ -69,19 +71,20 @@ def main () -> None:
     conversion_table: list[tuple[int, int]] = \
         load_table.load_as_list_with_noconv(conversion_table_filename)
     letterface_table: set[int] = \
-        load_letterface_table (letterface_table_filename)
+        load_letterface_table(letterface_table_filename)
 
     cid_in: int
     cid_out: int
     for cid_in, cid_out in conversion_table:
         if cid_out >= 0:
             if cid_out in letterface_table:
-                print ("# {}\t{}".format (cid_in, cid_out))
-                print ("{}".format (cid_in))
+                print("# {}\t{}".format(cid_in, cid_out))
+                print("{}".format(cid_in))
             else:
-                print ("{}\t{}".format (cid_in, cid_out))
+                print("{}\t{}".format(cid_in, cid_out))
         else:
-            print ("{}".format (cid_in))
+            print("{}".format(cid_in))
+
 
 if __name__ == "__main__":
-    main ()
+    main()
