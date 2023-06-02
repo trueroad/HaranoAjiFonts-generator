@@ -40,48 +40,53 @@ import xml.etree.ElementTree as ET
 
 import load_table
 
+
 def adjust_type(cid: int) -> str:
-    if 1011 <= cid and cid <= 1058: # Greek
+    if 1011 <= cid and cid <= 1058:  # Greek
         return 'c'
-    if cid == 16222: # ς AJ1 CID+16222 U+03C2 GREEK SMALL LETTER FINAL SIGMA
+    if cid == 16222:  # ς AJ1 CID+16222 U+03C2 GREEK SMALL LETTER FINAL SIGMA
         return 'c'
-    if 1059 <= cid and cid <= 1124: # Cyrillic
+    if 1059 <= cid and cid <= 1124:  # Cyrillic
         return 'c'
-    if cid == 647: # ¨ AJ1 CID+647 U+00A8 'DIAERESIS'
+    if cid == 647:  # ¨ AJ1 CID+647 U+00A8 'DIAERESIS'
         return 'c'
-    if cid == 707: # ° AJ1 CID+707 U+00B0 'DEGREE SIGN'
+    if cid == 707:  # ° AJ1 CID+707 U+00B0 'DEGREE SIGN'
         return 'l'
-    if cid == 645: # ´ AJ1 CID+645 U+00B4 'ACUTE ACCENT'
+    if cid == 645:  # ´ AJ1 CID+645 U+00B4 'ACUTE ACCENT'
         return 'c'
-    if cid == 708: # ′ AJ1 CID+708 U+2032 'PRIME'
+    if cid == 708:  # ′ AJ1 CID+708 U+2032 'PRIME'
         return 'l'
-    if cid == 709: # ″ AJ1 CID+709 U+2033 'DOUBLE PRIME'
+    if cid == 709:  # ″ AJ1 CID+709 U+2033 'DOUBLE PRIME'
         return 'l'
-    if cid == 12111: # ‼ AJ1 CID+12111 U+203C 'DOUBLE EXCLAMATION MARK'
+    if cid == 12111:  # ‼ AJ1 CID+12111 U+203C 'DOUBLE EXCLAMATION MARK'
         return 'c'
-    if cid == 16278: # ⁇ AJ1 CID+16278 U+2047 'DOUBLE QUESTION MARK'
+    if cid == 16278:  # ⁇ AJ1 CID+16278 U+2047 'DOUBLE QUESTION MARK'
         return 'c'
-    if cid == 16279: # ⁈ AJ1 CID+16279 U+2048 'QUESTION EXCLAMATION MARK'
+    if cid == 16279:  # ⁈ AJ1 CID+16279 U+2048 'QUESTION EXCLAMATION MARK'
         return 'c'
-    if cid == 12112: # ⁉ AJ1 CID+12112 U+2049 'EXCLAMATION QUESTION MARK'
+    if cid == 12112:  # ⁉ AJ1 CID+12112 U+2049 'EXCLAMATION QUESTION MARK'
         return 'c'
-    if cid == 8025: # ℓ AJ1 CID+8025 U+2113 'SCRIPT SMALL L'
+    if cid == 8025:  # ℓ AJ1 CID+8025 U+2113 'SCRIPT SMALL L'
         return 'c'
-    if cid == 7610: # № AJ1 CID+7610 U+2116 'NUMERO SIGN'
+    if cid == 7610:  # № AJ1 CID+7610 U+2116 'NUMERO SIGN'
         return 'c'
-    if cid == 693: # − AJ1 CID+693 U+2212 'MINUS SIGN'
+    if cid == 693:  # − AJ1 CID+693 U+2212 'MINUS SIGN'
         return 'c'
-    if cid == 16270: # ✓ AJ1 CID+16270 U+2713 'CHECK MARK'
+    if cid == 16270:  # ✓ AJ1 CID+16270 U+2713 'CHECK MARK'
         return 'c'
-    if cid == 16328: # AJ1 CID+16328 U+20DD 'COMBINING ENCLOSING CIRCLE'
+    if cid == 16328:  # AJ1 CID+16328 U+20DD 'COMBINING ENCLOSING CIRCLE'
         return 'r'
-    if cid == 11035: # AJ1 CID+11035 U+20DE 'COMBINING ENCLOSING SQUARE' 
+    if cid == 11035:  # AJ1 CID+11035 U+20DE 'COMBINING ENCLOSING SQUARE'
         return 'r'
-    if cid == 16326: # AJ1 CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
-        return '' # calc by make_shift.py
-    if cid == 16327: # AJ1 CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
-        return '' # calc by make_shift.py
+    if cid == 16326:
+        # AJ1 CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
+        return ''  # calc by make_shift.py
+    if cid == 16327:
+        # AJ1 CID+16327 U+309A
+        # 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
+        return ''  # calc by make_shift.py
     return ''
+
 
 def adjust(cid: int, name: str, source_width: int, output_width: int) -> None:
     t: str = adjust_type(cid)
@@ -97,6 +102,7 @@ def adjust(cid: int, name: str, source_width: int, output_width: int) -> None:
     else:
         print("# {}".format(name))
 
+
 def load_hmtx(root: ET.Element) -> dict[str, int]:
     hmtx: dict[str, int] = {}
     mtx: ET.Element
@@ -109,6 +115,7 @@ def load_hmtx(root: ET.Element) -> dict[str, int]:
     return hmtx
 
 ########################################################################
+
 
 def main() -> None:
     if len(sys.argv) <= 3:
