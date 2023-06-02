@@ -37,7 +37,7 @@
 
 import sys
 
-def load_conversion_table (file):
+def load_letterface_table (file):
     table = set ()
     with open (file, "r") as f:
         for line in f:
@@ -58,7 +58,7 @@ def main ():
     conversion_table_filename = sys.argv[1]
     letterface_table_filename = sys.argv[2]
 
-    conversion_table = load_conversion_table (letterface_table_filename)
+    letterface_table = load_letterface_table (letterface_table_filename)
 
     with open (conversion_table_filename, "r") as f:
         for line in f:
@@ -68,7 +68,7 @@ def main ():
             if len (items) == 2:
                 cid_in = int (items[0])
                 cid_out = int (items[1])
-                if cid_out in conversion_table:
+                if cid_out in letterface_table:
                     print ("# {}\t{}".format (cid_in, cid_out))
                     print ("{}".format (cid_in))
                 else:
