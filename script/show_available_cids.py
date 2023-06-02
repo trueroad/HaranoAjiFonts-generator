@@ -42,20 +42,6 @@ import sys
 import load_table
 
 
-def load_table_set(file: str) -> set[int]:
-    """Load table for existing AJ1 CID."""
-    s: set[int] = set()
-    table: list[tuple[int, int]] = load_table.load_as_list(file)
-
-    cid: int
-    for _, cid in table:
-        if cid in s:
-            print(f'Duplicate: table: {cid}', file=sys.stderr)
-        s.add(cid)
-
-    return s
-
-
 def load_copy_and_rotate_table(file: str) -> set[int]:
     """Load copy_and_rotate_table for existing AJ1 CID."""
     s: set[int] = set()
@@ -87,7 +73,7 @@ def main() -> None:
     pre_rotated: str = sys.argv[3]
 
     s_notdef: set[int] = {0}
-    s_table: set[int] = load_table_set(table)
+    s_table: set[int] = load_table.load_pre_defined_cid_set(table)
     s_copy_and_rotate: set[int] = \
         load_copy_and_rotate_table(copy_and_rotate)
     s_pre_rotated: set[int] = \
