@@ -39,23 +39,20 @@ SUCH DAMAGE.
 from typing import Set, List, TextIO
 import sys
 
+import load_table
 
-def load_table(file: str) -> Set[int]:
+
+def load_table_set(file: str) -> Set[int]:
     """Load table for existing AJ1 CID."""
     s: Set[int] = set()
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith('#'):
-                continue
-            items: List[str] = line.split()
-            if len(items) > 1:
-                cid: int = int(items[1])
-                if cid in s:
-                    print(f'Duplicate: table: {cid}',
-                          file=sys.stderr)
-                s.add(cid)
+    table: list[tuple[int, int]] = load_table.load_as_list(file)
+
+    cid: int
+    for _, cid in table:
+        if cid in s:
+            print(f'Duplicate: table: {cid}', file=sys.stderr)
+        s.add(cid)
+
     return s
 
 
@@ -90,7 +87,7 @@ def main() -> None:
     pre_rotated: str = sys.argv[3]
 
     s_notdef: Set[int] = {0}
-    s_table: Set[int] = load_table(table)
+    s_table: Set[int] = load_table_set(table)
     s_copy_and_rotate: Set[int] = \
         load_copy_and_rotate_table(copy_and_rotate)
     s_pre_rotated: Set[int] = \
