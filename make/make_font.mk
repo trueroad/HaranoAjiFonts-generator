@@ -473,18 +473,12 @@ vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
 		> $(addsuffix .log,$(basename $@)) 2>&1
 
 # Set vmtx height for pre-rotated glyphs
-ifeq ($(FONT_LANG),JP)
 vmtx03.ttx: height_pre_rotated.tbl vmtx02.ttx
 	@echo "setting vmtx height for pre-rotated glyphs..."
 	@$(SCRIPTDIR)/set_vmtx_height.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
-else
-vmtx03.ttx: vmtx02.ttx
-	@echo "skipping vmtx height for pre-rotated glyphs..."
-	@ln -s $< $@
-endif
 
 # Fix TSB in vmtx table
 vmtx.ttx: letter_face.tbl vmtx03.ttx
