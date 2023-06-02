@@ -8,7 +8,7 @@ https://github.com/trueroad/HaranoAjiFonts-generator
 show_available_cids.py:
   Show available CIDs.
 
-Copyright (C) 2021 Masamichi Hosoda.
+Copyright (C) 2021, 2023 Masamichi Hosoda.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -36,15 +36,15 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-from typing import Set, List, TextIO
+from typing import TextIO
 import sys
 
 import load_table
 
 
-def load_table_set(file: str) -> Set[int]:
+def load_table_set(file: str) -> set[int]:
     """Load table for existing AJ1 CID."""
-    s: Set[int] = set()
+    s: set[int] = set()
     table: list[tuple[int, int]] = load_table.load_as_list(file)
 
     cid: int
@@ -56,16 +56,16 @@ def load_table_set(file: str) -> Set[int]:
     return s
 
 
-def load_copy_and_rotate_table(file: str) -> Set[int]:
+def load_copy_and_rotate_table(file: str) -> set[int]:
     """Load copy_and_rotate_table for existing AJ1 CID."""
-    s: Set[int] = set()
+    s: set[int] = set()
     f: TextIO
     with open(file, "r") as f:
         line: str
         for line in f:
             if line.startswith("#"):
                 continue
-            items: List[str] = line.split()
+            items: list[str] = line.split()
             name_dst: str = items[1]
             cid_dst: int = int(name_dst[3:])
             if cid_dst in s:
@@ -86,14 +86,14 @@ def main() -> None:
     copy_and_rotate: str = sys.argv[2]
     pre_rotated: str = sys.argv[3]
 
-    s_notdef: Set[int] = {0}
-    s_table: Set[int] = load_table_set(table)
-    s_copy_and_rotate: Set[int] = \
+    s_notdef: set[int] = {0}
+    s_table: set[int] = load_table_set(table)
+    s_copy_and_rotate: set[int] = \
         load_copy_and_rotate_table(copy_and_rotate)
-    s_pre_rotated: Set[int] = \
+    s_pre_rotated: set[int] = \
         load_copy_and_rotate_table(pre_rotated)
 
-    s_total: Set[int] = s_notdef | s_table | s_copy_and_rotate | s_pre_rotated
+    s_total: set[int] = s_notdef | s_table | s_copy_and_rotate | s_pre_rotated
     cid: int
     for cid in sorted(s_total):
         print(cid)
