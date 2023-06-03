@@ -215,6 +215,77 @@ def load_copy_and_rotate_dst_set(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For letter_face.tbl
+#
+
+
+def load_letter_face(filename: Union[str, bytes, os.PathLike[Any]]
+                     ) -> list[tuple[str, float, float, float, float]]:
+    """Load letter_face.tbl."""
+    table: list[tuple[str, float, float, float, float]] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if len(items) != 5:
+                print("Error: row dosen't  have 5 columns.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            name: str = items[0]
+            if not name[3:].isdecimal():
+                print("Error: 1st column (name) doesn't have CID number.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  1st column: '{name}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            try:
+                x_min: float = float(items[1])
+                y_min: float = float(items[2])
+                x_max: float = float(items[3])
+                y_max: float = float(items[4])
+            except ValueError as e:
+                print('Error: {e}.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            table.append((name, x_min, y_min, x_max, y_max))
+    return table
+
+
+def load_letter_face_as_dict(filename: Union[str, bytes, os.PathLike[Any]]
+                             ) -> dict[str, tuple[float, float, float, float]]:
+    """Load letter_face.tbl as dict."""
+    table: dict[str, tuple[float, float, float, float]] = {}
+    name: str
+    x_min: float
+    y_min: float
+    x_max: float
+    y_max: float
+    for name, x_min, y_min, x_max, y_max in load_letter_face(filename):
+        table[name] = (x_min, y_min, x_max, y_max)
+    return table
+
+
+def load_letter_face_cid_set(filename: Union[str, bytes, os.PathLike[Any]]
+                             ) -> set[int]:
+    """Load letter_face.tbl for CID set."""
+    table: set[int] = set()
+    name: str
+    for name, _, _, _, _ in load_letter_face(filename):
+        cid: int = int(name[3:])
+        table.add(cid)
+    return table
+
+
+#
 # Main
 #
 
