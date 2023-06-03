@@ -38,8 +38,11 @@ import sys
 
 import load_table
 
-def calc_shift (name, width, ascender, descender, \
-                face_width, face_height, lsb, tsb):
+def calc_shift (name: str, width: int, ascender: int, descender: int,
+                face_width: float, face_height: float, lsb: float, tsb: float
+                ) -> tuple[float, float]:
+    new_lsb: float
+    new_tsb: float
     if name == "aji08269" or \
        name == "aji08273" or \
        name == "aji08283" or \
@@ -69,30 +72,36 @@ def calc_shift (name, width, ascender, descender, \
     print ("# no shift: {}".format (name))
     return lsb, tsb
 
-def main ():
+def main () -> None:
     if len (sys.argv) == 1:
         print ("Usage: make_shift.py letter_face01.tbl > shift.tbl")
-        exit (1)
+        sys.exit (1)
 
-    table_filename = sys.argv[1]
+    table_filename: str = sys.argv[1]
 
-    table = load_table.load_letter_face_as_dict(table_filename)
+    table: list[tuple[str, float, float, float, float]] = \
+        load_table.load_letter_face(table_filename)
 
     print ("# name width x-trans y-trans x-scale y-scale")
 
-    width = 1000
-    ascender = 880
-    descender = -120
+    width: int = 1000
+    ascender: int = 880
+    descender: int = -120
 
-    for name in table:
-        x_min, y_min, x_max, y_max = table[name]
+    name: str
+    x_min: float
+    y_min: float
+    x_max: float
+    y_max: float
+    for name, x_min, y_min, x_max, y_max in table:
+        face_width: float = x_max - x_min
+        face_height: float = y_max - y_min
 
-        face_width = x_max - x_min
-        face_height = y_max - y_min
+        lsb: float = x_min
+        tsb: float = ascender - y_max
 
-        lsb = x_min
-        tsb = ascender - y_max
-
+        new_lsb: float
+        new_tsb: float
         new_lsb, new_tsb = calc_shift (name, width, ascender, descender,
                                        face_width, face_height, lsb, tsb)
 
