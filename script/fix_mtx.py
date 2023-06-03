@@ -40,11 +40,10 @@ import xml.etree.ElementTree as ET
 
 import load_table
 
-########################################################################
 
 def main() -> None:
     if len(sys.argv) <= 3:
-        print("Usage: fix_mtx.py letter_face.tbl " \
+        print("Usage: fix_mtx.py letter_face.tbl "
               "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
         sys.exit(1)
 
