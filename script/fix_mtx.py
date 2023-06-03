@@ -41,43 +41,48 @@ import load_table
 
 ########################################################################
 
-if len(sys.argv) <= 3:
-    print("Usage: fix_mtx.py letter_face.tbl " \
-          "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
-    exit(1)
+def main():
+    if len(sys.argv) <= 3:
+        print("Usage: fix_mtx.py letter_face.tbl " \
+              "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
+        sys.exit(1)
 
-table_filename = sys.argv[1]
-input_filename = sys.argv[2]
-output_filename = sys.argv[3]
+    table_filename = sys.argv[1]
+    input_filename = sys.argv[2]
+    output_filename = sys.argv[3]
 
-table = load_table.load_letter_face_as_dict(table_filename)
+    table = load_table.load_letter_face_as_dict(table_filename)
 
-tree = ET.parse(input_filename)
-root = tree.getroot()
+    tree = ET.parse(input_filename)
+    root = tree.getroot()
 
-for hmtx in root.findall("./hmtx/mtx"):
-    name = hmtx.attrib["name"]
-    if name in table:
-        print("hmtx {}".format(name))
-        lsb = int(hmtx.attrib["lsb"])
-        x_min, _, _, _ = table[name]
-        new_lsb = int(x_min)
-        if lsb != new_lsb:
-            hmtx.attrib["lsb"] = str(new_lsb)
-            print("  LSB {} -> {}".format(lsb, new_lsb))
+    for hmtx in root.findall("./hmtx/mtx"):
+        name = hmtx.attrib["name"]
+        if name in table:
+            print("hmtx {}".format(name))
+            lsb = int(hmtx.attrib["lsb"])
+            x_min, _, _, _ = table[name]
+            new_lsb = int(x_min)
+            if lsb != new_lsb:
+                hmtx.attrib["lsb"] = str(new_lsb)
+                print("  LSB {} -> {}".format(lsb, new_lsb))
 
-ascender = 880
+    ascender = 880
 
-for vmtx in root.findall("./vmtx/mtx"):
-    name = vmtx.attrib["name"]
-    if name in table:
-        print("vmtx {}".format(name))
-        tsb = int(vmtx.attrib["tsb"])
-        _, _, _, y_max = table[name]
-        new_tsb = int(ascender - y_max)
-        if tsb != new_tsb:
-            vmtx.attrib["tsb"] = str(new_tsb)
-            print("  TSB {} -> {}".format(tsb, new_tsb))
+    for vmtx in root.findall("./vmtx/mtx"):
+        name = vmtx.attrib["name"]
+        if name in table:
+            print("vmtx {}".format(name))
+            tsb = int(vmtx.attrib["tsb"])
+            _, _, _, y_max = table[name]
+            new_tsb = int(ascender - y_max)
+            if tsb != new_tsb:
+                vmtx.attrib["tsb"] = str(new_tsb)
+                print("  TSB {} -> {}".format(tsb, new_tsb))
 
-ET.indent(tree, '  ')
-tree.write(output_filename)
+    ET.indent(tree, '  ')
+    tree.write(output_filename)
+
+
+if __name__ == '__main__':
+    main()
