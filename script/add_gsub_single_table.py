@@ -228,6 +228,7 @@ def main ():
         new_fi = ET.SubElement (ls, "FeatureIndex")
         new_fi.attrib["value"] = str (index)
 
+    ET.indent(tree, '  ')
     tree.write (output_filename)
 
 if __name__ == "__main__":

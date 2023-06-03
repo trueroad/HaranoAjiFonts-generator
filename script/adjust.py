@@ -412,4 +412,5 @@ for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
         wd, dx, dy, sx, sy = table[name]
         cs.text = adjust_CharString(cs.text, fd, wd, dx, dy, sx, sy)
 
+ET.indent(tree, '  ')
 tree.write(output_filename)

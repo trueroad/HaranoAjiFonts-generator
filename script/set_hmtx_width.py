@@ -75,4 +75,5 @@ for hmtx in root.findall("./hmtx/mtx"):
             hmtx.attrib["width"] = str(new_width)
             print("  Width {} -> {}".format(width, new_width))
 
+ET.indent(tree, '  ')
 tree.write(output_filename)

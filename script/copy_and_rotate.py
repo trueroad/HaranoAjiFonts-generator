@@ -642,6 +642,7 @@ def main() -> None:
             print(f"Error: table's name_dst {name_dst} is missing in CFF")
             sys.exit(1)
 
+    ET.indent(tree, '  ')
     tree.write(output_filename)
 
 

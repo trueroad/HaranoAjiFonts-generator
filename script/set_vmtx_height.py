@@ -75,4 +75,5 @@ for vmtx in root.findall("./vmtx/mtx"):
             vmtx.attrib["height"] = str(new_height)
             print("  Height {} -> {}".format(height, new_height))
 
+ET.indent(tree, '  ')
 tree.write(output_filename)

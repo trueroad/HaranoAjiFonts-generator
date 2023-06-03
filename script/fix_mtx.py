@@ -92,4 +92,5 @@ for vmtx in root.findall("./vmtx/mtx"):
             vmtx.attrib["tsb"] = str(new_tsb)
             print("  TSB {} -> {}".format(tsb, new_tsb))
 
+ET.indent(tree, '  ')
 tree.write(output_filename)

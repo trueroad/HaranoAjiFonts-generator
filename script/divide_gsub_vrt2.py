@@ -184,6 +184,7 @@ def main() -> None:
     copy_singlesubst(root, vert_index, insert_index)
     replace_index_feature(root, 'vrt2', vert_index, insert_index)
 
+    ET.indent(tree, '  ')
     tree.write(output_filename)
 
 

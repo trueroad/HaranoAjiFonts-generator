@@ -91,6 +91,7 @@ def main ():
     for index in indexes:
         remove_single_table (root, index, table)
 
+    ET.indent(tree, '  ')
     tree.write (output_filename)
 
 if __name__ == "__main__":

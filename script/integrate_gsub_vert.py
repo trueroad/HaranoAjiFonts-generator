@@ -183,6 +183,7 @@ def main ():
         print ("max lookup index error")
         exit (1)
 
+    ET.indent(tree, '  ')
     tree.write (output_filename)
 
 if __name__ == "__main__":

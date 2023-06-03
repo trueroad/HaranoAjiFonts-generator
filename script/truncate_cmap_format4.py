@@ -62,6 +62,7 @@ def main ():
         for r in removes:
             format4.remove (r)
 
+    ET.indent(tree, '  ')
     tree.write(output_filename)
 
 if __name__ == "__main__":
