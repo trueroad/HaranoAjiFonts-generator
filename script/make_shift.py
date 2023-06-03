@@ -38,16 +38,17 @@ import sys
 
 import load_table
 
-def calc_shift (name: str, width: int, ascender: int, descender: int,
-                face_width: float, face_height: float, lsb: float, tsb: float
-                ) -> tuple[float, float]:
+
+def calc_shift(name: str, width: int, ascender: int, descender: int,
+               face_width: float, face_height: float, lsb: float, tsb: float
+               ) -> tuple[float, float]:
     new_lsb: float
     new_tsb: float
-    if name == "aji08269" or \
-       name == "aji08273" or \
-       name == "aji08283" or \
-       name == "aji08271" or \
-       name == "aji08272":
+    if ((name == "aji08269" or
+         name == "aji08273" or
+         name == "aji08283" or
+         name == "aji08271" or
+         name == "aji08272")):
         # CID+707 -> CID+8269 (GSUB vert/vrt2, `°` U+00B0 'DEGREE SIGN')
         # CID+708 -> CID+8273 (GSUB vert/vrt2, `′` U+2032 'PRIME')
         # CID+709 -> CID+8283 (GSUB vert/vrt2, `″` U+2033 'DOUBLE PRIME')
@@ -59,8 +60,8 @@ def calc_shift (name: str, width: int, ascender: int, descender: int,
         new_lsb = width - (face_width + lsb)
         new_tsb = ascender - (descender + (face_height + tsb))
         return new_lsb, new_tsb
-    elif name == "aji16326" or \
-         name == "aji16327":
+    elif (name == "aji16326" or
+          name == "aji16327"):
         # CID+16326 U+3099 'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
         # CID+16327 U+309A 'COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK'
         # Left outside (right of previous letter face)
@@ -69,20 +70,21 @@ def calc_shift (name: str, width: int, ascender: int, descender: int,
         if new_lsb < 0:
             new_lsb = 0
         return new_lsb, tsb
-    print ("# no shift: {}".format (name))
+    print("# no shift: {}".format(name))
     return lsb, tsb
 
-def main () -> None:
-    if len (sys.argv) == 1:
-        print ("Usage: make_shift.py letter_face01.tbl > shift.tbl")
-        sys.exit (1)
+
+def main() -> None:
+    if len(sys.argv) == 1:
+        print("Usage: make_shift.py letter_face01.tbl > shift.tbl")
+        sys.exit(1)
 
     table_filename: str = sys.argv[1]
 
     table: list[tuple[str, float, float, float, float]] = \
         load_table.load_letter_face(table_filename)
 
-    print ("# name width x-trans y-trans x-scale y-scale")
+    print("# name width x-trans y-trans x-scale y-scale")
 
     width: int = 1000
     ascender: int = 880
@@ -102,13 +104,14 @@ def main () -> None:
 
         new_lsb: float
         new_tsb: float
-        new_lsb, new_tsb = calc_shift (name, width, ascender, descender,
-                                       face_width, face_height, lsb, tsb)
+        new_lsb, new_tsb = calc_shift(name, width, ascender, descender,
+                                      face_width, face_height, lsb, tsb)
 
-        print ("{}\t{}\t{}\t{}\t{}\t{}".format (name, width,
-                                                new_lsb - lsb,
-                                                tsb - new_tsb,
-                                                1, 1))
+        print("{}\t{}\t{}\t{}\t{}\t{}".format(name, width,
+                                              new_lsb - lsb,
+                                              tsb - new_tsb,
+                                              1, 1))
+
 
 if __name__ == "__main__":
-    main ()
+    main()
