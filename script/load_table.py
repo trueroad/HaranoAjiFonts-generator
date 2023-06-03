@@ -134,6 +134,87 @@ def load_pre_defined_cid_max(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For copy_and_rotate.tbl, pre_rotated.tbl
+#
+
+
+def load_copy_and_rotate(filename: Union[str, bytes, os.PathLike[Any]]
+                         ) -> list[tuple[str, str, int]]:
+    """Load copy_and_rotate.tbl."""
+    table: list[tuple[str, str, int]] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if len(items) != 3:
+                print("Error: row dosen't  have 3 columns.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            if not items[2].isdecimal():
+                print('Error: 3rd column (angle) is not integer.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  3rd column: '{items[2]}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            name_src: str = items[0]
+            if not name_src[3:].isdecimal():
+                print("Error: 1st column (name_src) doesn't have CID number.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  1st column: '{name_src}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            name_dst: str = items[1]
+            if not name_dst[3:].isdecimal():
+                print("Error: 2nd column (name_dst) doesn't have CID number.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  2nd column: '{name_dst}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            angle: int = int(items[2])
+            if (angle % 90) != 0:
+                print("Error: 3rd column (angle) is not multiple of 90.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f'  angle: {angle}',
+                      file=sys.stderr)
+                sys.exit(1)
+            table.append((name_src, name_dst, angle))
+    return table
+
+
+def load_copy_and_rotate_as_dict(filename: Union[str, bytes, os.PathLike[Any]]
+                                 ) -> dict[str, tuple[str, int]]:
+    """Load copy_and_rotate.tbl as dict."""
+    table: dict[str, tuple[str, int]] = {}
+    name_src: str
+    name_dst: str
+    angle: int
+    for name_src, name_dst, angle in load_copy_and_rotate(filename):
+        table[name_dst] = (name_src, angle)
+    return table
+
+
+def load_copy_and_rotate_dst_set(filename: Union[str, bytes, os.PathLike[Any]]
+                                 ) -> set[int]:
+    """Load copy_and_rotate.tbl destination CID set."""
+    s: set[int] = set()
+    name_dst: str
+    for _, name_dst, _ in load_copy_and_rotate(filename):
+        cid: int = int(name_dst[3:])
+        if cid in s:
+            print(f'Duplicate: copy_and_rotate: {cid}',
+                  file=sys.stderr)
+        s.add(cid)
+    return s
+
+
+#
 # Main
 #
 
