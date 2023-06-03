@@ -37,20 +37,7 @@
 import sys
 import xml.etree.ElementTree as ET
 
-def load_table(file):
-    table = {}
-    with open(file, "r") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            items = line.split()
-            name = items[0]
-            x_min = float(items[1])
-            y_min = float(items[2])
-            x_max = float(items[3])
-            y_max = float(items[4])
-            table[name] = (x_min, y_min, x_max, y_max)
-    return table
+import load_table
 
 ########################################################################
 
@@ -63,7 +50,7 @@ table_filename = sys.argv[1]
 input_filename = sys.argv[2]
 output_filename = sys.argv[3]
 
-table = load_table(table_filename)
+table = load_table.load_letter_face_as_dict(table_filename)
 
 tree = ET.parse(input_filename)
 root = tree.getroot()

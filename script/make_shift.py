@@ -36,6 +36,8 @@
 
 import sys
 
+import load_table
+
 def calc_shift (name, width, ascender, descender, \
                 face_width, face_height, lsb, tsb):
     if name == "aji08269" or \
@@ -67,21 +69,6 @@ def calc_shift (name, width, ascender, descender, \
     print ("# no shift: {}".format (name))
     return lsb, tsb
 
-def load_table (file):
-    table = {}
-    with open (file, "r") as f:
-        for line in f:
-            if line.startswith ('#'):
-                continue
-            items = line.split ()
-            name = items[0]
-            x_min = float (items[1])
-            y_min = float (items[2])
-            x_max = float (items[3])
-            y_max = float (items[4])
-            table[name] = (x_min, y_min, x_max, y_max)
-    return table
-
 def main ():
     if len (sys.argv) == 1:
         print ("Usage: make_shift.py letter_face01.tbl > shift.tbl")
@@ -89,7 +76,7 @@ def main ():
 
     table_filename = sys.argv[1]
 
-    table = load_table (table_filename)
+    table = load_table.load_letter_face_as_dict(table_filename)
 
     print ("# name width x-trans y-trans x-scale y-scale")
 
