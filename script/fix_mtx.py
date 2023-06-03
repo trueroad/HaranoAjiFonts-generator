@@ -35,49 +35,66 @@
 #
 
 import sys
+from typing import Optional
 import xml.etree.ElementTree as ET
 
 import load_table
 
 ########################################################################
 
-def main():
+def main() -> None:
     if len(sys.argv) <= 3:
         print("Usage: fix_mtx.py letter_face.tbl " \
               "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
         sys.exit(1)
 
-    table_filename = sys.argv[1]
-    input_filename = sys.argv[2]
-    output_filename = sys.argv[3]
+    table_filename: str = sys.argv[1]
+    input_filename: str = sys.argv[2]
+    output_filename: str = sys.argv[3]
 
-    table = load_table.load_letter_face_as_dict(table_filename)
+    table: dict[str, tuple[float, float, float, float]] = \
+        load_table.load_letter_face_as_dict(table_filename)
 
-    tree = ET.parse(input_filename)
-    root = tree.getroot()
+    tree: ET.ElementTree = ET.parse(input_filename)
+    root: ET.Element = tree.getroot()
 
+    name: Optional[str]
+    hmtx: ET.Element
     for hmtx in root.findall("./hmtx/mtx"):
-        name = hmtx.attrib["name"]
+        name = hmtx.get("name")
+        if name is None:
+            continue
         if name in table:
             print("hmtx {}".format(name))
-            lsb = int(hmtx.attrib["lsb"])
+            lsb_str: Optional[str] = hmtx.get("lsb")
+            if lsb_str is None:
+                continue
+            lsb: int = int(lsb_str)
+            x_min: float
             x_min, _, _, _ = table[name]
-            new_lsb = int(x_min)
+            new_lsb: int = int(x_min)
             if lsb != new_lsb:
-                hmtx.attrib["lsb"] = str(new_lsb)
+                hmtx.set("lsb", str(new_lsb))
                 print("  LSB {} -> {}".format(lsb, new_lsb))
 
-    ascender = 880
+    ascender: int = 880
 
+    vmtx: ET.Element
     for vmtx in root.findall("./vmtx/mtx"):
         name = vmtx.attrib["name"]
+        if name is None:
+            continue
         if name in table:
             print("vmtx {}".format(name))
-            tsb = int(vmtx.attrib["tsb"])
+            tsb_str: Optional[str] = vmtx.get("tsb")
+            if tsb_str is None:
+                continue
+            tsb: int = int(tsb_str)
+            y_max: float
             _, _, _, y_max = table[name]
-            new_tsb = int(ascender - y_max)
+            new_tsb: int = int(ascender - y_max)
             if tsb != new_tsb:
-                vmtx.attrib["tsb"] = str(new_tsb)
+                vmtx.set("tsb", str(new_tsb))
                 print("  TSB {} -> {}".format(tsb, new_tsb))
 
     ET.indent(tree, '  ')
