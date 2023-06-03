@@ -71,25 +71,6 @@ PRE_ROTATED_GLYPHS_AKR: Final[list[tuple[list[tuple[int, int]], int]]] = \
     []
 
 
-def load_copy_and_rotate_table(file: str) -> set[int]:
-    """Load copy_and_rotate_table for existing AJ1 CID."""
-    s: set[int] = set()
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith("#"):
-                continue
-            items: list[str] = line.split()
-            name_dst: str = items[1]
-            cid_dst: int = int(name_dst[3:])
-            if cid_dst in s:
-                print(f'Duplicate: copy_and_rotate: {cid_dst}',
-                      file=sys.stderr)
-            s.add(cid_dst)
-    return s
-
-
 def main() -> None:
     """Do main."""
     if len(sys.argv) != 4:
@@ -105,7 +86,7 @@ def main() -> None:
     s_notdef: set[int] = {0}
     s_table: set[int] = load_table.load_pre_defined_cid_set(table)
     s_copy_and_rotate: set[int] = \
-        load_copy_and_rotate_table(copy_and_rotate)
+        load_table.load_copy_and_rotate_dst_set(copy_and_rotate)
 
     s_total: set[int] = s_notdef | s_table | s_copy_and_rotate
 

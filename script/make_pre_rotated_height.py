@@ -40,6 +40,8 @@ import sys
 from typing import Final, Optional, TextIO
 import xml.etree.ElementTree as ET
 
+import load_table
+
 
 def load_pre_rotated_table(file: str) -> list[tuple[int, int]]:
     """Load pre-rotated table."""
@@ -70,20 +72,19 @@ def main() -> None:
     pre_rotated_filename: str = sys.argv[1]
     hmtx_filename: str = sys.argv[2]
 
-    pre_rotated: list[tuple[int, int]] = \
-        load_pre_rotated_table(pre_rotated_filename)
-
     tree: ET.ElementTree = ET.parse(hmtx_filename)
     root: ET.Element = tree.getroot()
 
-    cid_src: int
-    cid_dst: int
-    for cid_src, cid_dst in pre_rotated:
+    name_src: str
+    name_dst: str
+    for name_src, name_dst, _ in load_table.load_copy_and_rotate(
+            pre_rotated_filename):
         hmtx: Optional[ET.Element] = \
-            root.find(f"./hmtx/mtx[@name='aji{cid_src:05}']")
+            root.find(f"./hmtx/mtx[@name='{name_src}']")
         if hmtx is not None:
+            # Use the *width* of name_src for the *height* of name_dst.
             width: int = int(hmtx.get('width', default=1000))
-            print(f'aji{cid_dst:05}\t{width}')
+            print(f'{name_dst}\t{width}')  # height
 
 
 if __name__ == '__main__':

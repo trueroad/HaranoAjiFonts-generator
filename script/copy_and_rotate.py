@@ -9,7 +9,7 @@ copy_and_rotate.py:
   copy and rotate the CFF glyph.
 
 Copyright (C) 2020 Yukimasa Morimi.
-Copyright (C) 2020, 2022 Masamichi Hosoda.
+Copyright (C) 2020, 2022, 2023 Masamichi Hosoda.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -50,6 +50,8 @@ import re
 import sys
 from typing import cast, Optional, TextIO, Union
 import xml.etree.ElementTree as ET
+
+import load_table
 
 FDArray: list[dict[str, Union[str, list[str]]]] = []
 GlobalSubrs: list[str] = []
@@ -575,23 +577,6 @@ def copy_and_rotate_CharString90(cs: str, fd: int) -> str:
             raise Exception("unknown operator {}".format(op))
     return " ".join(result_list)
 
-
-def load_copy_and_rotateTable(file: str) -> dict[str, tuple[str, int]]:
-    """Load copy_and_rotate table."""
-    table: dict[str, tuple[str, int]] = {}
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith("#"):
-                continue
-            items: list[str] = line.split()
-            name_src: str = items[0]
-            name_dst: str = items[1]
-            angle: int = int(items[2])
-            table[name_dst] = (name_src, angle)
-    return table
-
 ########################################################################
 
 
@@ -607,7 +592,7 @@ def main() -> None:
     output_filename: str = sys.argv[3]
 
     table: dict[str, tuple[str, int]] = \
-        load_copy_and_rotateTable(copy_and_rotate_filename)
+        load_table.load_copy_and_rotate_as_dict(copy_and_rotate_filename)
 
     tree: ET.ElementTree = ET.parse(source_filename)
     root: ET.Element = tree.getroot()
