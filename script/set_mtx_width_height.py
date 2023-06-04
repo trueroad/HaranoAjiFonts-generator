@@ -35,56 +35,73 @@
 #
 
 import sys
+from typing import Optional, TextIO
 import xml.etree.ElementTree as ET
 
-def load_table(file):
-    table = {}
+def load_table(file: str) -> dict[str, int]:
+    table: dict[str, int] = {}
+    f: TextIO
     with open(file, "r") as f:
+        line: str
         for line in f:
             if line.startswith('#'):
                 continue
-            items = line.split()
-            name = items[0]
-            width = int(items[1])
-            table[name] = width
+            items: list[str] = line.split()
+            name: str = items[0]
+            if items[1].isdecimal():
+                width: int = int(items[1])
+                table[name] = width
     return table
 
 ########################################################################
 
 
-def main():
+def main() -> None:
     if len(sys.argv) <= 3:
         print("Usage: set_mtx_width_height.py {width|height}.tbl " \
               "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
         sys.exit(1)
 
-    table_filename = sys.argv[1]
-    input_filename = sys.argv[2]
-    output_filename = sys.argv[3]
+    table_filename: str = sys.argv[1]
+    input_filename: str = sys.argv[2]
+    output_filename: str = sys.argv[3]
 
-    table = load_table(table_filename)
+    table: dict[str, int] = load_table(table_filename)
 
-    tree = ET.parse(input_filename)
-    root = tree.getroot()
+    tree: ET.ElementTree = ET.parse(input_filename)
+    root: ET.Element = tree.getroot()
 
+    name: Optional[str]
+    hmtx: ET.Element
     for hmtx in root.findall("./hmtx/mtx"):
-        name = hmtx.attrib["name"]
+        name = hmtx.get("name")
+        if name is None:
+            continue
         if name in table:
             print("hmtx {}".format(name))
-            width = int(hmtx.attrib["width"])
-            new_width = table[name]
+            width_str: Optional[str] = hmtx.get("width")
+            if width_str is None:
+                continue
+            width: int = int(width_str)
+            new_width: int = table[name]
             if width != new_width:
-                hmtx.attrib["width"] = str(new_width)
+                hmtx.set("width", str(new_width))
                 print("  Width {} -> {}".format(width, new_width))
 
+    vmtx: ET.Element
     for vmtx in root.findall("./vmtx/mtx"):
         name = vmtx.attrib["name"]
+        if name is None:
+            continue
         if name in table:
             print("vmtx {}".format(name))
-            height = int(vmtx.attrib["height"])
-            new_height = table[name]
+            height_str: Optional[str] = vmtx.get("height")
+            if height_str is None:
+                continue
+            height: int = int(height_str)
+            new_height: int = table[name]
             if height != new_height:
-                vmtx.attrib["height"] = str(new_height)
+                vmtx.set("height", str(new_height))
                 print("  Height {} -> {}".format(height, new_height))
 
     ET.indent(tree, '  ')
