@@ -38,6 +38,7 @@ import sys
 from typing import Optional, TextIO
 import xml.etree.ElementTree as ET
 
+
 def load_table(file: str) -> dict[str, int]:
     table: dict[str, int] = {}
     f: TextIO
@@ -58,7 +59,7 @@ def load_table(file: str) -> dict[str, int]:
 
 def main() -> None:
     if len(sys.argv) <= 3:
-        print("Usage: set_mtx_width_height.py {width|height}.tbl " \
+        print("Usage: set_mtx_width_height.py {width|height}.tbl "
               "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
         sys.exit(1)
 
