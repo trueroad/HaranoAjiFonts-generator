@@ -332,6 +332,22 @@ def load_calc_table(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For GSUB single subst table (feature_*.tbl etc.)
+#
+
+
+def load_gsub_single_table(filename: Union[str, bytes, os.PathLike[Any]]
+                           ) -> list[tuple[str, str]]:
+    """Load GSUB single subst table (feature_*.tbl etc.)."""
+    table: list[tuple[str, str]] = []
+    name_in: str
+    name_out: str
+    for name_in, name_out, _ in load_copy_and_rotate(filename):
+        table.append((name_in, name_out))
+    return table
+
+
+#
 # Main
 #
 
