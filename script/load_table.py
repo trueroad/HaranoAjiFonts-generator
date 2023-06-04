@@ -286,6 +286,52 @@ def load_letter_face_cid_set(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For calc.tbl (shift_*.lst, copy_and_rotate.tbl, adjust.tbl)
+#
+
+
+def load_calc_table(filename: Union[str, bytes, os.PathLike[Any]]
+                    ) -> list[str]:
+    """Load calc.tbl (shift_*.lst, copy_and_rotate.tbl, adjust.tbl)."""
+    table: list[str] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        name: str
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+
+            if len(items) == 2 and items[1].isdecimal():
+                # shift_*.lst format
+                name = items[0]
+            elif len(items) == 3 and not items[1].isdecimal():
+                # copy_and_rotate.tbl format
+                name = items[1]
+            elif len(items) == 6 and items[1].isdecimal():
+                # adjust.tbl format
+                name = items[0]
+            else:
+                print(f'Error: Invalid table format.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+
+            if not name[3:].isdecimal():
+                print("Error: name doesn't have CID number.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  name: '{name}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            table.append(name)
+    return table
+
+
+#
 # Main
 #
 
