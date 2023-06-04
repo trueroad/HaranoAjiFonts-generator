@@ -7,6 +7,7 @@
 #   adjust the position of the CFF glyph.
 #
 # Copyright (C) 2020 Yukimasa Morimi.
+# Copyright (C) 2023 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -47,50 +48,11 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-FDArray = []
-GlobalSubrs = []
-
-# load GlobalSubrs
-def load_GlobalSubrs(root):
-    for cs in root.findall("./CFF/GlobalSubrs/CharString"):
-        GlobalSubrs.append(cs.text)
-
-# load FDArray
-def load_FDArray(root):
-    for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
-        FontDict = {}
-        for cs in fd.findall("./Private/*"):
-            if "value" in cs.attrib:
-                FontDict[cs.tag] = cs.attrib["value"]
-        Subrs = []
-        for cs in fd.findall("./Private/Subrs/CharString"):
-            Subrs.append(cs.text)
-        FontDict["Subrs"] = Subrs
-        FDArray.append(FontDict)
-
-def get_GlobalSubr(index):
-    if len(GlobalSubrs) < 1240:
-        return GlobalSubrs[index + 107]
-    elif len(GlobalSubrs) < 33900:
-        return GlobalSubrs[index + 1131]
-    else:
-        return GlobalSubrs[index + 32768]
-
-def get_LocalSubr(fd, index):
-    Subrs = FDArray[fd]["Subrs"]
-    if len(Subrs) < 1240:
-        return Subrs[index + 107]
-    elif len(Subrs) < 33900:
-        return Subrs[index + 1131]
-    else:
-        return Subrs[index + 32768]
-
-re_isInt = re.compile(r"^-?\d+$")
-re_isFloat = re.compile(r"^-?\d+(?:\.\d+)?$")
+import cff
 
 def adjust_CharString(cs, fd, wd, dx, dy, sx, sy):
-    defaultWidthX = int(FDArray[fd]["defaultWidthX"])
-    nominalWidthX = int(FDArray[fd]["nominalWidthX"])
+    defaultWidthX = int(cff.FDArray[fd]["defaultWidthX"])
+    nominalWidthX = int(cff.FDArray[fd]["nominalWidthX"])
 
     stack = []
     result_list = []
@@ -104,9 +66,9 @@ def adjust_CharString(cs, fd, wd, dx, dy, sx, sy):
 
     while len(curr_list) > 0:
         op = curr_list.pop(0)
-        if re_isInt.match(op) is not None:
+        if cff.re_isInt.match(op) is not None:
             stack.append(int(op))
-        elif re_isFloat.match(op) is not None:
+        elif cff.re_isFloat.match(op) is not None:
             stack.append(float(op))
         elif op == "rmoveto" or op == "hmoveto" or op == "vmoveto":
             # |- dx1 dy1 rmoveto (21) |-
@@ -359,10 +321,10 @@ def adjust_CharString(cs, fd, wd, dx, dy, sx, sy):
             stack.clear()
         elif op == "callsubr":
             list_stack.append(curr_list)
-            curr_list = get_LocalSubr(fd, stack.pop()).split()
+            curr_list = cff.get_LocalSubr(fd, stack.pop()).split()
         elif op == "callgsubr":
             list_stack.append(curr_list)
-            curr_list = get_GlobalSubr(stack.pop()).split()
+            curr_list = cff.get_GlobalSubr(stack.pop()).split()
         elif op == "return":
             curr_list = list_stack.pop()
         else:
@@ -401,8 +363,8 @@ table = load_adjustTable(adjust_filename)
 tree = ET.parse(source_filename)
 root = tree.getroot()
 
-load_FDArray(root)
-load_GlobalSubrs(root)
+cff.load_FDArray(root)
+cff.load_GlobalSubrs(root)
 
 for cs in root.findall("./CFF/CFFFont/CharStrings/CharString"):
     name = cs.attrib["name"]

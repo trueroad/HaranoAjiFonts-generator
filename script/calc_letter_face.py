@@ -53,60 +53,11 @@ import sys
 from typing import cast, Any, Final, TextIO, Union
 import xml.etree.ElementTree as ET
 
+import cff
 import load_table
 
 debug_mode: bool = False
 tkinter: Any
-
-FDArray: list[dict[str, Union[str, list[str]]]] = []
-GlobalSubrs: list[str] = []
-
-
-def load_GlobalSubrs(root: ET.Element) -> None:
-    """Load GlobalSubrs."""
-    cs: ET.Element
-    for cs in root.findall("./CFF/GlobalSubrs/CharString"):
-        if cs.text is not None:
-            GlobalSubrs.append(cs.text)
-
-
-def load_FDArray(root: ET.Element) -> None:
-    """Load FDArray."""
-    fd: ET.Element
-    for fd in root.findall("./CFF/CFFFont/FDArray/FontDict"):
-        FontDict: dict[str, Union[str, list[str]]] = {}
-        cs: ET.Element
-        for cs in fd.findall("./Private/*"):
-            if "value" in cs.attrib:
-                FontDict[cs.tag] = cs.attrib["value"]
-        Subrs: list[str] = []
-        for cs in fd.findall("./Private/Subrs/CharString"):
-            if cs.text is not None:
-                Subrs.append(cs.text)
-        FontDict["Subrs"] = Subrs
-        FDArray.append(FontDict)
-
-
-def get_GlobalSubr(index: int) -> str:
-    """Get GlobalSubr."""
-    if len(GlobalSubrs) < 1240:
-        return GlobalSubrs[index + 107]
-    elif len(GlobalSubrs) < 33900:
-        return GlobalSubrs[index + 1131]
-    else:
-        return GlobalSubrs[index + 32768]
-
-
-def get_LocalSubr(fd: int, index: int) -> str:
-    """Get LocalSubr."""
-    Subrs: list[str] = cast(list[str], FDArray[fd]["Subrs"])
-    if len(Subrs) < 1240:
-        return Subrs[index + 107]
-    elif len(Subrs) < 33900:
-        return Subrs[index + 1131]
-    else:
-        return Subrs[index + 32768]
-
 
 # for debug
 canvas: Any
@@ -286,10 +237,6 @@ def point_move(x: float, y: float) -> None:
     debug_first_y = y
 
 
-re_isInt: re.Pattern[str] = re.compile(r"^-?\d+$")
-re_isFloat: re.Pattern[str] = re.compile(r"^-?\d+(?:\.\d+)?$")
-
-
 def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
     """Calc CharString."""
     stack: list[float] = []
@@ -312,9 +259,9 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
 
     while len(curr_list) > 0:
         op: str = curr_list.pop(0)
-        if re_isInt.match(op) is not None:
+        if cff.re_isInt.match(op) is not None:
             stack.append(int(op))
-        elif re_isFloat.match(op) is not None:
+        elif cff.re_isFloat.match(op) is not None:
             stack.append(float(op))
         elif op == "rmoveto" or op == "hmoveto" or op == "vmoveto":
             # |- dx1 dy1 rmoveto (21) |-
@@ -849,10 +796,10 @@ def calc_CharString(cs: str, fd: int) -> tuple[float, float, float, float]:
             stack.clear()
         elif op == "callsubr":
             list_stack.append(curr_list)
-            curr_list = get_LocalSubr(fd, int(stack.pop())).split()
+            curr_list = cff.get_LocalSubr(fd, int(stack.pop())).split()
         elif op == "callgsubr":
             list_stack.append(curr_list)
-            curr_list = get_GlobalSubr(int(stack.pop())).split()
+            curr_list = cff.get_GlobalSubr(int(stack.pop())).split()
         elif op == "return":
             curr_list = list_stack.pop()
         else:
@@ -974,8 +921,8 @@ def main() -> None:
     tree: ET.ElementTree = ET.parse(source_filename)
     root: ET.Element = tree.getroot()
 
-    load_FDArray(root)
-    load_GlobalSubrs(root)
+    cff.load_FDArray(root)
+    cff.load_GlobalSubrs(root)
 
     print("# name x_min y_min x_max y_max")
 
