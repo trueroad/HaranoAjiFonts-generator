@@ -3,10 +3,10 @@
 # Harano Aji Fonts generator
 # https://github.com/trueroad/HaranoAjiFonts-generator
 #
-# set_hmtx_width.py:
-#   Set hmtx width for pwid glyphs.
+# set_mtx_width_height.py:
+#   Set hmtx width or vmtx height for pwid or pwidvert glyphs.
 #
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2023 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -52,9 +52,9 @@ def load_table(file):
 ########################################################################
 
 if len(sys.argv) <= 3:
-    print("Usage: set_hmtx_width.py width.tbl " \
-          "INPUT.hmtx.ttx OUTPUT.hmtx.ttx")
-    exit(1)
+    print("Usage: set_mtx_width_height.py {width|height}.tbl " \
+          "INPUT.{h|v}mtx.ttx OUTPUT.{h|v}mtx.ttx")
+    sys.exit(1)
 
 table_filename = sys.argv[1]
 input_filename = sys.argv[2]
@@ -74,6 +74,16 @@ for hmtx in root.findall("./hmtx/mtx"):
         if width != new_width:
             hmtx.attrib["width"] = str(new_width)
             print("  Width {} -> {}".format(width, new_width))
+
+for vmtx in root.findall("./vmtx/mtx"):
+    name = vmtx.attrib["name"]
+    if name in table:
+        print("vmtx {}".format(name))
+        height = int(vmtx.attrib["height"])
+        new_height = table[name]
+        if height != new_height:
+            vmtx.attrib["height"] = str(new_height)
+            print("  Height {} -> {}".format(height, new_height))
 
 ET.indent(tree, '  ')
 tree.write(output_filename)

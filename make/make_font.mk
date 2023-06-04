@@ -448,7 +448,7 @@ hmtx02.ttx: table.tbl hmtx01.ttx
 # Set hmtx width for pwid glyphs
 hmtx03.ttx: adjust_pwid.tbl hmtx02.ttx
 	@echo "setting hmtx width for pwid glyphs..."
-	@$(SCRIPTDIR)/set_hmtx_width.py \
+	@$(SCRIPTDIR)/set_mtx_width_height.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
@@ -467,7 +467,7 @@ hmtx.ttx: letter_face.tbl hmtx03.ttx
 # Set vmtx height for pwidvert glyphs
 vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
 	@echo "setting vmtx height for pwid glyphs..."
-	@$(SCRIPTDIR)/set_vmtx_height.py \
+	@$(SCRIPTDIR)/set_mtx_width_height.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
@@ -475,7 +475,7 @@ vmtx02.ttx: height_pwidvert.tbl vmtx01.ttx
 # Set vmtx height for pre-rotated glyphs
 vmtx03.ttx: height_pre_rotated.tbl vmtx02.ttx
 	@echo "setting vmtx height for pre-rotated glyphs..."
-	@$(SCRIPTDIR)/set_vmtx_height.py \
+	@$(SCRIPTDIR)/set_mtx_width_height.py \
 		$+ \
 		$@ \
 		> $(addsuffix .log,$(basename $@)) 2>&1
