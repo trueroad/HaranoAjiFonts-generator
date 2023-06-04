@@ -38,6 +38,8 @@
 import sys
 import xml.etree.ElementTree as ET
 
+import load_table
+
 def get_gsub_index (root, feature):
     indexes = set ()
 
@@ -69,16 +71,6 @@ def add_single_table (root, index, table):
                       f'(exists {old_name_out})')
                 elem.attrib['out'] = name_out
 
-def load_table (file):
-    table = []
-    with open (file, "r") as f:
-        for line in f:
-            if line.startswith ('#'):
-                continue
-            items = line.split ()
-            table.append ([items[0], items[1]])
-    return table
-
 def main ():
     if len (sys.argv) != 5:
         print ("Usage: add_gsub_single.py FEATURE INPUT_TABLE.tbl " \
@@ -90,7 +82,7 @@ def main ():
     input_filename = sys.argv[3]
     output_filename = sys.argv[4]
 
-    table = load_table (table_filename)
+    table = load_table.load_gsub_single_table(table_filename)
 
     tree = ET.parse (input_filename)
     root = tree.getroot ()
