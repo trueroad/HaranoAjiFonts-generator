@@ -5,7 +5,7 @@
 // make_hkana_table_main.cc:
 //   Make horizontal Kana table
 //
-// Copyright (C) 2020 Masamichi Hosoda.
+// Copyright (C) 2020, 2023 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(Make horizontal Kana table)"
     << std::endl
-    << "Copyright (C) 2020 Masamichi Hosoda"
+    << "Copyright (C) 2020, 2023 Masamichi Hosoda"
     << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator"
     << std::endl << std::endl;
@@ -167,6 +167,7 @@ int main (int argc, char *argv[])
                   << "\taji"
                   << std::setw (5) << std::setfill ('0')
                   << cid_aj1_hkna_out
+                  << "\t0"
                   << std::endl;
     }
 
