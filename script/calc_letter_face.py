@@ -53,6 +53,8 @@ import sys
 from typing import cast, Any, Final, TextIO, Union
 import xml.etree.ElementTree as ET
 
+import load_table
+
 debug_mode: bool = False
 tkinter: Any
 
@@ -946,24 +948,6 @@ def bezier(t: float,
         + 1.0 * y0
     return x, y
 
-
-def load_calcTable(file: str) -> list[str]:
-    """Load calc table."""
-    table: list[str] = []
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith("#"):
-                continue
-            items: list[str] = line.split()
-            name0: str = items[0]
-            name: str = items[1]
-            if re_isInt.match(name) is not None:
-                name = name0
-            table.append(name)
-    return table
-
 ########################################################################
 
 
@@ -985,7 +969,7 @@ def main() -> None:
     global debug_mode
     debug_mode = cast(bool, vargs['debug'])
 
-    table: list[str] = load_calcTable(calc_filename)
+    table: list[str] = load_table.load_calc_table(calc_filename)
 
     tree: ET.ElementTree = ET.parse(source_filename)
     root: ET.Element = tree.getroot()
