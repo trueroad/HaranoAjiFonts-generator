@@ -42,25 +42,27 @@ import load_table
 import gsub
 
 
-def main ():
+def main () -> None:
     if len (sys.argv) != 5:
         print ("Usage: add_gsub_single.py FEATURE INPUT_TABLE.tbl " \
                "INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
-        exit (1)
+        sys.exit (1)
 
-    feature = sys.argv[1]
-    table_filename = sys.argv[2]
-    input_filename = sys.argv[3]
-    output_filename = sys.argv[4]
+    feature: str = sys.argv[1]
+    table_filename: str = sys.argv[2]
+    input_filename: str = sys.argv[3]
+    output_filename: str = sys.argv[4]
 
-    table = load_table.load_gsub_single_table(table_filename)
+    table: list[tuple[str, str]] = \
+        load_table.load_gsub_single_table(table_filename)
 
-    tree = ET.parse (input_filename)
-    root = tree.getroot ()
+    tree: ET.ElementTree = ET.parse (input_filename)
+    root: ET.Element = tree.getroot ()
 
-    indexes = gsub.get_gsub_lookup_indexes(root, feature)
+    indexes: set[int] = gsub.get_gsub_lookup_indexes(root, feature)
     print ("{} lookup table index: {}".format (feature, indexes))
 
+    index: int
     for index in indexes:
         gsub.add_gsub_single_substs(root, index, table)
 
