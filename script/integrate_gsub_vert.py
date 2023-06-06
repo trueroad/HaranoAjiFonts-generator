@@ -7,7 +7,7 @@
 # integrate_gsub_vert.py:
 #   Integrate GSUB vert lookup tables.
 #
-# Copyright (C) 2020 Masamichi Hosoda.
+# Copyright (C) 2020, 2023 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@
 # SUCH DAMAGE.
 #
 
+import pprint
 import sys
 import xml.etree.ElementTree as ET
 
@@ -95,7 +96,8 @@ def main ():
         for j in integrate[i]:
             substs += gsub.get_gsub_single_substs(root, j)
 
-        print ("substs: {}".format (substs))
+        print("substs:")
+        pprint.pprint(substs)
         gsub.add_gsub_single_substs(root, i, substs)
 
     remove_index = set ()
