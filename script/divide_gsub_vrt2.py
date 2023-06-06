@@ -40,39 +40,12 @@ from typing import Optional
 import sys
 import xml.etree.ElementTree as ET
 
-
-def get_max_index(root: ET.Element) -> int:
-    """Get max index."""
-    i: int = 0
-    lookup: ET.Element
-    for lookup in root.findall("./GSUB/LookupList/Lookup"):
-        index_str: Optional[str] = lookup.get('index')
-        if index_str is not None and i != int(index_str):
-            print(f'Lookup index error: index {index_str}, expected {i}')
-            sys.exit(1)
-        i += 1
-
-    return i - 1
-
-
-def get_indexes(root: ET.Element, feature: str) -> set[int]:
-    """Get indexes."""
-    indexes: set[int] = set()
-
-    lli: ET.Element
-    for lli in root.findall('./GSUB/FeatureList/FeatureRecord'
-                            f"/FeatureTag[@value='{feature}']"
-                            '/../Feature/LookupListIndex'):
-        index_str: Optional[str] = lli.get('value')
-        if index_str is not None:
-            indexes.add(int(index_str))
-
-    return indexes
+import gsub
 
 
 def insert_lookup(root: ET.Element, insert_index: int) -> int:
     """Insert lookup."""
-    max_index: int = get_max_index(root)
+    max_index: int = gsub.get_gsub_lookup_index_max(root)
 
     if insert_index < 0:
         insert_index = max_index + 1
@@ -160,9 +133,9 @@ def main() -> None:
     tree: ET.ElementTree = ET.parse(input_filename)
     root: ET.Element = tree.getroot()
 
-    max_index: int = get_max_index(root)
-    vert_indexes: set[int] = get_indexes(root, 'vert')
-    vrt2_indexes: set[int] = get_indexes(root, 'vrt2')
+    max_index: int = gsub.get_gsub_lookup_index_max(root)
+    vert_indexes: set[int] = gsub.get_gsub_lookup_indexes(root, 'vert')
+    vrt2_indexes: set[int] = gsub.get_gsub_lookup_indexes(root, 'vrt2')
 
     print(f'max index   : {max_index}\n'
           f'vert indexes: {vert_indexes}\n'

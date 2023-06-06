@@ -39,37 +39,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 import load_table
+import gsub
 
-def get_gsub_index (root, feature):
-    indexes = set ()
-
-    for feature_record in root.findall ("./GSUB/FeatureList/FeatureRecord"):
-        if feature_record.find \
-           ("./FeatureTag[@value='{}']".format (feature)) is not None:
-            for lookup_list_index in \
-                feature_record.findall ("./Feature/LookupListIndex"):
-                indexes.add (int (lookup_list_index.attrib["value"]))
-
-    return indexes
-
-def add_single_table (root, index, table):
-    ss = root.find ("./GSUB/LookupList/Lookup[@index='" + str (index) \
-                    + "']/SingleSubst")
-    for name_in, name_out in table:
-        elem = ss.find(f"Substitution[@in='{name_in}']")
-        if elem is None:
-            print(f'Adding: {name_in} -> {name_out}')
-            new_elem = ET.SubElement (ss, "Substitution")
-            new_elem.attrib["in"] = name_in
-            new_elem.attrib["out"] = name_out
-        else:
-            old_name_out = elem.attrib['out']
-            if old_name_out == name_out:
-                print(f'Already exists: {name_in} -> {name_out}')
-            else:
-                print(f'Warning: overwriting {name_in} -> {name_out} '
-                      f'(exists {old_name_out})')
-                elem.attrib['out'] = name_out
 
 def main ():
     if len (sys.argv) != 5:
@@ -87,11 +58,11 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
-    indexes = get_gsub_index (root, feature)
+    indexes = gsub.get_gsub_lookup_indexes(root, feature)
     print ("{} lookup table index: {}".format (feature, indexes))
 
     for index in indexes:
-        add_single_table (root, index, table)
+        gsub.add_gsub_single_substs(root, index, table)
 
     ET.indent(tree, '  ')
     tree.write (output_filename)

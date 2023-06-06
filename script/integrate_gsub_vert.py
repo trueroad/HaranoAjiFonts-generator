@@ -38,29 +38,7 @@
 import sys
 import xml.etree.ElementTree as ET
 
-def get_max_index (root):
-    for elem_lookup_list in root.findall ("./GSUB/LookupList"):
-        i = 0
-        for l in elem_lookup_list.findall ("./Lookup"):
-            index = int (l.attrib["index"])
-            if i != index:
-                print ("Lookup index error: index {}, expected {}". \
-                       format (index, i))
-                exit (1);
-            i += 1
-
-    return i - 1
-
-def get_vrt2_index (root):
-    vrt2 = set ()
-
-    for feature_record in root.findall ("./GSUB/FeatureList/FeatureRecord"):
-        if feature_record.find ("./FeatureTag[@value='vrt2']") is not None:
-            for lookup_list_index in \
-                feature_record.findall ("./Feature/LookupListIndex"):
-                vrt2.add (int (lookup_list_index.attrib["value"]))
-
-    return vrt2
+import gsub
 
 def get_vert_index (root, vrt2_index):
     vert = set ()
@@ -85,24 +63,6 @@ def get_vert_index (root, vrt2_index):
 
     return vert
 
-def get_single_substs (root, index):
-    substs = []
-
-    xpath = "./GSUB/LookupList/Lookup[@index='" + str (index) \
-        + "']/SingleSubst/Substitution"
-    for elem in root.findall (xpath):
-        substs.append ((elem.attrib["in"], elem.attrib["out"]))
-
-    return substs
-
-def add_single_substs (root, index, substs):
-    ss = root.find ("./GSUB/LookupList/Lookup[@index='" + str (index) \
-                    + "']/SingleSubst")
-    for (name_in, name_out) in substs:
-        new_elem = ET.SubElement (ss, "Substitution")
-        new_elem.attrib["in"] = name_in
-        new_elem.attrib["out"] = name_out
-
 def main ():
     if len (sys.argv) != 3:
         print ("Usage: integrate_gsub_vert.py INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
@@ -114,9 +74,9 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
-    max_index = get_max_index (root)
+    max_index = gsub.get_gsub_lookup_index_max(root)
     print ("max lookup table index: {}".format (max_index))
-    vrt2_index = get_vrt2_index (root)
+    vrt2_index = gsub.get_gsub_lookup_indexes(root, 'vrt2')
     print ("vrt2 lookup table index: {}".format (vrt2_index))
 
     integrate = {}
@@ -133,10 +93,10 @@ def main ():
 
         substs = []
         for j in integrate[i]:
-            substs += get_single_substs (root, j)
+            substs += gsub.get_gsub_single_substs(root, j)
 
         print ("substs: {}".format (substs))
-        add_single_substs (root, i, substs)
+        gsub.add_gsub_single_substs(root, i, substs)
 
     remove_index = set ()
 
@@ -179,7 +139,7 @@ def main ():
                 lli.attrib["value"] = str (renum_index - 1)
         max_index -= 1
 
-    if get_max_index (root) !=  max_index:
+    if gsub.get_gsub_lookup_index_max(root) !=  max_index:
         print ("max lookup index error")
         exit (1)
 

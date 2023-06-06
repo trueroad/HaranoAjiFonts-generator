@@ -39,27 +39,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 import load_table
-
-def get_gsub_index (root, feature):
-    indexes = set ()
-
-    for feature_record in root.findall ("./GSUB/FeatureList/FeatureRecord"):
-        if feature_record.find \
-           ("./FeatureTag[@value='{}']".format (feature)) is not None:
-            for lookup_list_index in \
-                feature_record.findall ("./Feature/LookupListIndex"):
-                indexes.add (int (lookup_list_index.attrib["value"]))
-
-    return indexes
-
-def remove_single_table (root, index, table):
-    ss = root.find ("./GSUB/LookupList/Lookup[@index='" + str (index) \
-                    + "']/SingleSubst")
-    for name_in, name_out in table:
-        elem = ss.find ("./Substitution[@in='" + name_in + "'][@out='" + \
-                        name_out + "']")
-        if elem != None:
-            ss.remove (elem)
+import gsub
 
 def main ():
     if len (sys.argv) != 5:
@@ -77,11 +57,11 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
-    indexes = get_gsub_index (root, feature)
+    indexes = gsub.get_gsub_lookup_indexes(root, feature)
     print ("{} lookup table index: {}".format (feature, indexes))
 
     for index in indexes:
-        remove_single_table (root, index, table)
+        gsub.remove_gsub_single_substs(root, index, table)
 
     ET.indent(tree, '  ')
     tree.write (output_filename)
