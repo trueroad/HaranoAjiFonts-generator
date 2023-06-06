@@ -41,11 +41,12 @@ import xml.etree.ElementTree as ET
 import load_table
 import gsub
 
-def main () -> None:
-    if len (sys.argv) != 5:
-        print ("Usage: remove_gsub_single.py FEATURE INPUT_TABLE.tbl " \
-               "INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
-        exit (1)
+
+def main() -> None:
+    if len(sys.argv) != 5:
+        print("Usage: remove_gsub_single.py FEATURE INPUT_TABLE.tbl "
+              "INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
+        sys.exit(1)
 
     feature: str = sys.argv[1]
     table_filename: str = sys.argv[2]
@@ -55,18 +56,19 @@ def main () -> None:
     table: list[tuple[str, str]] = \
         load_table.load_gsub_single_table(table_filename)
 
-    tree: ET.ElementTree = ET.parse (input_filename)
-    root: ET.Element = tree.getroot ()
+    tree: ET.ElementTree = ET.parse(input_filename)
+    root: ET.Element = tree.getroot()
 
     indexes: set[int] = gsub.get_gsub_lookup_indexes(root, feature)
-    print ("{} lookup table index: {}".format (feature, indexes))
+    print("{} lookup table index: {}".format(feature, indexes))
 
     index: int
     for index in indexes:
         gsub.remove_gsub_single_substs(root, index, table)
 
     ET.indent(tree, '  ')
-    tree.write (output_filename)
+    tree.write(output_filename)
+
 
 if __name__ == "__main__":
-    main ()
+    main()
