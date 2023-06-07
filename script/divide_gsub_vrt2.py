@@ -89,27 +89,6 @@ def insert_lookup(root: ET.Element, insert_index: int) -> int:
     return insert_index
 
 
-def copy_singlesubst(root: ET.Element, src_index: int, dst_index: int) -> None:
-    """Copy SingleSubst."""
-    dst_ss: Optional[ET.Element] = \
-        root.find(f"./GSUB/LookupList/Lookup[@index='{dst_index}']"
-                  '/SingleSubst')
-    if dst_ss is None:
-        print('cannot find dst_index: {dst_index}')
-        sys.exit(1)
-
-    s: ET.Element
-    for s in root.findall("./GSUB/LookupList/Lookup[@index='"
-                          f'{src_index}'
-                          "']/SingleSubst/Substitution"):
-        new_s: ET.Element = ET.SubElement(dst_ss, 'Substitution')
-        s_in: Optional[str] = s.get('in')
-        s_out: Optional[str] = s.get('out')
-        if s_in is not None and s_out is not None:
-            new_s.set('in', s_in)
-            new_s.set('out', s_out)
-
-
 def replace_index_feature(root: ET.Element, feature: str,
                           old_index: int, new_index: int) -> None:
     """Replace index of feature."""
@@ -154,7 +133,7 @@ def main() -> None:
     vert_index: int = list(vert_indexes)[0]
 
     insert_index: int = insert_lookup(root, vert_index + 1)
-    copy_singlesubst(root, vert_index, insert_index)
+    gsub.copy_gsub_single_substs(root, vert_index, insert_index)
     replace_index_feature(root, 'vrt2', vert_index, insert_index)
 
     ET.indent(tree, '  ')
