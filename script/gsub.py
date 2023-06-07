@@ -161,6 +161,33 @@ def list_features_by_lookup_index(root: ET.Element) -> list[set[str]]:
     return result
 
 
+def get_lookup_index_to_insert_before_feature(root: ET.Element,
+                                              feature_tag: str
+                                              ) -> Optional[int]:
+    """Get lookup index to insert before the specified feature tag."""
+    lookups: list[set[str]] = list_features_by_lookup_index(root)
+    i: int
+    for i in range(len(lookups)):
+        if feature_tag in lookups[i]:
+            return i
+    return None
+
+
+def get_lookup_index_to_insert_after_feature(root: ET.Element,
+                                             feature_tag: str
+                                             ) -> Optional[int]:
+    """Get lookup index to insert after the specified feature tag."""
+    lookups: list[set[str]] = list_features_by_lookup_index(root)
+    result: Optional[int] = None
+    i: int
+    for i in range(len(lookups)):
+        if feature_tag in lookups[i]:
+            result = i
+    if result is not None:
+        result += 1
+    return result
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
