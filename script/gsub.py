@@ -139,6 +139,28 @@ def copy_gsub_single_substs(root: ET.Element,
     add_gsub_single_substs(root, lookup_index_dst, substs)
 
 
+def list_features_by_lookup_index(root: ET.Element) -> list[set[str]]:
+    """List feature tags by lookup index."""
+    result: list[set[str]] = []
+    fr: ET.Element
+    for fr in root.findall('./GSUB/FeatureList/FeatureRecord'):
+        ft: Optional[ET.Element] = fr.find('./FeatureTag')
+        if ft is None:
+            continue
+        feature_tag: Optional[str] = ft.get('value')
+        if feature_tag is None:
+            continue
+        lli: ET.Element
+        for lli in fr.findall('./Feature/LookupListIndex'):
+            value: Optional[str] = lli.get('value')
+            if value is not None and value.isdecimal():
+                lookup_index: int = int(value)
+                while len(result) <= lookup_index:
+                    result.append(set())
+                result[lookup_index] |= {feature_tag}
+    return result
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
