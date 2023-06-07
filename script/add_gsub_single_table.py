@@ -38,46 +38,7 @@
 import sys
 import xml.etree.ElementTree as ET
 
-def list_feature_lookup (root):
-    dic = {}
-    max_value = -1
-    for fr in root.findall ("./GSUB/FeatureList/FeatureRecord"):
-        ft = fr.find ("FeatureTag")
-        feature = ft.attrib["value"]
-        for lli in fr.findall ("./Feature/LookupListIndex"):
-            value = int (lli.attrib["value"])
-            if value in dic:
-                dic[value] = set (sorted (dic[value] | { feature }))
-            else:
-                dic[value] = { feature }
-            if max_value < value:
-                max_value = value
-
-    result = []
-    for index in range (0, max_value + 1):
-        result.append (dic[index])
-
-    return result
-
-def get_insert_index_before_feature (root, feature):
-    lookups = list_feature_lookup (root)
-    for index in range (0, len (lookups)):
-        if feature in lookups[index]:
-            return index
-
-    return -1
-
-def get_insert_index_after_feature (root, feature):
-    lookups = list_feature_lookup (root)
-    feature_index = -1
-    for index in range (0, len (lookups)):
-        if feature in lookups[index]:
-            feature_index = index
-
-    if feature_index >= 0:
-        feature_index += 1
-
-    return feature_index
+import gsub
 
 def insert_lookup (root, insert_index):
     ll = root.find ("./GSUB/LookupList")
@@ -184,7 +145,7 @@ def main ():
     tree = ET.parse (input_filename)
     root = tree.getroot ()
 
-    lookups = list_feature_lookup (root)
+    lookups = gsub.list_features_by_lookup_index(root)
     for index in range (0, len (lookups)):
         print ("lookup index {}: {}".format (index, lookups[index]))
     print ("")
@@ -193,15 +154,17 @@ def main ():
     if position_reference == "after":
         print ("inserting {} after {}".format (feature, existing_feature))
         lookup_index = \
-            insert_lookup (root, \
-                           get_insert_index_after_feature (root, \
-                                                           existing_feature))
+            insert_lookup(
+                root,
+                gsub.get_lookup_index_to_insert_after_feature
+                (root, existing_feature))
     elif position_reference == "before":
         print ("inserting {} before {}".format (feature, existing_feature))
         lookup_index = \
-            insert_lookup (root, \
-                           get_insert_index_before_feature (root, \
-                                                            existing_feature))
+            insert_lookup(
+                root,
+                gsub.get_lookup_index_to_insert_before_feature
+                (root, existing_feature))
     elif position_reference == "append":
         print ("appending {}".format (feature))
         lookup_index = append_lookup (root)
