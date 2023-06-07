@@ -130,6 +130,15 @@ def remove_gsub_single_substs(root: ET.Element, lookup_index: int,
             ss.remove(elem)
 
 
+def copy_gsub_single_substs(root: ET.Element,
+                            lookup_index_src: int, lookup_index_dst: int
+                            ) -> None:
+    """Copy GSUB single substs in lookup index."""
+    substs: list[tuple[str, str]] = \
+        get_gsub_single_substs(root, lookup_index_src)
+    add_gsub_single_substs(root, lookup_index_dst, substs)
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
