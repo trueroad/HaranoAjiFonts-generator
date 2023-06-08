@@ -43,52 +43,6 @@ import xml.etree.ElementTree as ET
 import gsub
 
 
-def insert_lookup(root: ET.Element, insert_index: int) -> int:
-    """Insert lookup."""
-    max_index: int = gsub.get_gsub_lookup_index_max(root)
-
-    if insert_index < 0:
-        insert_index = max_index + 1
-
-    print(f'preparing to insert lookup index {insert_index}')
-    if insert_index < max_index + 1:
-        renum_index: int
-        for renum_index in reversed(range(insert_index, max_index + 1)):
-            print('renumbering lookup index '
-                  f'{renum_index} to {renum_index + 1}')
-            l: Optional[ET.Element] = \
-                root.find(f"./GSUB/LookupList/Lookup[@index='{renum_index}']")
-            if l is None:
-                print('cannot find Lookup index {renum_index}')
-                sys.exit(1)
-            l.set('index', str(renum_index + 1))
-
-            lli: ET.Element
-            # In KR/K1, `LookupIndex`s requiring renumbering exist outside of
-            # `./GSUB/FeatureList/FeatureRecord/Feature`, such as
-            # `./GSUB/LookupList/Lookup/ChainContextSubst/SubstLookupRecord`.
-            for lli in root.findall('./GSUB//LookupListIndex'
-                                    f"[@value='{renum_index}']"):
-                lli.set('value', str(renum_index + 1))
-
-    print(f'inserting lookup index {insert_index}')
-    ll: Optional[ET.Element] = root.find('./GSUB/LookupList')
-    if ll is None:
-        print('cannot find LookupList')
-        sys.exit(1)
-    new_l: ET.Element = ET.Element('Lookup')
-    ll.insert(insert_index, new_l)
-    new_l.set('index', str(insert_index))
-    new_lt: ET.Element = ET.SubElement(new_l, 'LookupType')
-    new_lt.set('value', '1')
-    new_lf: ET.Element = ET.SubElement(new_l, 'LookupFlag')
-    new_lf.set('value', '0')
-    new_ss: ET.Element = ET.SubElement(new_l, 'SingleSubst')
-    new_ss.set('index', '0')
-
-    return insert_index
-
-
 def replace_index_feature(root: ET.Element, feature: str,
                           old_index: int, new_index: int) -> None:
     """Replace index of feature."""
@@ -132,7 +86,7 @@ def main() -> None:
 
     vert_index: int = list(vert_indexes)[0]
 
-    insert_index: int = insert_lookup(root, vert_index + 1)
+    insert_index: int = gsub.insert_lookup(root, vert_index + 1)
     gsub.copy_gsub_single_substs(root, vert_index, insert_index)
     replace_index_feature(root, 'vrt2', vert_index, insert_index)
 

@@ -40,71 +40,6 @@ import xml.etree.ElementTree as ET
 
 import gsub
 
-def insert_lookup (root, insert_index):
-    ll = root.find ("./GSUB/LookupList")
-    i = 0
-    for l in ll.findall ("./Lookup"):
-        index = int (l.attrib["index"])
-        if i != index:
-            print ("Lookup index error: index {}, expected {}". \
-                   format (index, i))
-            exit (1);
-        i += 1;
-    print ("max lookup index is {}".format (i - 1))
-
-    if insert_index < 0:
-        insert_index = i
-
-    print ("preparing to insert lookup index {}".format (insert_index))
-    if i > insert_index:
-        for renum_index in reversed (range (insert_index, i)):
-            print ("renumbering lookup index {} to {}".\
-                   format (renum_index, renum_index + 1))
-            l = ll.find ("./Lookup[@index='" + str (renum_index) + "']")
-            l.attrib["index"] = str (renum_index + 1)
-
-            xpath = "./GSUB//LookupListIndex[@value='" + \
-                str (renum_index) + "']"
-            for lli in root.findall (xpath):
-                lli.attrib["value"] = str (renum_index + 1)
-
-    print ("inserting lookup index {}".format (insert_index))
-    new_l = ET.Element ("Lookup")
-    ll.insert (insert_index, new_l)
-    new_l.attrib["index"] = str(insert_index)
-    new_lt = ET.SubElement (new_l, "LookupType")
-    new_lt.attrib["value"] = "1"
-    new_lf = ET.SubElement (new_l, "LookupFlag")
-    new_lf.attrib["value"] = "0"
-    new_ss = ET.SubElement (new_l, "SingleSubst")
-    new_ss.attrib["Format"] = "2"
-    new_ss.attrib["index"] = "0"
-
-    return insert_index
-
-def append_lookup (root):
-    ll = root.find ("./GSUB/LookupList")
-    i = 0
-    for l in ll.findall ("./Lookup"):
-        index = int (l.attrib["index"])
-        if i != index:
-            print ("Lookup index error: index {}, expected {}". \
-                   format (index, i))
-            exit (1);
-        i += 1;
-
-    new_l = ET.SubElement (ll, "Lookup")
-    new_l.attrib["index"] = str (i)
-    new_lt = ET.SubElement (new_l, "LookupType")
-    new_lt.attrib["value"] = "1"
-    new_lf = ET.SubElement (new_l, "LookupFlag")
-    new_lf.attrib["value"] = "0"
-    new_ss = ET.SubElement (new_l, "SingleSubst")
-    new_ss.attrib["Format"] = "2"
-    new_ss.attrib["index"] = "0"
-
-    return i
-
 def create_feature_record (root, tag, lookup_index):
     fl = root.find ("./GSUB/FeatureList")
     i = 0
@@ -154,20 +89,20 @@ def main ():
     if position_reference == "after":
         print ("inserting {} after {}".format (feature, existing_feature))
         lookup_index = \
-            insert_lookup(
+            gsub.insert_lookup(
                 root,
                 gsub.get_lookup_index_to_insert_after_feature
                 (root, existing_feature))
     elif position_reference == "before":
         print ("inserting {} before {}".format (feature, existing_feature))
         lookup_index = \
-            insert_lookup(
+            gsub.insert_lookup(
                 root,
                 gsub.get_lookup_index_to_insert_before_feature
                 (root, existing_feature))
     elif position_reference == "append":
         print ("appending {}".format (feature))
-        lookup_index = append_lookup (root)
+        lookup_index = gsub.insert_lookup(root, -1)
     else:
         print ("unknown position reference '{}'".format (position_reference))
         exit (1)
