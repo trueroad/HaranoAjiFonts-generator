@@ -88,19 +88,7 @@ def main ():
         print ("feature {} already exists".format (feature))
         exit (1)
 
-    print ("adding FeatureIndex for DefaultLangSys")
-    xpath = "./GSUB/ScriptList/ScriptRecord/Script/DefaultLangSys"
-    for ls in root.findall (xpath):
-        index = gsub.create_feature_record(root, feature, lookup_index)
-        new_fi = ET.SubElement (ls, "FeatureIndex")
-        new_fi.attrib["value"] = str (index)
-
-    print ("adding FeatureIndex for LangSysRecord/LangSys")
-    xpath = "./GSUB/ScriptList/ScriptRecord/Script/LangSysRecord/LangSys"
-    for ls in root.findall (xpath):
-        index = gsub.create_feature_record(root, feature, lookup_index)
-        new_fi = ET.SubElement (ls, "FeatureIndex")
-        new_fi.attrib["value"] = str (index)
+    gsub.add_script_record(root, feature, lookup_index)
 
     ET.indent(tree, '  ')
     tree.write (output_filename)
