@@ -40,30 +40,6 @@ import xml.etree.ElementTree as ET
 
 import gsub
 
-def create_feature_record (root, tag, lookup_index):
-    fl = root.find ("./GSUB/FeatureList")
-    i = 0
-    for fr in fl.findall ("./FeatureRecord"):
-        index = int (fr.attrib["index"])
-        if i != index:
-            print ("FeatureReocrd index error: index {}, expected {}". \
-                   format (index, i))
-            exit (1);
-        i += 1;
-
-    print ("creating feature record index {} that has {} lookup index {}". \
-           format (i, tag, lookup_index))
-    new_fr = ET.SubElement (fl, "FeatureRecord")
-    new_fr.attrib["index"] = str (i)
-    new_ft = ET.SubElement (new_fr, "FeatureTag")
-    new_ft.attrib["value"] = tag
-    new_f = ET.SubElement (new_fr, "Feature")
-    new_lli = ET.SubElement (new_f, "LookupListIndex")
-    new_lli.attrib["index"] = "0"
-    new_lli.attrib["value"] = str (lookup_index)
-
-    return i
-
 def main ():
     if len (sys.argv) != 6:
         print ("Usage: add_gsub_single_table.py {before|after|append}" \
@@ -115,14 +91,14 @@ def main ():
     print ("adding FeatureIndex for DefaultLangSys")
     xpath = "./GSUB/ScriptList/ScriptRecord/Script/DefaultLangSys"
     for ls in root.findall (xpath):
-        index = create_feature_record (root, feature, lookup_index)
+        index = gsub.create_feature_record(root, feature, lookup_index)
         new_fi = ET.SubElement (ls, "FeatureIndex")
         new_fi.attrib["value"] = str (index)
 
     print ("adding FeatureIndex for LangSysRecord/LangSys")
     xpath = "./GSUB/ScriptList/ScriptRecord/Script/LangSysRecord/LangSys"
     for ls in root.findall (xpath):
-        index = create_feature_record (root, feature, lookup_index)
+        index = gsub.create_feature_record(root, feature, lookup_index)
         new_fi = ET.SubElement (ls, "FeatureIndex")
         new_fi.attrib["value"] = str (index)
 
