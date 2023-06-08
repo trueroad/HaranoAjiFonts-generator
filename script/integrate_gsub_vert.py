@@ -41,35 +41,36 @@ import xml.etree.ElementTree as ET
 
 import gsub
 
-def main () -> None:
-    if len (sys.argv) != 3:
-        print ("Usage: integrate_gsub_vert.py INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
+
+def main() -> None:
+    if len(sys.argv) != 3:
+        print("Usage: integrate_gsub_vert.py INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
         sys.exit(1)
 
     input_filename: str = sys.argv[1]
     output_filename: str = sys.argv[2]
 
-    tree: ET.ElementTree = ET.parse (input_filename)
-    root: ET.Element = tree.getroot ()
+    tree: ET.ElementTree = ET.parse(input_filename)
+    root: ET.Element = tree.getroot()
 
     max_index: int = gsub.get_gsub_lookup_index_max(root)
-    print ("max lookup table index: {}".format (max_index))
+    print("max lookup table index: {}".format(max_index))
     vrt2_index: set[int] = gsub.get_gsub_lookup_indexes(root, 'vrt2')
-    print ("vrt2 lookup table index: {}".format (vrt2_index))
+    print("vrt2 lookup table index: {}".format(vrt2_index))
 
     integrate: dict[int, set[int]] = {}
 
     i: int
     for i in vrt2_index:
         vert_index: set[int] = gsub.get_gsub_lookup_indexes(root, 'vert')
-        print ("vert lookup table index: {}".format (vert_index))
+        print("vert lookup table index: {}".format(vert_index))
         if i in vert_index:
-            vert_index.remove (i)
+            vert_index.remove(i)
             integrate[i] = vert_index
 
     for i in integrate:
-        print ("Integrating: vert/vrt2 index {} <- vert index {}...".\
-               format (i, integrate[i]))
+        print("Integrating: vert/vrt2 index {} <- vert index {}...".
+              format(i, integrate[i]))
 
         substs: list[tuple[str, str]] = []
         j: int
@@ -80,57 +81,58 @@ def main () -> None:
         pprint.pprint(substs)
         gsub.add_gsub_single_substs(root, i, substs)
 
-    remove_index: set[int] = set ()
+    remove_index: set[int] = set()
 
     for i in integrate:
         for j in integrate[i]:
-            print ("Removing: vert lookup list index {}".format (j))
-            remove_index.add (j)
+            print("Removing: vert lookup list index {}".format(j))
+            remove_index.add(j)
             xpath: str = "./GSUB/FeatureList/FeatureRecord" + \
                 "/FeatureTag[@value='vert']/../Feature"
             elem_feature: ET.Element
-            for elem_feature in root.findall (xpath):
-                for elem in elem_feature.findall \
-                    ("./LookupListIndex[@value='" + str (j) + "']"):
-                    elem_feature.remove (elem)
+            for elem_feature in root.findall(xpath):
+                for elem in elem_feature.findall('./LookupListIndex'
+                                                 f"[@value='{j}']"):
+                    elem_feature.remove(elem)
 
     for i in remove_index:
-        print ("Removing: lookup table index {}".format (i))
-        for elem_lookup_list in root.findall ("./GSUB/LookupList"):
-            xpath = "./Lookup[@index='" + str (i) + "']"
-            for elem in elem_lookup_list.findall (xpath):
-                elem_lookup_list.remove (elem)
+        print("Removing: lookup table index {}".format(i))
+        for elem_lookup_list in root.findall("./GSUB/LookupList"):
+            xpath = "./Lookup[@index='" + str(i) + "']"
+            for elem in elem_lookup_list.findall(xpath):
+                elem_lookup_list.remove(elem)
 
-    remove_index_list: list[int] = sorted (remove_index)
-    for i in reversed (remove_index_list):
+    remove_index_list: list[int] = sorted(remove_index)
+    for i in reversed(remove_index_list):
         if i == max_index:
             max_index -= 1
-            remove_index_list.remove (i)
+            remove_index_list.remove(i)
 
-    for i in reversed (remove_index_list):
+    for i in reversed(remove_index_list):
         renum_index: int
-        for renum_index in range (i + 1, max_index + 1):
-            print ("renumbering lookup index {} to {}".\
-                   format (renum_index, renum_index - 1))
+        for renum_index in range(i + 1, max_index + 1):
+            print("renumbering lookup index {} to {}".
+                  format(renum_index, renum_index - 1))
             xpath = "./GSUB/LookupList/Lookup[@index='" + \
-                str (renum_index) + "']"
-            l: ET.Element
-            for l in root.findall (xpath):
-                l.attrib["index"] = str (renum_index - 1)
+                str(renum_index) + "']"
+            lookup: ET.Element
+            for lookup in root.findall(xpath):
+                lookup.attrib["index"] = str(renum_index - 1)
 
             xpath = "./GSUB//LookupListIndex[@value='" + \
-                str (renum_index) + "']"
+                str(renum_index) + "']"
             lli: ET.Element
-            for lli in root.findall (xpath):
-                lli.attrib["value"] = str (renum_index - 1)
+            for lli in root.findall(xpath):
+                lli.attrib["value"] = str(renum_index - 1)
         max_index -= 1
 
-    if gsub.get_gsub_lookup_index_max(root) !=  max_index:
-        print ("max lookup index error")
+    if gsub.get_gsub_lookup_index_max(root) != max_index:
+        print("max lookup index error")
         sys.exit(1)
 
     ET.indent(tree, '  ')
-    tree.write (output_filename)
+    tree.write(output_filename)
+
 
 if __name__ == "__main__":
-    main ()
+    main()
