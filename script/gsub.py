@@ -188,6 +188,57 @@ def get_lookup_index_to_insert_after_feature(root: ET.Element,
     return result
 
 
+def insert_lookup(root: ET.Element, lookup_index_to_insert: int) -> int:
+    """Insert lookup."""
+    max_index: int = get_gsub_lookup_index_max(root)
+
+    insert_index: int
+    if lookup_index_to_insert < 0:
+        insert_index = max_index + 1
+    else:
+        insert_index = lookup_index_to_insert
+
+    print(f'preparing to insert lookup index {insert_index}',
+          file=sys.stderr)
+    if insert_index < max_index + 1:
+        renum_index: int
+        for renum_index in reversed(range(insert_index, max_index + 1)):
+            print('renumbering lookup index '
+                  f'{renum_index} to {renum_index + 1}', file=sys.stderr)
+            l: Optional[ET.Element] = \
+                root.find(f"./GSUB/LookupList/Lookup[@index='{renum_index}']")
+            if l is None:
+                print('cannot find Lookup index {renum_index}',
+                      file=sys.stderr)
+                sys.exit(1)
+            l.set('index', str(renum_index + 1))
+
+            lli: ET.Element
+            # In KR/K1, `LookupIndex`s requiring renumbering exist outside of
+            # `./GSUB/FeatureList/FeatureRecord/Feature`, such as
+            # `./GSUB/LookupList/Lookup/ChainContextSubst/SubstLookupRecord`.
+            for lli in root.findall('./GSUB//LookupListIndex'
+                                    f"[@value='{renum_index}']"):
+                lli.set('value', str(renum_index + 1))
+
+    print(f'inserting lookup index {insert_index}', file=sys.stderr)
+    ll: Optional[ET.Element] = root.find('./GSUB/LookupList')
+    if ll is None:
+        print('cannot find LookupList', file=sys.stderr)
+        sys.exit(1)
+    new_l: ET.Element = ET.Element('Lookup')
+    ll.insert(insert_index, new_l)
+    new_l.set('index', str(insert_index))
+    new_lt: ET.Element = ET.SubElement(new_l, 'LookupType')
+    new_lt.set('value', '1')
+    new_lf: ET.Element = ET.SubElement(new_l, 'LookupFlag')
+    new_lf.set('value', '0')
+    new_ss: ET.Element = ET.SubElement(new_l, 'SingleSubst')
+    new_ss.set('index', '0')
+
+    return insert_index
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
