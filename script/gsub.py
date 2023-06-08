@@ -239,6 +239,41 @@ def insert_lookup(root: ET.Element, lookup_index_to_insert: int) -> int:
     return insert_index
 
 
+def get_gsub_feature_record_index_max(root: ET.Element) -> int:
+    """Get GSUB feature record index maximum."""
+    max_index: int = -1
+    fr: ET.Element
+    for fr in root.findall('./GSUB/FeatureList/FeatureRecord'):
+        index: int = int(fr.get('index', '-1'))
+        if max_index < index:
+            max_index = index
+    return max_index
+
+
+def create_feature_record(root: ET.Element,
+                          feature_tag:  str, lookup_index: int) -> int:
+    """Create feature record that has specified lookup index."""
+    max_index: int = get_gsub_feature_record_index_max(root)
+
+    print(f'creating feature record index {max_index + 1}'
+          f" that has '{feature_tag}' lookup index {lookup_index}",
+          file=sys.stderr)
+    fl: Optional[ET.Element] = root.find('./GSUB/FeatureList')
+    if fl is None:
+        print('cannot find FeatureList', file=sys.stderr)
+        sys.exit(1)
+    new_fr = ET.SubElement(fl, 'FeatureRecord')
+    new_fr.set('index', str(max_index + 1))
+    new_ft = ET.SubElement(new_fr, 'FeatureTag')
+    new_ft.set('value', feature_tag)
+    new_f = ET.SubElement(new_fr, 'Feature')
+    new_lli = ET.SubElement(new_f, 'LookupListIndex')
+    new_lli.set('index', '0')
+    new_lli.set('value', str(lookup_index))
+
+    return max_index + 1
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
