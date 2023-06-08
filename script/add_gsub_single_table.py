@@ -41,8 +41,9 @@ import xml.etree.ElementTree as ET
 
 import gsub
 
-def main () -> None:
-    if len (sys.argv) != 6:
+
+def main() -> None:
+    if len(sys.argv) != 6:
         print('Usage: add_gsub_single_table.py {before|after|append}'
               ' EXISTING_FEATURE_TAG \\\n'
               '           NEW_FEATURE_TAG INPUT_GSUB.ttx OUTPUT_GSUB.ttx')
@@ -54,19 +55,19 @@ def main () -> None:
     input_filename: str = sys.argv[4]
     output_filename: str = sys.argv[5]
 
-    tree: ET.ElementTree = ET.parse (input_filename)
-    root: ET.Element = tree.getroot ()
+    tree: ET.ElementTree = ET.parse(input_filename)
+    root: ET.Element = tree.getroot()
 
     lookups: list[set[str]] = gsub.list_features_by_lookup_index(root)
     index: int
     for index in range(len(lookups)):
-        print ("lookup index {}: {}".format (index, lookups[index]))
-    print ("")
+        print("lookup index {}: {}".format(index, lookups[index]))
+    print("")
 
     lookup_index: Optional[int]
     if position_reference == "after":
-        print ("inserting {} after {}".format (feature_tag,
-                                               existing_feature_tag))
+        print("inserting {} after {}".format(feature_tag,
+                                             existing_feature_tag))
         lookup_index = \
             gsub.get_lookup_index_to_insert_after_feature(
                 root, existing_feature_tag)
@@ -75,8 +76,8 @@ def main () -> None:
             sys.exit(1)
         lookup_index = gsub.insert_lookup(root, lookup_index)
     elif position_reference == "before":
-        print ("inserting {} before {}".format (feature_tag,
-                                                existing_feature_tag))
+        print("inserting {} before {}".format(feature_tag,
+                                              existing_feature_tag))
         lookup_index = \
             gsub.get_lookup_index_to_insert_before_feature(
                 root, existing_feature_tag)
@@ -85,21 +86,22 @@ def main () -> None:
             sys.exit(1)
         lookup_index = gsub.insert_lookup(root, lookup_index)
     elif position_reference == "append":
-        print ("appending {}".format (feature_tag))
+        print("appending {}".format(feature_tag))
         lookup_index = gsub.insert_lookup(root, -1)
     else:
-        print ("unknown position reference '{}'".format (position_reference))
+        print("unknown position reference '{}'".format(position_reference))
         sys.exit(1)
 
     if root.find('./GSUB/FeatureList/FeatureRecord'
                  f"/FeatureTag[@value='{feature_tag}']") is not None:
-        print ("feature {} already exists".format (feature_tag))
+        print("feature {} already exists".format(feature_tag))
         sys.exit(1)
 
     gsub.add_script_record(root, feature_tag, lookup_index)
 
     ET.indent(tree, '  ')
-    tree.write (output_filename)
+    tree.write(output_filename)
+
 
 if __name__ == "__main__":
-    main ()
+    main()
