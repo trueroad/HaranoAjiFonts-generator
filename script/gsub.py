@@ -274,6 +274,29 @@ def create_feature_record(root: ET.Element,
     return max_index + 1
 
 
+def add_script_record(root: ET.Element,
+                      feature_tag: str, lookup_index: int) -> None:
+    """Add script record that has specified feature tag and lookup index."""
+    ls: ET.Element
+    index: int
+    new_fi: ET.Element
+
+    print('adding FeatureIndex for DefaultLangSys', file=sys.stderr)
+    for ls in root.findall('./GSUB/ScriptList/ScriptRecord/Script'
+                           '/DefaultLangSys'):
+        index = create_feature_record(root, feature_tag, lookup_index)
+        new_fi = ET.SubElement(ls, 'FeatureIndex')
+        new_fi.set('value', str(index))
+
+    print('adding FeatureIndex for LangSysRecord/LangSys', file=sys.stderr)
+    xpath = "./GSUB/ScriptList/ScriptRecord/Script/LangSysRecord/LangSys"
+    for ls in root.findall('./GSUB/ScriptList/ScriptRecord/Script/'
+                           'LangSysRecord/LangSys'):
+        index = create_feature_record(root, feature_tag, lookup_index)
+        new_fi = ET.SubElement(ls, 'FeatureIndex')
+        new_fi.set('value', str(index))
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
