@@ -41,29 +41,6 @@ import xml.etree.ElementTree as ET
 
 import gsub
 
-def get_vert_index (root, vrt2_index):
-    vert = set ()
-
-    for feature_record in root.findall ("./GSUB/FeatureList/FeatureRecord"):
-        if feature_record.find ("./FeatureTag[@value='vert']") is not None:
-            v = set ()
-            for lookup_list_index in \
-                feature_record.findall ("./Feature/LookupListIndex"):
-                v.add (int (lookup_list_index.attrib["value"]))
-            if vrt2_index in v:
-                print ("found vrt2 index {} in vert indexes {}".\
-                       format (vrt2_index, v))
-                if len (vert) != 0 and v != vert:
-                    print ("different vert indexes {} and {} with same vrt2".\
-                           format (vert, v))
-                    exit (1)
-                vert = v
-            else:
-                print ("not found vrt2 index {} in vert index {}".\
-                       format (vrt2_index, v))
-
-    return vert
-
 def main ():
     if len (sys.argv) != 3:
         print ("Usage: integrate_gsub_vert.py INPUT_GSUB.ttx OUTPUT_GSUB.ttx")
@@ -83,10 +60,11 @@ def main ():
     integrate = {}
 
     for i in vrt2_index:
-        vert_index = get_vert_index (root, i)
+        vert_index = gsub.get_gsub_lookup_indexes(root, 'vert')
         print ("vert lookup table index: {}".format (vert_index))
-        vert_index.remove (i)
-        integrate[i] = vert_index
+        if i in vert_index:
+            vert_index.remove (i)
+            integrate[i] = vert_index
 
     for i in integrate:
         print ("Integrating: vert/vrt2 index {} <- vert index {}...".\
