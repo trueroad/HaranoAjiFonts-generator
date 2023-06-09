@@ -38,6 +38,8 @@
 from typing import List, Set
 import sys
 
+import load_table
+
 
 def make_hwid_h() -> Set[int]:
     retval: Set[int] = set()
@@ -142,17 +144,6 @@ def make_pwid_v() -> Set[int]:
     return retval
 
 
-def load_available(file: str) -> List[int]:
-    retval: List[int] = []
-    with open(file, "r") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            cid: int = int(line)
-            retval.append(cid)
-    return retval
-
-
 def main() -> None:
     if len(sys.argv) != 2:
         print('Usage: check_kana_coverage.py '
@@ -163,7 +154,7 @@ def main() -> None:
 
     available_filename: str = sys.argv[1]
 
-    available_list: List[int] = load_available(available_filename)
+    available_list: List[int] = load_table.load_available(available_filename)
 
     # hwid
     hwid_h: Set[int] = make_hwid_h()

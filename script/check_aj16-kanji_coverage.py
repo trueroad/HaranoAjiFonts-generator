@@ -38,6 +38,8 @@
 from typing import List
 import sys
 
+import load_table
+
 
 def load_aj16(file: str) -> List[int]:
     retval: List[int] = []
@@ -49,17 +51,6 @@ def load_aj16(file: str) -> List[int]:
             if len(items) > 1:
                 cid: int = int(items[0])
                 retval.append(cid)
-    return retval
-
-
-def load_available(file: str) -> List[int]:
-    retval: List[int] = []
-    with open(file, "r") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            cid: int = int(line)
-            retval.append(cid)
     return retval
 
 
@@ -75,7 +66,7 @@ def main() -> None:
     available_filename: str = sys.argv[2]
 
     aj16_list: List[int] = load_aj16(aj16_filename)
-    available_list: List[int] = load_available(available_filename)
+    available_list: List[int] = load_table.load_available(available_filename)
 
     missing_list: List[int] = []
     for cid in aj16_list:

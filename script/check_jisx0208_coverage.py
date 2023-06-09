@@ -38,6 +38,8 @@
 from typing import List
 import sys
 
+import load_table
+
 
 # JISX0208-SourceHan-Mapping.txt: Source Han's JIS X 0208 mapping file from
 # Adobe-Japan1-6 vs Source Han
@@ -62,17 +64,6 @@ def load_jisx0208(file: str) -> List[int]:
     return retval
 
 
-def load_available(file: str) -> List[int]:
-    retval: List[int] = []
-    with open(file, "r") as f:
-        for line in f:
-            if line.startswith('#'):
-                continue
-            cid: int = int(line)
-            retval.append(cid)
-    return retval
-
-
 def main() -> None:
     if len(sys.argv) != 3:
         print('Usage: check_jisx0208_coverage.py '
@@ -86,7 +77,7 @@ def main() -> None:
     available_filename: str = sys.argv[2]
 
     jisx0208_list: List[int] = load_jisx0208(jisx0208_filename)
-    available_list: List[int] = load_available(available_filename)
+    available_list: List[int] = load_table.load_available(available_filename)
 
     # print(sorted(jisx0208_list))
 
