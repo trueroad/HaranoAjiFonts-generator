@@ -348,6 +348,42 @@ def load_gsub_single_table(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For width.tbl and height.tbl
+#
+
+
+def load_width_height(filename: Union[str, bytes, os.PathLike[Any]]
+                      ) -> dict[str, int]:
+    """Load width.tbl and height.tbl."""
+    table: dict[str, int] = {}
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if len(items) != 2 and len(items) != 6:
+                print("Error: Invalid table format.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            name: str = items[0]
+            if not items[1].isdecimal():
+                print('Error: 2nd column (width or height) is not integer.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  2nd column: '{items[1]}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            width: int = int(items[1])
+            table[name] = width
+    return table
+
+
+#
 # For available.txt
 #
 
