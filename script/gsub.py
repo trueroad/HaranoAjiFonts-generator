@@ -297,6 +297,18 @@ def add_script_record(root: ET.Element,
         new_fi.set('value', str(index))
 
 
+def replace_lookup_index_of_feature(root: ET.Element, feature_tag: str,
+                                    old_lookup_index: int,
+                                    new_lookup_index: int) -> None:
+    """Replace index of feature."""
+    lli: ET.Element
+    for lli in root.findall('./GSUB/FeatureList/FeatureRecord'
+                            f"/FeatureTag[@value='{feature_tag}']"
+                            '/../Feature'
+                            f"/LookupListIndex[@value='{old_lookup_index}']"):
+        lli.set('value', str(new_lookup_index))
+
+
 def main() -> None:
     """Test main."""
     if len(sys.argv) != 2:
