@@ -40,24 +40,7 @@ import sys
 from typing import Optional, TextIO
 import xml.etree.ElementTree as ET
 
-
-def load_table(file: str) -> dict[str, int]:
-    """Load {width|height}.tbl."""
-    table: dict[str, int] = {}
-    f: TextIO
-    with open(file, "r") as f:
-        line: str
-        for line in f:
-            if line.startswith('#'):
-                continue
-            items: list[str] = line.split()
-            name: str = items[0]
-            if items[1].isdecimal():
-                width: int = int(items[1])
-                table[name] = width
-    return table
-
-########################################################################
+import load_table
 
 
 def main() -> None:
@@ -71,7 +54,7 @@ def main() -> None:
     input_filename: str = sys.argv[2]
     output_filename: str = sys.argv[3]
 
-    table: dict[str, int] = load_table(table_filename)
+    table: dict[str, int] = load_table.load_width_height(table_filename)
 
     tree: ET.ElementTree = ET.parse(input_filename)
     root: ET.Element = tree.getroot()
