@@ -49,6 +49,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 import cff
+import load_table
 
 def adjust_CharString(cs, fd, wd, dx, dy, sx, sy):
     defaultWidthX = int(cff.FDArray[fd]["defaultWidthX"])
@@ -358,7 +359,7 @@ adjust_filename = sys.argv[1]
 source_filename = sys.argv[2]
 output_filename = sys.argv[3]
 
-table = load_adjustTable(adjust_filename)
+table = load_table.load_adjust_table(adjust_filename)
 
 tree = ET.parse(source_filename)
 root = tree.getroot()
