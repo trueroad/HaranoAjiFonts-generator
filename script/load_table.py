@@ -348,6 +348,35 @@ def load_gsub_single_table(filename: Union[str, bytes, os.PathLike[Any]]
 
 
 #
+# For available.txt
+#
+
+
+def load_available(filename: Union[str, bytes, os.PathLike[Any]]
+                   ) -> list[int]:
+    """Load available.txt."""
+    table: list[int] = []
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if not (len(items) == 1 and items[0].isdecimal()):
+                print("Error: Invalid table format.\n"
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            cid: int = int(items[0])
+            table.append(cid)
+    return table
+
+
+#
 # Main
 #
 
