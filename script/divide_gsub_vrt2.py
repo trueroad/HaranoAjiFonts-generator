@@ -43,17 +43,6 @@ import xml.etree.ElementTree as ET
 import gsub
 
 
-def replace_index_feature(root: ET.Element, feature: str,
-                          old_index: int, new_index: int) -> None:
-    """Replace index of feature."""
-    lli: ET.Element
-    for lli in root.findall('./GSUB/FeatureList/FeatureRecord'
-                            f"/FeatureTag[@value='{feature}']"
-                            '/../Feature'
-                            f"/LookupListIndex[@value='{old_index}']"):
-        lli.set('value', str(new_index))
-
-
 def main() -> None:
     """Do main."""
     if len(sys.argv) != 3:
@@ -88,7 +77,8 @@ def main() -> None:
 
     insert_index: int = gsub.insert_lookup(root, vert_index + 1)
     gsub.copy_gsub_single_substs(root, vert_index, insert_index)
-    replace_index_feature(root, 'vrt2', vert_index, insert_index)
+    gsub.replace_lookup_index_of_feature(root, 'vrt2',
+                                         vert_index, insert_index)
 
     ET.indent(tree, '  ')
     tree.write(output_filename)
