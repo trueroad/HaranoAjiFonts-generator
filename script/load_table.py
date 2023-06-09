@@ -382,6 +382,52 @@ def load_width_height(filename: Union[str, bytes, os.PathLike[Any]]
             table[name] = width
     return table
 
+#
+# For adjust.tbl
+#
+
+
+def load_adjust_table(filename: Union[str, bytes, os.PathLike[Any]]
+                      ) -> dict[str, tuple[int, float, float, float, float]]:
+    """Load adjust.tbl."""
+    table: dict[str, tuple[int, float, float, float, float]] = {}
+    f: TextIO
+    with open(filename, 'r') as f:
+        row: int = 0
+        line: str
+        for line in f:
+            row += 1
+            if line.startswith('#'):
+                continue
+            items: list[str] = line.split()
+            if len(items) != 6:
+                print('Error: Invalid table format.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            name: str = items[0]
+            if not items[1].isdecimal():
+                print('Error: 2nd column (width) is not integer.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  2nd column: '{items[1]}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            width: int = int(items[1])
+            try:
+                dx: float = float(items[2])
+                dy: float = float(items[3])
+                sx: float = float(items[4])
+                sy: float = float(items[5])
+            except ValueError as e:
+                print(f'Error: {e}.\n'
+                      f"  row {row}, filename '{str(filename)}',\n"
+                      f"  line: '{line}'",
+                      file=sys.stderr)
+                sys.exit(1)
+            table[name] = (width, dx, dy, sx, sy)
+    return table
+
 
 #
 # For available.txt
