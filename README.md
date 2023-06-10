@@ -238,6 +238,16 @@ AJ1 への対応が取れたものを搭載します。
 * `’` AJ1 CID+12172 U+2019 'RIGHT SINGLE QUOTATION MARK'
     + AJ1 CID+12174 を270 (-90)度回転
 
+一部の[
+回転グリフ
+](https://github.com/adobe-type-tools/Adobe-Japan1/blob/master/README-JP.md#%E5%9B%9E%E8%BB%A2%E3%82%B0%E3%83%AA%E3%83%95)
+（[
+Pre-Rotated Glyphs
+](https://github.com/adobe-type-tools/Adobe-Japan1#pre-rotated-glyphs)
+）について、
+回転前のグリフが存在するものについて90度回転させることで搭載しています
+（20230610 版以降）。
+
 抜けているグリフのCIDにはダミーグリフ
 （.notdef と同じで四角の中に×が入ったような形）が入っています。
 そのほとんどは
@@ -984,6 +994,33 @@ AJ1-7
 「プロポーショナルかな縦組み用」は vpal を使って
 全角グリフを調整して配置したものです。
 
+原ノ味フォント 20230610 から
+一部の[
+回転グリフ
+](https://github.com/adobe-type-tools/Adobe-Japan1/blob/master/README-JP.md#%E5%9B%9E%E8%BB%A2%E3%82%B0%E3%83%AA%E3%83%95)
+（[
+Pre-Rotated Glyphs
+](https://github.com/adobe-type-tools/Adobe-Japan1#pre-rotated-glyphs)
+）について、
+回転前のグリフが存在するものについて90度回転させることで搭載しています
+(JP, CN, TW, K1)。
+[
+半角幅回転グリフの要望
+](https://github.com/trueroad/HaranoAjiFonts/issues/10)
+によるものですが、半角幅以外でも回転前グリフが存在すれば搭載しています。
+半角幅でも回転前グリフが存在しないものは搭載していません。
+[
+回転後グリフのボディ内のレターフェイス（字面）位置
+](https://github.com/trueroad/HaranoAjiFonts/issues/10#issuecomment-1565343385)
+、
+[
+高さ深さなどのパラメータ
+](https://github.com/trueroad/HaranoAjiFonts/issues/10#issuecomment-1565328290)
+などは、
+SIL Open Font License で配布されている Adobe-Japan1-3 フォントである
+IBM Plex Sans JP を参考に設定しています。
+これらが他の標準的な Adobe-Japan1 フォントと同じかどうかはわかりません。
+
 #### `hmtx`, `vmtx`
 
 `hmtx`, `vmtx` 用の変換プログラムで
@@ -1013,6 +1050,10 @@ akr-hangul.txt
 の最初に出てくる CID） の横幅に揃えました。
 その他、KR で追加したスペースのグリフについて、横幅を
 AKR CID+221 の幅や数字グリフの幅を元に設定しています。
+
+原ノ味フォント 20230610 から、
+回転グリフについて回転前グリフの横幅を回転後グリフの
+height へ設定しています。
 
 #### `VORG`
 
@@ -1126,6 +1167,19 @@ vrt2 が vert と同じ内容になるようにしました。
 ことがあったので、JP のみ CID 個別指定で実施していた vert 追加を、
 AJ17 などの GSUB を読み込んで反映するよう汎用化して多言語対応しました。
 
+原ノ味フォント 20230610 から、
+回転グリフを搭載するにあたって `vert` と `vrt2` を独立させました。
+OpenType 規格的には `vrt2` は `vert`
+のすべてを含むスーパーセットである必要があり、
+回転グリフは `vrt2` にのみ含まれる必要があります。
+これだけなら `vert` と `vrt2` の共通部分を含んだテーブルと
+回転グリフだけ含んだテーブルを用意して、`vert` は共通テーブルのみ、
+`vrt2` は両方のテーブルを使うようにすればよさそうなのですが、
+困ったことに `vrt2` は単一テーブルでなければならないという制約があります。
+ということで `vert` と `vrt2` を独立させ、
+回転グリフ以外は双方で同一のものを含み、
+回転グリフは `vrt2` だけに含まれるようにしています。
+
 #### `DSIG`
 
 必須テーブルではないため削除しています。
@@ -1133,6 +1187,29 @@ AJ17 などの GSUB を読み込んで反映するよう汎用化して多言語
 
 ## 履歴
 
+* [
+20230610
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230610)
+(JP, CN, TW, KR, K1)
+    + 一部の回転グリフを追加 (JP, CN, TW, K1)
+        - [
+半角幅回転グリフの要望
+](https://github.com/trueroad/HaranoAjiFonts/issues/10)
+          によるもの。
+        - 半角幅以外でも回転前グリフが搭載しています。
+        - 半角幅でも回転前グリフが存在しないものは搭載していません。
+        - KR は AKR 規格に回転グリフがありません。
+    + スクリプト類などのリファクタリングを実施
+        - 生成されるフォントには特に影響ないハズです。
+    + バージョンアップ
+        - python 3.9.16
+        - ttx 4.39.4
+    + グリフ数 (JP)
+        + 原ノ味明朝：18015
+          （変換 16867 ＋グリフ加工 699 ＋回転グリフ 448 ＋ .notdef 1）
+        + 原ノ味角ゴシック：18015
+          （変換 16866 ＋グリフ加工 700 ＋回転グリフ 448 ＋ .notdef 1）
+        + 回転グリフ追加により 448 増です。
 * [
 20230223
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230223)
@@ -1612,8 +1689,8 @@ CID](https://twitter.com/trueroad_jp/status/1304001557822730241)
         + CharString でダミーグリフを展開せず、
           サブルーチン呼び出しに変更したことによります
     + 2グリフの描画位置を再調整しました
-        + 20200215 版では位置調整の結果ボックス内右上隅に寄っていましたが、
-          他の AJ1 フォントではボックス内左上隅に寄っていたため再調整しました
+        + 20200215 版では位置調整の結果ボディ内右上隅に寄っていましたが、
+          他の AJ1 フォントではボディ内左上隅に寄っていたため再調整しました
             + AJ1 CID+16326 U+3099
               'COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK'
             + AJ1 CID+16327 U+309A

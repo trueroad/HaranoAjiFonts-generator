@@ -289,6 +289,22 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20230610
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230610)
+(JP, CN, TW, KR, K1)
+    + Add pre-rotated glyphs (JP, CN, TW, K1)
+    + Refactor scripts
+    + Update
+        + python 3.9.16
+        + ttx 4.39.4
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 18015
+          (conversion 16867 + glyph processing 699 + pre-rotated 448
+          + .notdef 1)
+        - HaranoAjiGothic: 18015
+          (conversion 16866 + glyph processing 700 + pre-rotated 448
+          + .notdef 1)
+* [
 20230223
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230223)
 (JP, KR)
