@@ -1,0 +1,97 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20230610 回転グリフ
+% グリフ比較用
+
+\documentclass[dvipdfmx]{jsarticle}
+\usepackage{otf}
+\usepackage{lmodern}
+
+% From
+% https://github.com/texjporg/japanese-otf-mirror/commit/9e2a2b21b0f12e040b5d3b65aca42758f8be46ca
+\makeatletter
+\newcount\K@@CJ%
+\def\CIDJrange#1#2{%
+  \K@@CJ=#1%
+  \loop\ifnum\K@@CJ<#2%
+    \CID{\number\K@@CJ}%
+  \advance\K@@CJ by1%
+  \repeat%
+  }
+\makeatother
+
+\title{原ノ味フォント 20230610 回転グリフ \\
+--- グリフ比較用 ---}
+\author{細田 真道}
+
+\begin{document}
+
+\maketitle
+
+\abstract{%
+  このファイルは原ノ味フォントのグリフが正しく生成されているか、
+  他のフォントと比較して確認するためのものである。
+  そのために、同じDVIから、原ノ味フォント埋め込みPDFと
+  フォント非埋め込みPDFの双方を生成している。
+  小塚フォントを持つAcrobat Readerでフォント非埋め込みPDFを開くと、
+  小塚フォントを使った表示を見ることができる。
+  同じAcrobat Readerで原ノ味フォント埋め込みPDFを開くと、
+  原ノ味フォントを使った表示を見ることができる。
+  これにより双方の表示を比較し、
+  デザインの差を除いて同じような表示になれば、
+  原ノ味フォントのグリフが正しいと考えることができる。
+}
+
+\clearpage
+
+\section{Adobe-Japan1-3 8720--9353明朝}
+
+\mcfamily\Large
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\section{Adobe-Japan1-3 8720--9353ゴシック}
+
+\gtfamily\Large
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\section{Adobe-Japan1-4 12870--13319明朝}
+
+\mcfamily\Large
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\section{Adobe-Japan1-4 12870--13319ゴシック}
+
+\gtfamily\Large
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\section{Adobe-Japan1-5 16469--16778明朝}
+
+\mcfamily\Large
+\CIDJrange{16469}{16779}
+
+\section{Adobe-Japan1-5 16469--16778ゴシック}
+
+\gtfamily\Large
+\CIDJrange{16469}{16779}
+
+\clearpage
+
+\section{Adobe-Japan1-6 20961--21070明朝}
+
+\mcfamily\Large
+\CIDJrange{20961}{21070}
+
+\section{Adobe-Japan1-6 20961--21070ゴシック}
+
+\gtfamily\Large
+\CIDJrange{20961}{21070}
+
+\end{document}
