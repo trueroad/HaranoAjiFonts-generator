@@ -1,0 +1,396 @@
+% -*- coding: utf-8 mode:latex -*-
+
+% 原ノ味フォント 20230610 回転グリフ
+
+\documentclass[xelatex,ja=minimal]{bxjsarticle}
+
+\usepackage{fontspec}
+\usepackage{xcolor}
+
+\usepackage{bxtexlogo}
+\bxtexlogoimport{XeLaTeX}
+
+\title{原ノ味フォント 20230610 回転グリフ}
+\author{細田 真道}
+
+\definecolor{gray1}{rgb}{.9,.9,.9}
+\newcommand{\test}[1]{{\fontsize{11pt}{12pt}\selectfont%
+    \colorbox{gray1}{#1}}}
+
+\makeatletter
+\newcount\K@@CJ%
+\def\CIDJrange#1#2{%
+  \K@@CJ=#1%
+  \loop\ifnum\K@@CJ<#2%
+    \test{\XeTeXglyph\number\K@@CJ}
+  \advance\K@@CJ by1%
+  \repeat%
+  }
+\makeatother
+
+\begin{document}
+
+\setmainfont{HaranoAjiMincho-Regular.otf}
+\setsansfont{HaranoAjiGothic-Regular.otf}
+
+\maketitle
+
+\abstract{原ノ味フォント 20230610 版より搭載している回転グリフである。
+  \textbackslash colorbox に vmtx テーブルの height が反映されず、
+  ボディを示すことができていないようである。
+}
+
+\footnotetext{本資料は\XeLaTeX 組版で日本語処理機能を有効にしていないため、
+日本語組版としてはおかしなところがある。}
+
+\clearpage
+
+\section{原ノ味角ゴシックExtraLight}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-ExtraLight.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックLight}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Light.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックNormal}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Normal.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックRegular}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Regular.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックMedium}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Medium.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックBold}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Bold.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味角ゴシックHeavy}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiGothic-Heavy.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝ExtraLight}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-ExtraLight.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝Light}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-Light.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝Regular}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-Regular.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝Medium}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-Medium.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝SemiBold}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-SemiBold.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝Bold}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-Bold.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\clearpage
+
+\section{原ノ味明朝Heavy}
+
+\subsection{Adobe-Japan1-3 8720--9353}
+
+\setmainfont{HaranoAjiMincho-Heavy.otf}
+\CIDJrange{8720}{9354}
+
+\clearpage
+
+\subsection{Adobe-Japan1-4 12870--13319}
+
+\CIDJrange{12870}{13320}
+
+\clearpage
+
+\subsection{Adobe-Japan1-5 16469--16778}
+
+\CIDJrange{16469}{16779}
+
+\subsection{Adobe-Japan1-6 20961--21070}
+
+\CIDJrange{20961}{21070}
+
+\end{document}
