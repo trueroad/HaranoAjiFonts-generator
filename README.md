@@ -305,7 +305,7 @@ AJ1 で全角幅の CID に割り当たったため、
 ](https://github.com/adobe-fonts/source-han-serif/issues/157)
 という問題があったので
 原ノ味フォント 20220130 版から平行移動して位置調整していましたが、
-源ノ明朝 2.002 で修正されたため原ノ味フォント 202310xx 版から調整していません。
+源ノ明朝 2.002 で修正されたため原ノ味フォント 20231009 版から調整していません。
 源ノ角ゴシックにはこの問題はありませんので調整していません。
 
 + CID+8271 (GSUB vert/vrt2,
@@ -1187,6 +1187,30 @@ OpenType 規格的には `vrt2` は `vert`
 
 ## 履歴
 
+* [
+20231009
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20231009)
+(JP, CN, TW, KR, K1)
+    + 源ノ明朝 2.002 に対応 (JP, CN, TW, KR, K1)
+        - ベースとなる源ノ明朝を 2.001 から 2.002 に変更しました。
+        - JP: [
+源ノ明朝 2.001 で縦書き用の濁点、半濁点の位置がおかしい問題
+](https://github.com/adobe-fonts/source-han-serif/issues/157)
+          が修正されたため原ノ味フォント 20220130 で導入した修正をやめました。
+    + Adobe-GB1-6 対応 (CN)
+        - [
+Adobe-GB1-6 対応の要望
+](https://github.com/trueroad/HaranoAjiFontsCN/issues/2)
+          によるもの。
+        - これまで Adobe-GB1-5 フォントでしたが
+          Adobe-GB1-6 がリリースされたので対応しました。
+        - これにより搭載グリフ数が大幅に増えています。
+    + バージョンアップ
+        - 源ノ明朝 2.002
+        - Adobe-GB1-6
+        - ttx 4.43.1
+    + グリフ数 (JP)
+        + 増減ありません。
 * [
 20230610
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230610)

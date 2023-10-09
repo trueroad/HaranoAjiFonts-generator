@@ -289,6 +289,18 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20231009
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20231009)
+(JP, CN, TW, KR, K1)
+    + Based on SourceHanSerif 2.002 (JP, CN, TW, KR, K1)
+    + Support Adobe-GB1-6 (CN)
+    + Update
+        + SourceHanSerif 2.002
+        + Adobe-GB1-6
+        + ttx 4.43.1
+    + Number of contained glyphs (JP)
+        - No changes.
+* [
 20230610
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230610)
 (JP, CN, TW, KR, K1)
