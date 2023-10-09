@@ -168,14 +168,14 @@ Place all other files in the same directory.
         - SourceHanSansCN-Heavy.otf
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniGB-UTF32-H
-* AG1-5 GSUB
+* AG1-6 GSUB
     + [
-The Adobe-GB1-7 Character Collection
+The Adobe-GB1-6 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
-        - ag15-gsub.fea
-* AG1-5 Variation Selector
+        - ag16-gsub.fea
+* AG1-6 Variation Selector
     + [
-The Adobe-GB1-7 Character Collection
+The Adobe-GB1-6 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
         - Adobe-GB1_sequences.txt
 

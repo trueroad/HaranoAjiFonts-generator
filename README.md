@@ -477,15 +477,15 @@ The Adobe-Japan1-7 Character Collection
         - SourceHanSansCN-Heavy.otf
 * [CMap](https://github.com/adobe-type-tools/cmap-resources)
     + UniGB-UTF32-H
-* AG1-5 の GSUB 情報
+* AG1-6 の GSUB 情報
     + [
-The Adobe-GB1-5 Character Collection
+The Adobe-GB1-6 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
-      から `ag15-gsub.fea`
+      から `ag16-gsub.fea`
       （GSUB ディレクトリにあります）
-* AG1-5 の Variation Selector 情報
+* AG1-6 の Variation Selector 情報
     + [
-The Adobe-GB1-5 Character Collection
+The Adobe-GB1-6 Character Collection
 ](https://github.com/adobe-type-tools/Adobe-GB1)
       から `Adobe-GB1_sequences.txt`
 

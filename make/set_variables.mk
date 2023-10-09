@@ -61,7 +61,7 @@ ifeq ($(FONT_LANG),CN)
 CMAP = UniGB-UTF32-H
 ROS_R = Adobe
 ROS_O = GB1
-ROS_S = 5
+ROS_S = 6
 ROS = AG1
 SRC_LANG = CN
 
@@ -84,10 +84,10 @@ DEST_FONTBASE = $(DEST_NAME)Mincho$(FONT_LANG)-$(FONT_WEIGHT)
 endif
 
 # CN Common
-FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ag15-gsub.fea
+FEATURE_GSUB_FEA = $(DOWNLOADDIR)/ag16-gsub.fea
 SEQUENCES_FILE = $(DOWNLOADDIR)/Adobe-GB1_sequences.txt
 FONT_NAME_SED = $(BASEDIR)/font_name_cn.sed
-CID_MAX = 29063
+CID_MAX = 30571
 endif
 
 # TW
