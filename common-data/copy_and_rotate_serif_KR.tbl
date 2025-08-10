@@ -11,5 +11,5 @@ aji00001	aji00113	0
 aji00108	aji00114	0
 # CID+108 -> CID+115 (AKR, One-sixteenth of hangul syllable width)
 aji00108	aji00115	0
-# CID+109 -> CID+12105 (AKR, Hanja width)
-aji00109	aji12105	0
+# CID+109 -> CID+12105 (AKR, Hanja width), now generated automatically
+#aji00109	aji12105	0
