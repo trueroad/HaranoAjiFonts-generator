@@ -877,9 +877,14 @@ endif
 
 ### Copy and rotate ###
 
+copy_duplicated.tbl: table-cmap.tbl table.tbl
+	@echo "making copy_dulplicated table..."
+	@$(SCRIPTDIR)/make_copy_duplicated_table.py \
+		$+ > $@ 2> $(addsuffix .log,$(basename $@))
+
 copy_and_rotate_do.tbl: ${COPY_AND_ROTATE_TABLE} \
 		palt_to_pwid_copy.tbl vpal_to_pwidvert_copy.tbl \
-		copy_vkana.tbl copy_hkana.tbl
+		copy_vkana.tbl copy_hkana.tbl copy_duplicated.tbl
 	@echo "merging copy and rotate table..."
 	@cat $+ > $@
 
