@@ -5,7 +5,7 @@
 // fontcmap_reverse.cc:
 //   read cmap table of the original font file and create an reverse map
 //
-// Copyright (C) 2019, 2022 Masamichi Hosoda.
+// Copyright (C) 2019, 2022, 2025 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without

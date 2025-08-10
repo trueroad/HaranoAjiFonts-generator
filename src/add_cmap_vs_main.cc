@@ -5,7 +5,7 @@
 // add_cmap_vs_main.cc:
 //   Add CIDs to cmap variation selector
 //
-// Copyright (C) 2021 Masamichi Hosoda.
+// Copyright (C) 2021, 2025 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -311,7 +311,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "(Add CIDs to cmap variation selector)"
     << std::endl
-    << "Copyright (C) 2021 Masamichi Hosoda"
+    << "Copyright (C) 2021, 2025 Masamichi Hosoda"
     << std::endl
     << "https://github.com/trueroad/HaranoAjiFonts-generator"
     << std::endl

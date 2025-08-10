@@ -5,7 +5,7 @@
 // make_conv_table_main.cc:
 //   make conversion table from original font CID to pre-defined CID
 //
-// Copyright (C) 2019, 2022, 2023 Masamichi Hosoda.
+// Copyright (C) 2019, 2022, 2023, 2025 Masamichi Hosoda.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
     << std::endl
     << "# (make conversion table from original font CID to pre-defined CID)"
     << std::endl
-    << "# Copyright (C) 2019, 2022, 2023 Masamichi Hosoda" << std::endl
+    << "# Copyright (C) 2019, 2022, 2023, 2025 Masamichi Hosoda" << std::endl
     << "# https://github.com/trueroad/HaranoAjiFonts-generator" << std::endl
     << "#" << std::endl;
 
