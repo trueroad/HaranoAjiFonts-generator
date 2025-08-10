@@ -44,6 +44,7 @@
 
 #include <pugixml.hpp>
 
+#include "cmapfile.hh"
 #include "prefer_unicode.hh"
 
 void fontcmap_reverse::load_ttx (const std::string &filename,
@@ -117,6 +118,25 @@ void fontcmap_reverse::load_ttx (const std::string &filename,
                         << prefer_code
                         << std::nouppercase << std::dec
                         << std::setfill (' ') << std::endl;
+
+                      auto cmf_map = cmf.get_map ();
+                      if ((cmf_map.find (map_[cid]) != cmf_map.end ()) &&
+                          (cmf_map.find (code) != cmf_map.end ()) &&
+                          (cmf_map[map_[cid]] != cmf_map[code]))
+                        {
+                          auto dst_code =
+                            (code == prefer_code) ? map_[cid] : code;
+                          std::cout
+                            << "#COPY_AND_ROTATE\taji"
+                            << std::setw (5) << std::setfill ('0')
+                            << cmf_map[prefer_code]
+                            << "\taji"
+                            << std::setw (5) << std::setfill ('0')
+                            << cmf_map[dst_code]
+                            << "\t0"
+                            << std::endl;
+                        }
+
                       if (map_[cid] != prefer_code)
                         map_[cid] = prefer_code;
                     }
