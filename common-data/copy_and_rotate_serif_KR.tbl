@@ -1,4 +1,6 @@
 # name_src name_dst angle
+# CID+1 -> CID+3006 (AKR, Proportional for Korean use)
+aji00001	aji03006	0
 # CID+108 -> CID+110 (AKR, One-third of hangul syllable width)
 aji00108	aji00110	0
 # CID+108 -> CID+111 (AKR, One-fourth of hangul syllable width)
