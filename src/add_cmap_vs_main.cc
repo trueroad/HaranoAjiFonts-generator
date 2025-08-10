@@ -214,6 +214,8 @@ namespace
               }
             else if (cmap_cid != as.cid)
               {
+                node.remove_attribute (name_attr);
+
                 std::stringstream ss_name;
                 ss_name << "aji" << as.cid;
                 node.append_attribute ("name") = ss_name.str ().c_str ();
