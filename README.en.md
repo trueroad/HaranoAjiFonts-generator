@@ -289,6 +289,27 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
 ## Release Notes
 
 * [
+20250811
+](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20250811)
+(JP, CN, TW, KR, K1)
+    + Based on SourceHanSerif 2.003 (JP, CN, TW, KR, K1)
+    + Based on SourceHanSans 2.005 (JP, CN, TW, KR, K1)
+    + Add handling for cases where duplicate Unicode code points are
+      mapped to a single AI0 CID (JP, CN, TW, KR, K1)
+    + Add space glyphs defined in AJ1 and AKR (JP, KR)
+    + Update
+        + SourceHanSerif 2.003
+        + SourceHanSans 2.005
+        + ttx 4.59.0
+        + g++ 13.4
+    + Number of contained glyphs (JP)
+        - HaranoAjiMincho: 18022
+          (conversion 16867 + glyph processing 705 + pre-rotated 449 +
+          .notdef 1)
+        - HaranoAjiGothic: 18022
+          (conversion 16867 + glyph processing 705 + pre-rotated 449 +
+          .notdef 1)
+* [
 20231009
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20231009)
 (JP, CN, TW, KR, K1)
@@ -311,11 +332,11 @@ AFDKO “features” File Tips & Tricks, Part 2: GSUB Features for Public ROSes
         + ttx 4.39.4
     + Number of contained glyphs (JP)
         - HaranoAjiMincho: 18015
-          (conversion 16867 + glyph processing 699 + pre-rotated 448
-          + .notdef 1)
+          (conversion 16867 + glyph processing 699 + pre-rotated 448 +
+          .notdef 1)
         - HaranoAjiGothic: 18015
-          (conversion 16866 + glyph processing 700 + pre-rotated 448
-          + .notdef 1)
+          (conversion 16866 + glyph processing 700 + pre-rotated 448 +
+          .notdef 1)
 * [
 20230223
 ](https://github.com/trueroad/HaranoAjiFonts-generator/releases/tag/20230223)
@@ -603,7 +624,7 @@ GSUB feature](https://github.com/adobe-type-tools/Adobe-Japan1/pull/4)
 
 ## LICENSE
 
-Copyright (C) 2019-2023 Masamichi Hosoda
+Copyright (C) 2019-2025 Masamichi Hosoda
 
 The license of the generator is BSD 2-Clause. See [LICENSE](./LICENSE).
 The license of the generated fonts is SIL Open Font License 1.1.
