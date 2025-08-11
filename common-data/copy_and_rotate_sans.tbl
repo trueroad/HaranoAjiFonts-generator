@@ -30,3 +30,15 @@ aji00231	aji00422	0
 aji00231	aji00515	0
 # CID+633 -> CID+8229 (AJ1, Full-width, Generic space)
 aji00633	aji08229	0
+# CID+1 -> CID+9444 (AJ1, Proportional, Italic space --- U+0020)
+aji00001	aji09444	0
+# CID+633 -> CID+15444 (AJ1, Full-width, For AAT compatibility --- U+F860)
+aji00633	aji15444	0
+# CID+633 -> CID+15445 (AJ1, Full-width, For AAT compatibility --- U+F861)
+aji00633	aji15445	0
+# CID+633 -> CID+15446 (AJ1, Full-width, For AAT compatibility --- U+F862)
+aji00633	aji15446	0
+# CID+633 -> CID+15447 (AJ1, Full-width, For AAT compatibility --- U+F87A)
+aji00633	aji15447	0
+# CID+633 -> CID+15448 (AJ1, Full-width, For AAT compatibility --- U+F87F)
+aji00633	aji15448	0
