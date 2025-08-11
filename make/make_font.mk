@@ -1,4 +1,4 @@
-all: output.otf
+all: output.otf available.txt
 
 .PHONY: all install clean dist-clean
 
@@ -947,6 +947,15 @@ pre_rotated.tbl: table.tbl copy_and_rotate_do.tbl
 height_pre_rotated.tbl: pre_rotated.tbl hmtx03.ttx
 	@echo "making pre-rotated height..."
 	@$(SCRIPTDIR)/make_pre_rotated_height.py \
+		$+ \
+		> $@ 2> $(addsuffix .log,$(basename $@))
+
+
+### available.txt for checking available CIDs ###
+
+available.txt: table.tbl copy_and_rotate_do.tbl pre_rotated.tbl
+	@echo "building available.txt for checking available CIDs..."
+	@$(SCRIPTDIR)/show_available_cids.py \
 		$+ \
 		> $@ 2> $(addsuffix .log,$(basename $@))
 
