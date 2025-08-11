@@ -60,6 +60,32 @@ def main() -> None:
     s_pre_rotated: set[int] = \
         load_table.load_copy_and_rotate_dst_set(pre_rotated)
 
+    len_table: int = len(load_table.load_as_list(table))
+    len_copy_and_rotate: int = \
+        len(load_table.load_copy_and_rotate(copy_and_rotate))
+    len_pre_rotated: int = \
+        len(load_table.load_copy_and_rotate(pre_rotated))
+
+    b_dup: bool = False
+
+    if len(s_table) != len_table:
+        print(f'Error: {table}: len(pre-defined cid set) {len(s_table)} != '
+              f'len(list) {len_table}',
+              file=sys.stderr)
+        b_dup = True
+    if len(s_copy_and_rotate) != len_copy_and_rotate:
+        print('Error: {copy_and_rotate}: len(dst set) '
+              f'{len(s_copy_and_rotate)} != '
+              f'len(list) {len_copy_and_rotate}',
+              file=sys.stderr)
+        b_dup = True
+    if len(s_pre_rotated) != len_pre_rotated:
+        print('Error: {pre_rotated}: len(dst set) '
+              f'{len(s_pre_rotated)} != '
+              f'len(list) {len_pre_rotated}',
+              file=sys.stderr)
+        b_dup = True
+
     s_total: set[int] = s_notdef | s_table | s_copy_and_rotate | s_pre_rotated
     cid: int
     for cid in sorted(s_total):
@@ -69,21 +95,27 @@ def main() -> None:
     for i in (s_notdef & s_table):
         print(f'Duplicate: notdef & table: {i}',
               file=sys.stderr)
+        b_dup = True
     for i in (s_notdef & s_copy_and_rotate):
         print(f'Duplicate: notdef & copy_and_rotate: {i}',
               file=sys.stderr)
+        b_dup = True
     for i in (s_notdef & s_pre_rotated):
         print(f'Duplicate: notdef & pre_rotated: {i}',
               file=sys.stderr)
+        b_dup = True
     for i in (s_table & s_copy_and_rotate):
         print(f'Duplicate: table & copy_and_rotate: {i}',
               file=sys.stderr)
+        b_dup = True
     for i in (s_table & s_pre_rotated):
         print(f'Duplicate: table & pre_rotated: {i}',
               file=sys.stderr)
+        b_dup = True
     for i in (s_copy_and_rotate & s_pre_rotated):
         print(f'Duplicate: copy_and_rotate & pre_rotated: {i}',
               file=sys.stderr)
+        b_dup = True
 
     print(f'conversion = {len(s_table)}, '
           f'copy + pre-rotated = {len(s_copy_and_rotate | s_pre_rotated)}, '
@@ -91,6 +123,10 @@ def main() -> None:
           f'  (copy = {len(s_copy_and_rotate)}, '
           f'pre-rotated = {len(s_pre_rotated)})',
           file=sys.stderr)
+
+    if b_dup:
+        print(f'Error: detect duplicate', file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
