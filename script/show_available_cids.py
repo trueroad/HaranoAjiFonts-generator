@@ -8,7 +8,7 @@ https://github.com/trueroad/HaranoAjiFonts-generator
 show_available_cids.py:
   Show available CIDs.
 
-Copyright (C) 2021, 2023 Masamichi Hosoda.
+Copyright (C) 2021, 2023, 2025 Masamichi Hosoda.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
